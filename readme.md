@@ -1,0 +1,3 @@
+- Might try a different library than `jest` for API-testing (integration testing)
+  - what's the use of `supertest`?
+- add (DB) dependencies as needed.
