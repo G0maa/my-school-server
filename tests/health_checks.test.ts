@@ -1,5 +1,6 @@
-const app = require('../app');
-const supertest = require('supertest');
+import supertest from 'supertest';
+import app from '../app';
+
 const api = supertest(app);
 
 describe('Health checks', () => {

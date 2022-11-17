@@ -1,3 +1,3 @@
 module.exports = {
-  testEnvironment: 'node',
+  presets: [['@babel/preset-env', { targets: { node: 'current' } }]],
 };
