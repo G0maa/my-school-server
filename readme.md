@@ -30,10 +30,10 @@
   - Implement the cycle of, register, verify, login, forgot password. ✅
     - Bonus: `2FA`. ❌
     - Contemplating the idea of adding social register/login. ❌
-  - TypeScript ❓
-    - Stopped here: https://jestjs.io/docs/getting-started#using-typescript
-    - Development & Production works, but testing doesn't work.
-    - You somewhat can use `.js` but you'd have to disable eslint for them.
+  - TypeScript ❓✅
+    - This could be helpful: https://express-validator.github.io/docs/
+    - You somewhat can use `.js` but you'd have to disable eslint for it.
+    - Will try applying to the other prototypes.
 
 ## Decisions:
 

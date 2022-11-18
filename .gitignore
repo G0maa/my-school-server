@@ -2,3 +2,4 @@ node_modules/
 .env
 .eslintrc_old
 build/
+dist/

@@ -1,3 +1,4 @@
 node_modules/
 .eslintrc_old
 build/
+dist/
