@@ -1,5 +1,5 @@
 {
-  "name": "my-school-gp",
+  "name": "my-school-server",
   "version": "0.0.1",
   "description": "The backend for my Graduation Project, it's a School Management System, deployed on the cloud.",
   "main": "index.ts",
