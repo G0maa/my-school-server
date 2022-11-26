@@ -225,6 +225,7 @@
 
 # Concerns:
 
+- PostgreSQL database design.
 - There's what I think is caled `3rd Normal Form` in `Teachers & Classes` and `Students & Subjects`. i.e. "distant" relationship.
 - Now I thought of the MVP, should I think of the other versions/other possible features at the same time?
   - i.e. to allow for a design that may suit "possible" features? Talking in a "near-future" perspective.
@@ -234,6 +235,19 @@
 # Next step?
 
 - I think logically it is Backup & Restore, i.e. start a new academic year.
+
+# Angular To-Dos:
+
+- Sending requests to cross-origin server with cookies.
+- Accepting cross-origin cookies from cross-origin server.
+- Displaying response from server.
+
+# This branch To-Dos:
+
+- Do Session-based authentication.
+- Think about your middlewares
+- error checking
+- are routes actually secure?
 
 # Above was "summary of this, every thought I had ~2 Hours:
 

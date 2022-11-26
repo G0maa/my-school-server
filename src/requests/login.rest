@@ -1,0 +1,15 @@
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+    "username": "root",
+    "password": "sekret"
+}
+###
+GET http://localhost:8080/testSecure
+Cookie: connect.sid=s%3AvxvQMiNI2I06GrttLCnyH2OOOxwfsGbh.slZCZ%2B%2Bs671Bq3ds%2FLHPXpDsV%2F2Z1T%2FxNKFXfWBgK%2B8
+###
+GET http://localhost:8080/printCookie
+Cookie: foo=bar
+###
+GET http://localhost:8080/testUnSecure
