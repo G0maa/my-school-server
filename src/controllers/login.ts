@@ -41,7 +41,19 @@ loginRouter.post('/login', passport.authenticate('local'), (req, res) => {
   if (!req.user) return res.status(401).end();
   console.log('/login', req.user);
   console.log('HERE');
-  return res.status(200).end();
+  return res
+    .status(200)
+    .json({
+      // id: 1,
+      // img: 'assets/images/user/admin.jpg',
+      // username: 'admin@school.org',
+      // password: 'admin@123',
+      // firstName: 'Sarah',
+      // lastName: 'Smith',
+      role: 'Admin',
+      // token: 'admin-token',
+    })
+    .end();
 });
 
 export default loginRouter;
