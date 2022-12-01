@@ -22,6 +22,11 @@
 - Creates accounts of Students, Teachers, Managers.
 - Resets passwords.
 - Ability to print reports.
+- **Creates subjects**
+- Can create classes,
+- set their sechedule, according to available subjects
+- set their teacher,
+- set their students,
 
 ## About **has Profile**:
 
@@ -33,6 +38,8 @@
 
 ## Creating accounts:
 
+- When creating accounts can specify to create account with its details.
+  - ~~Maybe~~ more simple for now is to Create account -> Edit details.
 - For Teachers
   - I'd say the ID will be something like `account type - serial number` e.g. 400001, for example.
   - Create many accounts in one go e.g. 50 teacher accounts i.e. will have 400001 to 400050 as usernames. also generate radnom string for passwords. maybe six random number e.g. `368791`
@@ -45,27 +52,10 @@
 
 - generate new random six digit password, and delete old password. user has to re-enter his email & new password after logging in now.
 
-## Reports:
-
-- Reports of every teacher, student, manager, account that isn't set (i.e. changed email and password).
-
-# Manager
-
-- What does a **manager** do?
-  - Has profile.
-  - **Creates subjects**
-  - Can create classes,
-  - set their sechedule, according to available subjects
-  - set their teacher,
-  - set their students,
-  - Apility to print reports.
-
-## About has profile:
-
-- Identical to admin.
-
 ## Creating subjects:
 
+- **Subject can have 1+ teacher.**
+  - ?Should be? inside realtion.
 - a tab in the dashboard
 - Set Name, Code, Year, speciality (math, chemisty, physcis, Physical education, ...)
 
@@ -76,6 +66,7 @@
 
 ## setting classes:
 
+- Fields: Name, Code, Details.
 - classes tab, pick class & edit.
 - set class schedule.
   - set subjects in scheudle, day, how many periods for each subject.
@@ -87,14 +78,17 @@
 - subjects tab, can search for specific subject,
 - click on subject & assign it a teacher (should be provided ability to search by ID or name or Email)
 
-## Printing reports:
+## Reports:
 
+- Reports of every teacher, student, manager, account that isn't set (i.e. changed email and password).
 - Print their subjects & teachers.
 - Print classes & their students.
 - Print class scheduels.
 - Print unassigned teachers & students.
 
 # Teacher
+
+- Fields: First name, Last name, Gender, Phone number, Password, **Username**, Department (Multiple-choice), Title, Address, Email, Date of Birth, Education, Upload Profile Picture to AWS S3, Date of joining.
 
 - What does a **Teacher** do?
   - Has profile.
@@ -136,45 +130,9 @@
 - print attednece of each subject (each class in a separate paper)
 - print grades of each subject (each class in a separate paper)
 
-# Parent
-
-- What does the **Parent** do?
-  - Has profile.
-  - a parent can have many students ?attached? to him.
-  - See grades of student(s).
-  - See attendence of student(s).
-  - See profiles teachers of student(s).
-  - See schedule of student(s).
-  - See class material & homework.
-  - Ability to print reports of grades, attendence.
-
-## Profile
-
-- Similar to others, except has link to each of his kids.
-
-## Grades, attendence
-
-- `My kids` tab -> for each students see grades attencence.
-- This means attendence & grades for all of this students subjects
-- i.e.
-  1. Query class of student & return this class' subjects
-  2. ???, I don't know. #Design, similarly in Teacher setting grades, where does the grades go?
-
-## teachers, schedule
-
-- `My Kids` tab, select one of his kids.
-- See his scheudle, click to see details of subject for that student.
-  - "See his schedule" #Design #HERE
-- details: material & homework, ?grades, attednece,? link to profile of teacher.
-
-## Reports:
-
-- Grades, Attendence.
-- Student Schedule.
-- Student teachers.
-
 # Student
 
+- Fields: First name, Last name, Gender, Phone number, Password, **Username**, Class (Multiple-choice first year, second year, ...), Address, Email, Date of Birth, Parent name, parent phone number, Upload Profile Picture to AWS S3, Date of joining.
 - What does a **Student** do?
   - Has profile.
   - See grades, attendance.
@@ -216,12 +174,39 @@
 
 - Print attendence, grades, scheudle.
 
+# Staff
+
+- Fields: Identical to Teacher.
+- Admin has ability to add, edit & delete.
+- Has no functions except for public ones e.g. Holidays.
+
+# Attendence
+
+- Will be updated.
+
+# Holidays tab
+
+- Admin has ability to add & edit & remove,
+- rest of users has ability to read.
+
+# Fees tab
+
+- Admin has ability to add & edit & remove,
+  - Should verify that student exists
+- **student** of users has ability to read.
+
 # Somethings that are shared:
 
 - Parts of the profile.
 - First login screen.
 - ?Dashboard?
 - Resetting password (in-case he/she remembers his/her email)
+- Holidays
+
+# Next step(s)?
+
+- I think logically it is Backup & Restore, i.e. start a new academic year.
+- Adding Parent user
 
 # Concerns:
 
@@ -231,10 +216,6 @@
   - i.e. to allow for a design that may suit "possible" features? Talking in a "near-future" perspective.
 - ID should be random & unpredictable & cryptographically safe.
 - I thought of this as backend only, it might have _horrible_ UX.
-
-# Next step?
-
-- I think logically it is Backup & Restore, i.e. start a new academic year.
 
 # Angular To-Dos:
 
@@ -306,3 +287,44 @@
   - can edit schedules.
   - Save past year, enter new year (Delete & Backup).
   - Restore past subjects.
+
+# Parent
+
+- What does the **Parent** do?
+  - Has profile.
+  - a parent can have many students ?attached? to him.
+  - See grades of student(s).
+  - See attendence of student(s).
+  - See profiles teachers of student(s).
+  - See schedule of student(s).
+  - See class material & homework.
+  - Ability to print reports of grades, attendence.
+
+# LATER
+
+## Profile
+
+- Similar to others, except has link to each of his kids.
+
+## Grades, attendence
+
+- `My kids` tab -> for each students see grades attencence.
+- This means attendence & grades for all of this students subjects
+- i.e.
+  1. Query class of student & return this class' subjects
+  2. ???, I don't know. #Design, similarly in Teacher setting grades, where does the grades go?
+
+## teachers, schedule
+
+- `My Kids` tab, select one of his kids.
+- See his scheudle, click to see details of subject for that student.
+  - "See his schedule" #Design #HERE
+- details: material & homework, ?grades, attednece,? link to profile of teacher.
+
+## Reports:
+
+- Grades, Attendence.
+- Student Schedule.
+- Student teachers.
+
+# End
