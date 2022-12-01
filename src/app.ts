@@ -6,7 +6,6 @@ const app = express();
 import cors from 'cors';
 import morgan from 'morgan';
 import middleware from './utils/middleware';
-// import logger from './utils/logger';
 
 app.use(cors());
 app.use(express.json());
