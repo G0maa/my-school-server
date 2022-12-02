@@ -4,3 +4,4 @@ node_modules/
 .eslintrc_old
 build/
 dist/
+jest.config.js

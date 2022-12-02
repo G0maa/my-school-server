@@ -74,6 +74,15 @@
   - `docker exec -it <ContainerName> psql`
 - `Sequelize` is the one who generatres `UUIDs` NOT `PostgreSQL`
 
+### Database Related:
+
+- `sequelize-cli` is saved as a Dev dependency.
+  - Might need `pg-hstore`, as per the [docs](https://node-postgres.com/#version-compatibility).
+- Not using `umzug` (Code-level migration loader) for now, will be using `sequelize-cli` instead.
+- About `Docker`:
+  - `docker compose -f postgres-compose.yml up` for running `PostgreSQL`.
+  - `docker exec -it postgres-db psql` for getting into `psql` terminal.
+
 ## Problem(s):
 
 - CORS, CSRF with SPAs?
@@ -83,6 +92,7 @@
       - Reverse Proxy (nginx), trivial solution, but ?not applicable? for ELB and ASG & CF, as far as I know.
       - `api.my-school.software`, `www.my-school.software` & allow CORS ✅
   - Erm... CSRF with different domains?... or anything generally with different subdomains\*
+- `ESLint` doesn't produce a warnging after using `console.log`, investigate.
 
 ## To-Dos:
 
