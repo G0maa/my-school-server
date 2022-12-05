@@ -6,3 +6,10 @@ import { MigrationParams } from 'umzug';
 export type Migration = (
   params: MigrationParams<QueryInterface>
 ) => Promise<unknown>;
+
+export enum Role {
+  Student = 'Student',
+  Teacher = 'Teacher',
+  Admin = 'Admin',
+  Parent = 'Parent',
+}

@@ -10,6 +10,7 @@
     "tsc": "tsc",
     "start": "tsc && node build/index.js",
     "dev": "ts-node-dev src/index.ts",
+    "migration:down": "ts-node-dev src/utils/rollback.ts",
     "eslint": "eslint src/ .",
     "prettier": "npx prettier --check .",
     "test": "jest --verbose --runInBand --forceExit"
