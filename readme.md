@@ -98,3 +98,5 @@
 
 - Use session-manager.
 - Passportjs, and the Register Verify Login Forgot Cycle (auth).
+- `sequelize-typescript` or find a way to have a type for models.
+  - [see](https://sequelize.org/docs/v6/other-topics/typescript/)
