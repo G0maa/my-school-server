@@ -1,19 +1,25 @@
-import { Admin } from '../models';
+import { Admin, User } from '../models';
+import { Role } from '../types';
+import { hashPassword } from './helpers';
 
 const init = async () => {
-  // A0001 for Admins
-  // T0001 for Teachers
-  // S0001 for Students
-  // P0001 for Parents
-  // ...
+  console.log('Default username & password for admin is: A0001 : 000000');
   const res = await Admin.findAll();
+  if (res.length !== 0) {
+    return;
+  }
 
-  // To-Do
-  // if (res.length === 0)
-  //   await Admin.create({
-  //     userId: 123,
-  //   });
-  console.log('res', res);
+  const passwordHash = await hashPassword('000000');
+
+  // new Admin({}); Admin.save();
+  const admin = await User.create({
+    username: 'A0001',
+    password: passwordHash,
+    role: Role.Admin,
+  });
+
+  // This or use sequelize-hooks
+  await admin.createAdmin();
 };
 
 export default init;
