@@ -11,15 +11,19 @@ export const up: Migration = async ({ context: queryInterface }) => {
     },
     name: {
       type: DataTypes.STRING(64),
-      allowNull: false,
+      allowNull: true,
     },
     email: {
       type: DataTypes.STRING(64),
-      allowNull: false,
+      allowNull: true,
       unique: true,
       validate: {
         isEmail: true,
       },
+    },
+    username: {
+      type: DataTypes.STRING(5), // Make it six for good measures? :D
+      allowNull: false,
     },
     password: {
       type: DataTypes.STRING(64),
