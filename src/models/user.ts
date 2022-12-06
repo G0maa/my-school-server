@@ -1,9 +1,25 @@
-import { Model, DataTypes, HasOneCreateAssociationMixin } from 'sequelize';
+import {
+  Model,
+  DataTypes,
+  HasOneCreateAssociationMixin,
+  InferAttributes,
+  InferCreationAttributes,
+  CreationOptional,
+} from 'sequelize';
 import { sequelize } from '../utils/db';
 import { Role } from '../types';
 import Admin from './admin';
 
-class User extends Model {
+class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
+  declare id: CreationOptional<number>;
+  declare name: CreationOptional<string>;
+  declare email: CreationOptional<string>;
+  declare username: string;
+  declare password: string;
+  declare role: Role;
+  declare isVerified: CreationOptional<boolean>;
+  declare isReset: CreationOptional<boolean>;
+
   declare createAdmin: HasOneCreateAssociationMixin<Admin>;
 }
 User.init(

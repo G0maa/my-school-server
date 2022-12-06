@@ -9,14 +9,14 @@ import config from './utils/config';
 import middleware from './utils/middleware';
 
 import devRouter from './controllers/dev';
-import loginRouter from './controllers/login';
+import loginRouter from './controllers/auth';
 // import logger from './utils/logger';
 
 const app = express();
 
 app.use(
   session({
-    secret: 'cat',
+    secret: config.SECRET,
     resave: false,
     saveUninitialized: false,
     // store: new MemoryStore(),
@@ -43,7 +43,7 @@ app.use(express.json());
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call
 app.use(morgan('tiny'));
 
-if (config.NODE_ENV === 'DEV') app.use('/', devRouter);
+if (config.NODE_ENV !== 'PROD') app.use('/', devRouter);
 
 app.use('/api/auth/', loginRouter);
 
