@@ -1,10 +1,11 @@
 import dotenv from 'dotenv';
 // require('dotenv').config();
 dotenv.config();
-
+// Write Test for login for default admin
+// wrap-up logging in generally.
 const { PORT, NODE_ENV } = process.env;
 const DATABASE_URL =
-  NODE_ENV === 'DEV' ? process.env.DEV_DATABASE_URL : process.env.DATABASE_URL;
+  NODE_ENV === 'PROD' ? process.env.DATABASE_URL : process.env.DEV_DATABASE_URL;
 
 const SALT_ROUNDS = parseInt(process.env.SALT_ROUNDS || '10');
 // There's probably a better way to do this,

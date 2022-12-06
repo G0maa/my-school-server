@@ -6,12 +6,12 @@ import config from './config';
 const sequelize = new Sequelize(config.DATABASE_URL, {
   dialectOptions: {
     ssl:
-      config.NODE_ENV === 'DEV'
-        ? null
-        : {
+      config.NODE_ENV === 'PROD'
+        ? {
             require: false,
             rejectUnauthorized: false,
-          },
+          }
+        : null,
   },
 });
 
