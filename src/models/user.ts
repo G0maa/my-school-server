@@ -9,7 +9,9 @@ import {
 import { sequelize } from '../utils/db';
 import { Role } from '../types';
 import Admin from './admin';
+import Student from './student';
 
+// id, name, email, username, password, role, isVerified, isReset
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare id: CreationOptional<number>;
   declare name: CreationOptional<string>;
@@ -21,6 +23,7 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare isReset: CreationOptional<boolean>;
 
   declare createAdmin: HasOneCreateAssociationMixin<Admin>;
+  declare createStudent: HasOneCreateAssociationMixin<Student>;
 }
 User.init(
   {

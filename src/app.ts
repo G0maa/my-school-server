@@ -6,10 +6,11 @@ import morgan from 'morgan';
 import passport from 'passport';
 import session from 'express-session';
 import config from './utils/config';
-import middleware from './utils/middleware';
+import { unknownEndpoint, errorHandler } from './utils/middleware';
 
 import devRouter from './controllers/dev';
 import loginRouter from './controllers/auth';
+import studentRouter from './controllers/student';
 // import logger from './utils/logger';
 
 const app = express();
@@ -46,6 +47,7 @@ app.use(morgan('tiny'));
 if (config.NODE_ENV !== 'PROD') app.use('/', devRouter);
 
 app.use('/api/auth/', loginRouter);
+app.use('/api/student/', studentRouter);
 
 app.get('/api/ping', (_, response) => {
   response.send('<p>pong</p>');
@@ -55,7 +57,7 @@ app.get('/api/failping', (_, response) => {
   response.status(400).send();
 });
 
-app.use(middleware.unknownEndpoint);
-app.use(middleware.errorHandler);
+app.use(unknownEndpoint);
+app.use(errorHandler);
 
 export default app;

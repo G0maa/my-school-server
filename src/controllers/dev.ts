@@ -1,10 +1,9 @@
 import express from 'express';
+import { isAuthenticated } from '../utils/middleware';
 const devRouter = express.Router();
 
-devRouter.get('/testAuth', (req, res) => {
-  if (!req.user)
-    return res.status(401).json({ message: 'Unauthorized /testAuth' }).end();
-
+// try auth middleware here.
+devRouter.get('/testAuth', isAuthenticated, (req, res) => {
   return res.status(200).json(req.user).end();
 });
 
