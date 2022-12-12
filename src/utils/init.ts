@@ -1,4 +1,5 @@
 import { Admin, User, Var } from '../models';
+// import { Admin, User } from '../models';
 import { Role } from '../types';
 import { hashPassword } from './helpers';
 
@@ -11,7 +12,6 @@ const init = async () => {
 
   const passwordHash = await hashPassword('000000');
 
-  // new Admin({}); Admin.save();
   const admin = await User.create({
     username: 'A0001',
     password: passwordHash,
@@ -22,8 +22,7 @@ const init = async () => {
     varName: 'StudentUsername',
   });
 
-  // This or use sequelize-hooks
-  await admin.createAdmin();
+  await admin.$create('Admin', admin);
 };
 
 export default init;

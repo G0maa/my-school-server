@@ -1,40 +1,41 @@
-import { Model, DataTypes, HasOneCreateAssociationMixin } from 'sequelize';
+import {
+  Model,
+  DataType,
+  Table,
+  Column,
+  BelongsTo,
+  Default,
+  ForeignKey,
+  AllowNull,
+} from 'sequelize-typescript';
 import { Class } from '../types';
-import { sequelize } from '../utils/db';
+
 import User from './user';
 
 // class, parentName, parentPhoneNumber
+@Table({
+  timestamps: false,
+  underscored: true,
+  modelName: 'student',
+})
 class Student extends Model {
-  declare createUser: HasOneCreateAssociationMixin<User>;
+  @ForeignKey(() => User) // is this needed?
+  @BelongsTo(() => User, { as: 'Student' }) // student
+  @Default(DataType.UUIDV4) // to allow creation on this side.
+  @Column(DataType.UUID)
+  userId!: string;
+
+  @AllowNull(false)
+  @Column(DataType.ENUM(...Object.values(Class)))
+  class!: Class;
+
+  @AllowNull(true)
+  @Column(DataType.STRING(64))
+  parentName!: string;
+
+  @AllowNull(true)
+  @Column(DataType.STRING(16))
+  parentPhonenumber!: string;
 }
-Student.init(
-  {
-    userId: {
-      type: DataTypes.UUID(),
-      allowNull: false,
-      defaultValue: DataTypes.UUIDV4(),
-      primaryKey: true,
-      references: { model: 'users', key: 'user_id' },
-    },
-    class: {
-      type: DataTypes.ENUM(...Object.values(Class)),
-      allowNull: true,
-    },
-    parentName: {
-      type: DataTypes.STRING(64),
-      allowNull: true,
-    },
-    parentPhonenumber: {
-      type: DataTypes.STRING(16),
-      allowNull: true,
-    },
-  },
-  {
-    sequelize,
-    underscored: true,
-    timestamps: false,
-    modelName: 'student',
-  }
-);
 
 export default Student;

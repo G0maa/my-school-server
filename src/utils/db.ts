@@ -1,7 +1,8 @@
-import { Sequelize } from 'sequelize';
+import { Sequelize } from 'sequelize-typescript';
 import { Umzug, SequelizeStorage } from 'umzug';
 import logger from './logger';
 import config from './config';
+import { Admin, Student, User, Var } from '../models';
 
 const sequelize = new Sequelize(config.DATABASE_URL, {
   dialectOptions: {
@@ -14,6 +15,8 @@ const sequelize = new Sequelize(config.DATABASE_URL, {
         : null,
   },
 });
+
+sequelize.addModels([Admin, Student, User, Var]);
 
 const migrationConf = {
   migrations: {
