@@ -1,34 +1,28 @@
 import {
   Model,
-  DataTypes,
-  CreationOptional,
-  InferAttributes,
-  InferCreationAttributes,
-} from 'sequelize';
-import { sequelize } from '../utils/db';
+  DataType,
+  Column,
+  Default,
+  Table,
+  PrimaryKey,
+  AllowNull,
+} from 'sequelize-typescript';
 
-class Var extends Model<InferAttributes<Var>, InferCreationAttributes<Var>> {
-  declare varName: string;
-  declare value: CreationOptional<number>;
+// We may need to use timestamps here, for deubgging purposes.
+@Table({
+  timestamps: false,
+  underscored: true,
+  modelName: 'var',
+})
+class Var extends Model {
+  @PrimaryKey
+  @Column(DataType.STRING(24))
+  varName!: string;
+
+  @AllowNull(false)
+  @Default(1)
+  @Column(DataType.INTEGER)
+  value!: number;
 }
-Var.init(
-  {
-    varName: {
-      type: DataTypes.STRING(24),
-      primaryKey: true,
-    },
-    value: {
-      type: DataTypes.INTEGER(),
-      allowNull: false,
-      defaultValue: 1,
-    },
-  },
-  {
-    sequelize,
-    underscored: true,
-    timestamps: false,
-    modelName: 'var',
-  }
-);
 
 export default Var;

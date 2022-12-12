@@ -5,6 +5,10 @@ import cors from 'cors';
 import morgan from 'morgan';
 import passport from 'passport';
 import session from 'express-session';
+
+import { connectToDatabase } from './utils/db';
+import init from './utils/init';
+
 import config from './utils/config';
 import { unknownEndpoint, errorHandler } from './utils/middleware';
 
@@ -14,6 +18,14 @@ import studentRouter from './controllers/student';
 // import logger from './utils/logger';
 
 const app = express();
+
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
+connectToDatabase().then(() => {
+  init().catch((error) => {
+    // catch this in a better way?
+    console.error('Some error happened during initalizing DB', error);
+  });
+});
 
 app.use(
   session({
