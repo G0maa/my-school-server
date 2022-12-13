@@ -4,10 +4,14 @@ import { Class, Migration } from '../types';
 // These two functions get passed the context in migrationConf in db.js
 export const up: Migration = async ({ context: queryInterface }) => {
   await queryInterface.createTable('students', {
+    serial: {
+      type: DataTypes.INTEGER(),
+      primaryKey: true,
+      autoIncrement: true,
+    },
     user_id: {
       type: DataTypes.UUID(),
       allowNull: false,
-      primaryKey: true,
       references: { model: 'users', key: 'id' },
     },
     class: {

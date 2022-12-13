@@ -45,6 +45,11 @@ export const up: Migration = async ({ context: queryInterface }) => {
     created_at: DataTypes.DATE,
   });
   await queryInterface.createTable('admins', {
+    serial: {
+      type: DataTypes.INTEGER(),
+      primaryKey: true,
+      autoIncrement: true,
+    },
     user_id: {
       type: DataTypes.UUID(),
       allowNull: false,

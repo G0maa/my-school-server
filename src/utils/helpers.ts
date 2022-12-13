@@ -15,4 +15,15 @@ const verifyPassword = async (password: string, passwordHash: string) => {
 const generateRandomPassword = () => {
   return crypto.randomInt(100000, 999999).toString();
 };
-export { hashPassword, verifyPassword, generateRandomPassword };
+
+// Works only for student, for now.
+const generateSerialUsername = () => {
+  return 'TO-DO: Under Construction';
+};
+
+export {
+  hashPassword,
+  verifyPassword,
+  generateRandomPassword,
+  generateSerialUsername,
+};

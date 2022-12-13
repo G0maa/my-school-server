@@ -7,6 +7,7 @@ import {
   BelongsTo,
   ForeignKey,
   PrimaryKey,
+  AutoIncrement,
 } from 'sequelize-typescript';
 import User from './user';
 
@@ -17,6 +18,11 @@ import User from './user';
   modelName: 'admin',
 })
 class Admin extends Model {
+  @PrimaryKey
+  @AutoIncrement
+  @Column
+  serial!: number;
+
   @BelongsTo(() => User, { as: 'user' })
   @ForeignKey(() => User)
   @PrimaryKey

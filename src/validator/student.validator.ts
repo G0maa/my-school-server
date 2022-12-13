@@ -28,13 +28,19 @@ const Student = User.extend({
 // e.g. POST /api/student/
 // specific details about student, for whatever reason.
 // #Note: Verbose
-export const PostStudent = Student.pick({
+export const PostFullStudent = Student.pick({
   name: true,
   class: true,
   username: true,
   password: true,
   parentName: true,
   parentPhonenumber: true,
+});
+
+export const PostStudent = Student.pick({
+  class: true,
+  username: true,
+  password: true,
 });
 
 // verify that the type is what you want & use if if needed, somewhere.

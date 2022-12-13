@@ -16,10 +16,7 @@ beforeAll(async () => {
 
 // must not provide username & password as they're auto created.
 const dummyStudent: PostStudent = {
-  name: 'Gomaa',
   class: 'First',
-  parentName: 'Abdedlhady',
-  parentPhonenumber: '01013587921',
 };
 
 describe('CRUD of Student', () => {

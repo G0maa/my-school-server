@@ -11,8 +11,13 @@ import {
   Unique,
   IsEmail,
   HasOne,
+  BeforeCreate,
 } from 'sequelize-typescript';
 import { Role } from '../types';
+import {
+  generateRandomPassword,
+  generateSerialUsername,
+} from '../utils/helpers';
 import Admin from './admin';
 // import Student from './student';
 // import { sequelize } from '../utils/db';
@@ -70,6 +75,14 @@ class User extends Model {
 
   @UpdatedAt
   updatedAt!: Date;
+
+  @BeforeCreate
+  static createRecord = (instance: User) => {
+    if (instance.role === Role.Student) {
+      instance.username = generateSerialUsername();
+      instance.password = generateRandomPassword();
+    }
+  };
 }
 
 export default User;
