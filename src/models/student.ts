@@ -19,7 +19,6 @@ import User from './user';
   timestamps: false,
   underscored: true,
   modelName: 'student',
-  // initialAutoIncrement: '1', Doesn't exist on sequelize
 })
 class Student extends Model {
   @PrimaryKey

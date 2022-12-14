@@ -1,5 +1,7 @@
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
+// import { Student } from '../models';
+import { Student } from '../models';
 import config from './config';
 
 const hashPassword = async (password: string) => {
@@ -16,9 +18,19 @@ const generateRandomPassword = () => {
   return crypto.randomInt(100000, 999999).toString();
 };
 
+const formatUsername = (lastValue: number) => {
+  const temp = 'S0000';
+  const trimmed = temp.slice(0, temp.length - lastValue.toString().length);
+  return trimmed.concat(lastValue.toString());
+};
+
 // Works only for student, for now.
-const generateSerialUsername = () => {
-  return 'TO-DO: Under Construction';
+const generateSerialUsername = async () => {
+  // Again, if it's not a number = we are doomed.
+  let nextUsername: number = await Student.max('serial');
+  if (!nextUsername) nextUsername = 0;
+  nextUsername += 1;
+  return formatUsername(nextUsername);
 };
 
 export {

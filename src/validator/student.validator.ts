@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const StudentClass = z.enum(['First', 'Second', 'Third']);
+export const StudentClass = z.enum(['1', '2', '3']);
 export const Roles = z.enum(['Admin', 'Teacher', 'Student']);
 
 // id, name, email, username, password, role, isVerified, isReset
@@ -18,7 +18,7 @@ export type User = z.infer<typeof User>;
 
 // class, parentName, parentPhoneNumber
 // Weird way of setting defaults.
-const Student = User.extend({
+export const Student = User.extend({
   class: StudentClass,
   role: z.literal(Roles.enum.Student).default(Roles.enum.Student),
   parentName: z.string().max(64),
@@ -37,24 +37,15 @@ export const PostFullStudent = Student.pick({
   parentPhonenumber: true,
 });
 
+// To-DO: Refactor, to have an object user & a student user.
 export const PostStudent = Student.pick({
   class: true,
   username: true,
+  role: true,
   password: true,
+}).extend({
+  role: z.literal(Roles.enum.Student).default(Roles.enum.Student),
 });
 
 // verify that the type is what you want & use if if needed, somewhere.
 export type PostStudent = z.infer<typeof PostStudent>;
-
-// e.g. POST /api/admin/CreateStudent?accountsCount=50
-// jsut creates 50 new accounts.
-export const CreateStudent = Student.pick({
-  class: true,
-  role: true,
-});
-
-// type CreateStudent = z.infer<typeof CreateStudent>;
-
-// type User = z.infer<typeof User>;
-// export type ZpostStudent = z.infer<typeof postStudent>;
-// type StudentClass = z.infer<typeof StudentClass>;

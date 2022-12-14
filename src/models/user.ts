@@ -11,7 +11,7 @@ import {
   Unique,
   IsEmail,
   HasOne,
-  BeforeCreate,
+  BeforeValidate,
 } from 'sequelize-typescript';
 import { Role } from '../types';
 import {
@@ -51,6 +51,7 @@ class User extends Model {
 
   // Note: we generate usernames on code-level
   @AllowNull(false)
+  @Unique(true)
   @Column(DataType.STRING(5))
   username!: string;
 
@@ -76,10 +77,12 @@ class User extends Model {
   @UpdatedAt
   updatedAt!: Date;
 
-  @BeforeCreate
-  static createRecord = (instance: User) => {
-    if (instance.role === Role.Student) {
-      instance.username = generateSerialUsername();
+  @BeforeValidate
+  static assignUsernamePassword = async (instance: User) => {
+    if (!instance.username) {
+      if (instance.role === Role.Student) {
+        instance.username = await generateSerialUsername();
+      }
       instance.password = generateRandomPassword();
     }
   };

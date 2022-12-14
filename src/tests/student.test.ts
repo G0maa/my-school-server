@@ -15,18 +15,20 @@ beforeAll(async () => {
 });
 
 // must not provide username & password as they're auto created.
-const dummyStudent: PostStudent = {
-  class: 'First',
-};
+const dummyStudent = {
+  class: '1',
+} as PostStudent;
 
 describe('CRUD of Student', () => {
   test('POST new student', async () => {
     // const postStudent = await api
 
-    await api
+    const res = await api
       .post('/api/student')
       .set('Cookie', [sessionId])
       .send(dummyStudent)
       .expect(200);
+
+    console.log('Jest: res.body: ', res.body);
   });
 });

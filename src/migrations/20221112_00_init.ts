@@ -24,6 +24,7 @@ export const up: Migration = async ({ context: queryInterface }) => {
     username: {
       type: DataTypes.STRING(5), // Make it six for good measures? :D
       allowNull: false,
+      unique: true,
     },
     password: {
       type: DataTypes.STRING(64),

@@ -35,9 +35,14 @@ studentRouter.post(
     if (req.query['type'] == 'full') {
       return res.status(200).json({}).end();
     } else {
+      // So, this validates for both User & Student.
       const postStudent = PostStudent.parse(req.body);
-      const student = await User.create(postStudent);
-      console.log('postministudent', student);
+
+      // Then create each one separately.
+      // You CANT do it vice versa, i.e. create Student then User.
+      // Unless you can provide more parameters to sequelize hooks.
+      const user = await User.create(postStudent);
+      await user.$create('student', { id: user.id, class: postStudent.class });
     }
     return res.status(200).json({}).end();
   }
