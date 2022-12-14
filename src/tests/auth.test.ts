@@ -15,6 +15,7 @@ const wrongAdminCreds = {
 
 beforeAll(async () => {
   await initServer();
+  await api.get('/deleteAllRecords').expect(200);
 });
 
 describe('Try default Admin credentials', () => {

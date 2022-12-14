@@ -8,7 +8,7 @@ const api = supertest(app);
 let sessionId: string;
 beforeAll(async () => {
   await initServer();
-
+  await api.get('/deleteAllRecords').expect(200);
   // P.S: If this doesn't return a string, we are in deep trouple.
   sessionId = (await loginAdmin(api)) as string;
 

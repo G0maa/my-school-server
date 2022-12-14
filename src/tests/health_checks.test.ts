@@ -5,6 +5,7 @@ const api = supertest(app);
 
 beforeAll(async () => {
   await initServer();
+  await api.get('/deleteAllRecords').expect(200);
 });
 
 describe('Health checks', () => {
