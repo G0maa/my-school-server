@@ -19,14 +19,6 @@ import studentRouter from './controllers/student';
 
 const app = express();
 
-// eslint-disable-next-line @typescript-eslint/no-floating-promises
-connectToDatabase().then(() => {
-  init().catch((error) => {
-    // catch this in a better way?
-    console.error('Some error happened during initalizing DB', error);
-  });
-});
-
 app.use(
   session({
     secret: config.SECRET,
@@ -72,4 +64,9 @@ app.get('/api/failping', (_, response) => {
 app.use(unknownEndpoint);
 app.use(errorHandler);
 
-export default app;
+const initServer = async () => {
+  await connectToDatabase();
+  await init();
+};
+
+export { app, initServer };

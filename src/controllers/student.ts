@@ -43,8 +43,14 @@ studentRouter.post(
       // Unless you can provide more parameters to sequelize hooks.
       const user = await User.create(postStudent);
       await user.$create('student', { id: user.id, class: postStudent.class });
+
+      // 3rd one for actually giving student info to client.
+      const student = await User.findOne({
+        include: Student,
+        where: { id: user.id },
+      });
+      return res.status(200).json(student).end();
     }
-    return res.status(200).json({}).end();
   }
 );
 

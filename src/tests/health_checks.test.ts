@@ -1,7 +1,11 @@
 import supertest from 'supertest';
-import app from '../app';
+import { app, initServer } from '../app';
 
 const api = supertest(app);
+
+beforeAll(async () => {
+  await initServer();
+});
 
 describe('Health checks', () => {
   test('GET /api/ping works', async () => {
