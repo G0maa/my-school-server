@@ -1,8 +1,9 @@
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
-// import { Student } from '../models';
-import { Student } from '../models';
+import { sequelize } from './db';
 import config from './config';
+import { QueryTypes } from 'sequelize';
+import { ValidateRawQuery } from '../validator/student.validator';
 
 const hashPassword = async (password: string) => {
   const hashedPassword = await bcrypt.hash(password, config.SALT_ROUNDS);
@@ -26,11 +27,25 @@ const formatUsername = (lastValue: number) => {
 
 // Works only for student, for now.
 const generateSerialUsername = async () => {
-  // Again, if it's not a number = we are doomed.
-  let nextUsername: number = await Student.max('serial');
-  if (!nextUsername) nextUsername = 0;
-  nextUsername += 1;
-  return formatUsername(nextUsername);
+  // Need to refactor this sooner or later.
+  const rawQuery = await sequelize.query(
+    `SELECT max(last_value) as "lastValue", max(serial) as "maxSerial"
+     FROM students_serial_seq CROSS JOIN students`,
+    { type: QueryTypes.SELECT }
+  );
+  // console.log('rawQuery', rawQuery);
+
+  const rawQueryObj = ValidateRawQuery.parse(rawQuery);
+
+  // console.log('rawQueryObj', rawQueryObj);
+
+  let nextNum = parseInt(rawQueryObj[0].lastValue || '0');
+
+  // console.log('nextNum', nextNum);
+
+  if (!rawQueryObj[0].lastValue) nextNum = 0;
+  nextNum += 1;
+  return formatUsername(nextNum);
 };
 
 export {

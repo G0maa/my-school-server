@@ -22,15 +22,25 @@ const dummyStudent = {
 } as PostStudent;
 
 describe('CRUD of Student', () => {
-  test('POST new student', async () => {
+  test('POST & GET new student', async () => {
     // const postStudent = await api
 
-    const res = await api
+    let res = await api
       .post('/api/student')
       .set('Cookie', [sessionId])
       .send(dummyStudent)
       .expect(200);
 
+    await api
+      .post('/api/student')
+      .set('Cookie', [sessionId])
+      .send(dummyStudent)
+      .expect(200);
+
+    res = await api
+      .get(`/api/student/${res.body.id}`)
+      .set('Cookie', [sessionId])
+      .expect(200);
     console.log('Jest: res.body: ', res.body);
   });
 });

@@ -49,3 +49,10 @@ export const PostStudent = Student.pick({
 
 // verify that the type is what you want & use if if needed, somewhere.
 export type PostStudent = z.infer<typeof PostStudent>;
+
+export const ValidateRawQuery = z.tuple([
+  z.object({
+    lastValue: z.string().nullable().optional(),
+    maxSerial: z.number().nullable().optional(),
+  }),
+]);

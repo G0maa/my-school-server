@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import express from 'express';
-import { Student } from '../models';
+import { Student, User } from '../models';
+import { Op } from 'sequelize';
 import { isAuthenticated } from '../utils/middleware';
 const devRouter = express.Router();
 
 devRouter.get('/deleteAllRecords', async (_req, res) => {
   await Student.destroy({ where: {} });
+  await User.destroy({ where: { username: { [Op.like]: 'S%' } } });
   return res.status(200).end();
 });
 

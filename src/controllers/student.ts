@@ -21,7 +21,7 @@ studentRouter.get(
 );
 
 studentRouter.get('/:id', isAuthenticated, async (req, res) => {
-  const query = await Student.findOne({ where: { id: req.params.id } });
+  const query = await Student.findOne({ where: { userId: req.params.id } });
   return res.status(200).json(query).end();
 });
 
