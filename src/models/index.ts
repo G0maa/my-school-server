@@ -1,8 +1,12 @@
 import User from './user';
 import Admin from './admin';
+import Student from './student';
 
-// Default FK is <table_name>_id
-User.hasOne(Admin);
-Admin.belongsTo(User);
+// One-To-One Relationships
+// User.hasOne(Admin);
+// Admin.belongsTo(User);
 
-export { User, Admin };
+// User.hasOne(Student);
+// Student.belongsTo(User);
+
+export { User, Admin, Student };

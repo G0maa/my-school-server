@@ -1,5 +1,5 @@
 import supertest from 'supertest';
-import app from '../app';
+import { app, initServer } from '../app';
 
 const api = supertest(app);
 
@@ -12,6 +12,11 @@ const wrongAdminCreds = {
   username: 'A0002',
   password: '000000',
 };
+
+beforeAll(async () => {
+  await initServer();
+  await api.get('/deleteAllRecords').expect(200);
+});
 
 describe('Try default Admin credentials', () => {
   test('Status 200 When correct credentials & Gives back correct user info', async () => {

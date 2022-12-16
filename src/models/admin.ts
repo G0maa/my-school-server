@@ -1,22 +1,34 @@
-import { Model, DataTypes } from 'sequelize';
-import { sequelize } from '../utils/db';
+import {
+  Table,
+  Model,
+  DataType,
+  Column,
+  AllowNull,
+  BelongsTo,
+  ForeignKey,
+  PrimaryKey,
+  AutoIncrement,
+} from 'sequelize-typescript';
+import User from './user';
 
-class Admin extends Model {}
-Admin.init(
-  {
-    userId: {
-      type: DataTypes.UUID(),
-      allowNull: false,
-      primaryKey: true,
-      references: { model: 'users', key: 'user_id' },
-    },
-  },
-  {
-    sequelize,
-    underscored: true,
-    timestamps: false,
-    modelName: 'admin',
-  }
-);
+// #Bug, sequelize creates id by default & is autoincremented, that's why tere's PK
+@Table({
+  timestamps: false,
+  underscored: true,
+  modelName: 'admin',
+})
+class Admin extends Model {
+  @PrimaryKey
+  @AutoIncrement
+  @Column
+  serial!: number;
+
+  @BelongsTo(() => User, { as: 'user' })
+  @ForeignKey(() => User)
+  @PrimaryKey
+  @AllowNull(false)
+  @Column(DataType.UUID)
+  userId!: string;
+}
 
 export default Admin;

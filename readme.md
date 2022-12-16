@@ -30,10 +30,15 @@
 
 ## Decisions:
 
-- Use of a [3rd-pary auth service](https://youtu.be/Hh_kiZTTBr0), mainly AWS Cognito.
-  - DIY? How hard is it?
-  - To try: [PassportJS](https://www.passportjs.org/)
-  - Honoranble mentions "Open-source" (you can host it yourself) auth services e.g. Ory Hydra.
+- Use of AWS's Infrastructure as opposed to VPS or a group of containers generally.
+- Using Angular for Frontend.
+- Not using a _proper_ framework for Backend. (or both FE & BE)
+- Use of `PassportJS` for authentication as opposed to 3rd party auth services (e.g. AWS Cognito) & open source ones (e.g. Ory Hydra).
+- How to store files?
+  - Server storage ✅ (for now), AWS S3, MinIO, OpenStack Swift
+- Validating input (and possibily sanitizing?)
+  - express-validator (very JS), runtypes, zod ✅ (puerly based on it being most used), others...
+- Starting with `sequelize`, then ?eventually? switching to `sequelize-typescript`.
 
 ## Problem(s):
 
@@ -42,6 +47,7 @@
     - `api.my-school.software`, `www.my-school.software` & allow CORS ✅
     - Erm... CSRF with different domains?... or anything generally with different subdomains
 - `ESLint` doesn't produce a warnging after using `console.log`, investigate.
+- Types of sequelize != types of zod != types of ???
 
 ## To-Dos: ✅❌❓
 
@@ -52,3 +58,4 @@
   - Find a way to put model typing in `types.ts`
 - Think about validation.
 - [envalid](https://www.npmjs.com/package/envalid)
+- You validated the input, now to sanitize it?

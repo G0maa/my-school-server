@@ -11,15 +11,13 @@ const init = async () => {
 
   const passwordHash = await hashPassword('000000');
 
-  // new Admin({}); Admin.save();
   const admin = await User.create({
     username: 'A0001',
     password: passwordHash,
     role: Role.Admin,
   });
 
-  // This or use sequelize-hooks
-  await admin.createAdmin();
+  await admin.$create('Admin', admin);
 };
 
 export default init;
