@@ -13,16 +13,12 @@ import {
   HasOne,
   BeforeValidate,
 } from 'sequelize-typescript';
-import { Role } from '../types';
+import { BloodGroups, Gender, Role } from '../types';
 import {
   generateRandomPassword,
   generateSerialUsername,
 } from '../utils/helpers';
 import Admin from './admin';
-// import Student from './student';
-// import { sequelize } from '../utils/db';
-// import { Role } from '../types';
-// import Admin from './admin';
 import Student from './student';
 
 // id, name, email, username, password, role, isVerified, isReset
@@ -41,7 +37,35 @@ class User extends Model {
 
   @AllowNull(true)
   @Column(DataType.STRING(64))
-  name!: string;
+  firstName!: string;
+
+  @AllowNull(true)
+  @Column(DataType.STRING(64))
+  lastName!: string;
+
+  @AllowNull(true)
+  @Column(DataType.ENUM(...Object.values(Gender)))
+  gender!: Gender;
+
+  @AllowNull(true)
+  @Column(DataType.STRING(20))
+  mobile!: string;
+
+  @AllowNull(true)
+  @Column
+  registerDate!: Date;
+
+  @AllowNull(true)
+  @Column
+  dateOfBirth!: Date;
+
+  @AllowNull(true)
+  @Column(DataType.STRING(64))
+  address!: string;
+
+  @AllowNull(true)
+  @Column(DataType.ENUM(...Object.values(BloodGroups)))
+  bloodGroup!: BloodGroups;
 
   @AllowNull(true)
   @Unique(true)

@@ -23,6 +23,28 @@ export enum Class {
   Third = '3',
 }
 
+export enum Gender {
+  Male = 'Male',
+  Female = 'Female',
+}
+
+export enum BloodGroups {
+  OPos = 'O+',
+  ONeg = 'O-',
+  APos = 'A+',
+  ANeg = 'A-',
+  BPos = 'B+',
+  BNeg = 'B-',
+  ABPos = 'AB+',
+  ABNeg = 'AB-',
+}
+
+export enum EducationTypes {
+  Sciences = 'Sceiences',
+  Literature = 'Literature',
+  Other = 'Other',
+}
+
 export type UserType = InferAttributes<User>;
 
 export interface SerializedUser {

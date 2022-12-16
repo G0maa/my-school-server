@@ -10,7 +10,7 @@ import {
   PrimaryKey,
   AutoIncrement,
 } from 'sequelize-typescript';
-import { Class } from '../types';
+import { Class, EducationTypes } from '../types';
 
 import User from './user';
 
@@ -35,6 +35,10 @@ class Student extends Model {
   @AllowNull(false)
   @Column(DataType.ENUM(...Object.values(Class)))
   class!: Class;
+
+  @AllowNull(true)
+  @Column(DataType.ENUM(...Object.values(EducationTypes)))
+  educationType!: EducationTypes;
 
   @AllowNull(true)
   @Column(DataType.STRING(64))

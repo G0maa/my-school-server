@@ -48,7 +48,7 @@ const connectToDatabase = async () => {
     logger.info('Successfully connected to PostgreSQL & Applied migrations.');
   } catch (error) {
     logger.error(error);
-    throw new Error('Failed to connect to PostgreSQL');
+    throw new Error('Failed to connect to PostgreSQL or Apply Migrations.');
   }
   return null;
 };

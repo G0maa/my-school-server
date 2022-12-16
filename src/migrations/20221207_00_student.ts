@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize';
-import { Class, Migration } from '../types';
+import { Migration } from '../types';
 
 // These two functions get passed the context in migrationConf in db.js
 export const up: Migration = async ({ context: queryInterface }) => {
@@ -13,10 +13,6 @@ export const up: Migration = async ({ context: queryInterface }) => {
       type: DataTypes.UUID(),
       allowNull: false,
       references: { model: 'users', key: 'id' },
-    },
-    class: {
-      type: DataTypes.ENUM(...Object.values(Class)),
-      allowNull: true,
     },
     parent_name: {
       type: DataTypes.STRING(64),

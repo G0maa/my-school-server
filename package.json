@@ -33,7 +33,7 @@
     "sequelize": "^6.26.0",
     "sequelize-typescript": "^2.1.5",
     "umzug": "^3.2.1",
-    "zod": "^3.19.1"
+    "zod": "^3.20.2"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",

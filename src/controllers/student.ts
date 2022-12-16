@@ -5,7 +5,7 @@ import { Student, User } from '../models';
 import { Role } from '../types';
 // import { generateRandomPassword } from '../utils/helpers';
 import { setAuthorizedRoles, isAuthenticated } from '../utils/middleware';
-import { PostStudent } from '../validator/student.validator';
+import { PostFullStudent, PostStudent } from '../validator/student.validator';
 
 const studentRouter = express.Router();
 
@@ -33,7 +33,19 @@ studentRouter.post(
   async (req: Request, res: Response) => {
     // const [name, studentClass, parentName, parentPhonenumber] = req.body;
     if (req.query['type'] == 'full') {
-      return res.status(200).json({}).end();
+      const postFullStudent = PostFullStudent.parse(req.body);
+
+      const user = await User.create(postFullStudent);
+      await user.$create('student', {
+        id: user.id,
+        class: postFullStudent.class,
+        role: postFullStudent.role,
+        educationType: postFullStudent.educationType,
+        parentName: postFullStudent.parentName,
+        parentPhonenumber: postFullStudent.parentPhonenumber,
+      });
+
+      return res.status(200).json(user).end();
     } else {
       // So, this validates for both User & Student.
       const postStudent = PostStudent.parse(req.body);
