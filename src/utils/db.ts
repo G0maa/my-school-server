@@ -35,10 +35,17 @@ const runMigrations = async () => {
   });
 };
 
+// #17 Need to hang this laundry
 const rollbackMigration = async () => {
   await sequelize.authenticate();
   const migrator = new Umzug(migrationConf);
   await migrator.down();
+};
+
+const rollbackAllMigrations = async () => {
+  await sequelize.authenticate();
+  const migrator = new Umzug(migrationConf);
+  await migrator.down({ to: 0 });
 };
 
 const connectToDatabase = async () => {
@@ -53,4 +60,10 @@ const connectToDatabase = async () => {
   return null;
 };
 
-export { sequelize, connectToDatabase, rollbackMigration, runMigrations };
+export {
+  sequelize,
+  connectToDatabase,
+  rollbackMigration,
+  runMigrations,
+  rollbackAllMigrations,
+};
