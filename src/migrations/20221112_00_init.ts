@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize';
-import { Migration } from '../types';
+import { BloodGroups, Gender, Migration, Role } from '../types';
 
 // These two functions get passed the context in migrationConf in db.js
 export const up: Migration = async ({ context: queryInterface }) => {
@@ -16,6 +16,18 @@ export const up: Migration = async ({ context: queryInterface }) => {
     last_name: {
       type: DataTypes.STRING(64),
       allowNull: true,
+    },
+    gender: {
+      type: DataTypes.ENUM(...Object.values(Gender)),
+      allowNull: true,
+    },
+    blood_group: {
+      type: DataTypes.ENUM(...Object.values(BloodGroups)),
+      allowNull: true,
+    },
+    role: {
+      type: DataTypes.ENUM(...Object.values(Role)),
+      allowNull: false,
     },
     email: {
       type: DataTypes.STRING(64),
@@ -74,7 +86,16 @@ export const up: Migration = async ({ context: queryInterface }) => {
     },
   });
 };
+
+// There's a bug when you use dropTable without empty options object,
+// normal dropTable does not delete ENUMS, so I'm keeping this raw query:
+// await queryInterface.sequelize.query('DROP TYPE [IF EXISTS] enum_users_blood_group');
 export const down: Migration = async ({ context: queryInterface }) => {
-  await queryInterface.dropTable('admins');
-  await queryInterface.dropTable('users');
+  await queryInterface.dropTable('admins', {});
+  await queryInterface.dropTable('users', {});
+  await queryInterface.sequelize.query('DROP TYPE IF EXISTS enum_users_gender');
+  await queryInterface.sequelize.query(
+    'DROP TYPE IF EXISTS enum_users_blood_group'
+  );
+  await queryInterface.sequelize.query('DROP TYPE IF EXISTS enum_users_role');
 };
