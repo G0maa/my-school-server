@@ -26,11 +26,11 @@ const formatUsername = (lastValue: number) => {
 };
 
 // Works only for student, for now.
-const generateSerialUsername = async () => {
+const generateSerialUsername = async (tableName: string) => {
   // Need to refactor this sooner or later.
   const rawQuery = await sequelize.query(
     `SELECT max(last_value) as "lastValue", max(serial) as "maxSerial"
-     FROM students_serial_seq CROSS JOIN students`,
+     FROM ${tableName}_serial_seq CROSS JOIN ${tableName}`,
     { type: QueryTypes.SELECT }
   );
   // console.log('rawQuery', rawQuery);

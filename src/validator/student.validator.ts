@@ -17,7 +17,7 @@ export const BloodGroups = z.enum([
 export const EducationTypes = z.enum(['Sceiences', 'Literature', 'Other']);
 
 // id, name, email, username, password, role, isVerified, isReset
-const User = z.object({
+export const User = z.object({
   id: z.string().uuid(),
   firstName: z.string().max(64),
   lastName: z.string().max(64),

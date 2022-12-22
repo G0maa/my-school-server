@@ -20,6 +20,7 @@ import {
 } from '../utils/helpers';
 import Admin from './admin';
 import Student from './student';
+import Teacher from './teacher';
 
 // id, name, email, username, password, role, isVerified, isReset
 @Table({
@@ -31,6 +32,7 @@ class User extends Model {
   @PrimaryKey
   @HasOne(() => Student, { as: 'student' })
   @HasOne(() => Admin, { as: 'admin' })
+  @HasOne(() => Teacher, { as: 'teacher' })
   @Default(DataType.UUIDV4)
   @Column(DataType.UUID)
   id!: string;
@@ -104,9 +106,9 @@ class User extends Model {
   @BeforeValidate
   static assignUsernamePassword = async (instance: User) => {
     if (!instance.username) {
-      if (instance.role === Role.Student) {
-        instance.username = await generateSerialUsername();
-      }
+      const tableName = instance.role.toLowerCase().concat('s');
+
+      instance.username = await generateSerialUsername(tableName);
       instance.password = generateRandomPassword();
     }
   };
