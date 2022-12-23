@@ -14,10 +14,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
-      - name: Running ESlint
-        run: npm run eslint
-      - name: Running Prettieri
-        run: npm run prettier
       - name: Installing Dependencies
         run: npm install
+      - name: Running ESlint
+        run: npm run eslint
+      - name: Running Prettier
+        run: npm run prettier
 
