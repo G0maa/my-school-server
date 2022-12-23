@@ -19,13 +19,13 @@ const generateRandomPassword = () => {
   return crypto.randomInt(100000, 999999).toString();
 };
 
-const formatUsername = (lastValue: number) => {
-  const temp = 'S0000';
+const formatUsername = (lastValue: number, tableName: string) => {
+  const firstLetter = tableName[0].toUpperCase();
+  const temp = firstLetter.concat('0000');
   const trimmed = temp.slice(0, temp.length - lastValue.toString().length);
   return trimmed.concat(lastValue.toString());
 };
 
-// Works only for student, for now.
 const generateSerialUsername = async (tableName: string) => {
   // Need to refactor this sooner or later.
   const rawQuery = await sequelize.query(
@@ -45,7 +45,7 @@ const generateSerialUsername = async (tableName: string) => {
 
   if (!rawQueryObj[0].lastValue) nextNum = 0;
   nextNum += 1;
-  return formatUsername(nextNum);
+  return formatUsername(nextNum, tableName);
 };
 
 export {
