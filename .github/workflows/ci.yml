@@ -1,0 +1,32 @@
+name: Continuous Integration Pipeline
+
+on:
+  push:
+    branches:
+      - master # or main
+  pull_request:
+    branches: [master]
+    types: [opened, synchronize]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+      - name: Installing Dependencies
+        run: npm install
+      - name: Running ESlint
+        run: npm run eslint
+      - name: Running Prettier
+        run: npm run prettier
+      - name: Checking Git Status
+        run: git status
+      - name: Renaming .sample.env to .env
+        run: mv .sample.env .env
+      - name: Starting Docker DB Container
+        run: npm run ci:docker
+      - name: Running API Tests
+        run: npm run ci:test
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3

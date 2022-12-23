@@ -8,3 +8,4 @@ A&D - MVP.md
 out/
 test.ts
 package-lock.json
+coverage/
