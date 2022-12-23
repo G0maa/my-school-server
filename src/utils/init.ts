@@ -17,7 +17,22 @@ const init = async () => {
     role: Role.Admin,
   });
 
-  await admin.$create('Admin', admin);
+  const student = await User.create({
+    username: 'S0001',
+    password: passwordHash,
+    role: Role.Student,
+    class: '1',
+  });
+
+  const teacher = await User.create({
+    username: 'T0001',
+    password: passwordHash,
+    role: Role.Student,
+  });
+
+  await admin.$create('admin', { id: admin.id });
+  await student.$create('student', { id: student.id, class: '1' });
+  await teacher.$create('teacher', { id: teacher.id });
 };
 
 export default init;

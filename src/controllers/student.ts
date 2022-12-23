@@ -21,7 +21,10 @@ studentRouter.get(
 );
 
 studentRouter.get('/:id', isAuthenticated, async (req, res) => {
-  const query = await Student.findOne({ where: { userId: req.params.id } });
+  const query = await Student.findOne({
+    include: User,
+    where: { userId: req.params.id },
+  });
   return res.status(200).json(query).end();
 });
 
@@ -57,6 +60,7 @@ studentRouter.post(
       await user.$create('student', { id: user.id, class: postStudent.class });
 
       // 3rd one for actually giving student info to client.
+      // #fix
       const student = await User.findOne({
         include: Student,
         where: { id: user.id },

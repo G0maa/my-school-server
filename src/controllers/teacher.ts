@@ -4,7 +4,7 @@ import express, { Request, Response } from 'express';
 import { Teacher, User } from '../models';
 import { Role } from '../types';
 import { setAuthorizedRoles, isAuthenticated } from '../utils/middleware';
-import { PostTeacher } from '../validator/teacher.validator';
+import { PostFullTeacher, PostTeacher } from '../validator/teacher.validator';
 
 const teacherRouter = express.Router();
 
@@ -20,18 +20,30 @@ teacherRouter.get(
 );
 
 teacherRouter.get('/:id', isAuthenticated, async (req, res) => {
-  const query = await Teacher.findOne({ where: { userId: req.params.id } });
+  const query = await Teacher.findOne({
+    include: User,
+    where: { userId: req.params.id },
+  });
   return res.status(200).json(query).end();
 });
 
-// Very broken route, will fix eventually.
+// Remains for Teacher: doing this the correct way.
 teacherRouter.post(
   '/',
   setAuthorizedRoles([Role.Admin]),
   isAuthenticated,
   async (req: Request, res: Response) => {
     if (req.query['type'] == 'full') {
-      return res.status(200).json({ msg: 'todo' }).end();
+      const postFullTeacher = PostFullTeacher.parse(req.body);
+
+      const user = await User.create(postFullTeacher);
+      await user.$create('teacher', {
+        id: user.id,
+        education: postFullTeacher.education,
+        department: postFullTeacher.department,
+      });
+
+      return res.status(200).json(user).end();
     } else {
       // So, this validates for both User & Student.
       const postTeacher = PostTeacher.parse(req.body);

@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import express from 'express';
-import { Student, Teacher, User } from '../models';
-import { Op } from 'sequelize';
 import { isAuthenticated } from '../utils/middleware';
+import { rollbackAllMigrations } from '../utils/db';
+import init from '../utils/init';
+
 const devRouter = express.Router();
 
 devRouter.get('/deleteAllRecords', async (_req, res) => {
-  await Student.destroy({ where: {} });
-  await Teacher.destroy({ where: {} });
-  await User.destroy({ where: { username: { [Op.like]: 'S%' } } });
+  await rollbackAllMigrations();
+  await init();
   return res.status(200).end();
 });
 

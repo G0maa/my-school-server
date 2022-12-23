@@ -3,7 +3,7 @@ import { User, Roles } from './student.validator';
 
 export const Teacher = User.extend({
   department: z.string().max(64),
-  edication: z.string().max(64),
+  education: z.string().max(64),
 });
 
 export const PostTeacher = Teacher.pick({
@@ -14,3 +14,12 @@ export const PostTeacher = Teacher.pick({
   role: z.literal(Roles.enum.Teacher).default(Roles.enum.Teacher),
 });
 export type PostTeacher = z.infer<typeof PostTeacher>;
+
+export const PostFullTeacher = Teacher.omit({
+  id: true,
+  isVerified: true,
+  isReset: true,
+}).extend({
+  role: z.literal(Roles.enum.Teacher).default(Roles.enum.Teacher),
+});
+export type PostFullTeacher = z.infer<typeof PostFullTeacher>;
