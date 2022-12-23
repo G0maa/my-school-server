@@ -9,15 +9,35 @@ const init = async () => {
     return;
   }
 
-  const passwordHash = await hashPassword('000000');
+  const password = '000000';
+  const hashedPassword = await hashPassword(password);
 
+  // this is solely for the purpose of testing if the user has a hashed password.
+  // also #bug, isReset logic is illogical, if true => user can & should reset,
+  // if false => user cannot reset.
   const admin = await User.create({
     username: 'A0001',
-    password: passwordHash,
+    password: hashedPassword,
     role: Role.Admin,
+    isReset: true,
   });
 
-  await admin.$create('Admin', admin);
+  const student = await User.create({
+    username: 'S0001',
+    password,
+    role: Role.Student,
+    class: '1',
+  });
+
+  const teacher = await User.create({
+    username: 'T0001',
+    password,
+    role: Role.Teacher,
+  });
+
+  await admin.$create('admin', { id: admin.id });
+  await student.$create('student', { id: student.id, class: '1' });
+  await teacher.$create('teacher', { id: teacher.id });
 };
 
 export default init;

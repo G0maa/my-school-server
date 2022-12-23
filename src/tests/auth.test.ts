@@ -1,22 +1,14 @@
 import supertest from 'supertest';
-import { app, initServer } from '../app';
+import { app } from '../app';
+import { Role } from '../types';
 
 const api = supertest(app);
 
-const adminCreds = {
-  username: 'A0001',
-  password: '000000',
-};
-
-const wrongAdminCreds = {
-  username: 'A0002',
-  password: '000000',
-};
-
-beforeAll(async () => {
-  await initServer();
-  await api.get('/deleteAllRecords').expect(200);
-});
+// #17 WET Code
+const adminCreds = { username: 'A0001', password: '000000' };
+const studentCreds = { username: 'S0001', password: '000000' };
+const teacherCreds = { username: 'T0001', password: '000000' };
+const wrongAdminCreds = { username: 'A0002', password: '000000' };
 
 describe('Try default Admin credentials', () => {
   test('Status 200 When correct credentials & Gives back correct user info', async () => {
@@ -30,7 +22,37 @@ describe('Try default Admin credentials', () => {
       role: 'Admin',
     });
   });
+});
 
+describe('Trying with default Student Credentials', () => {
+  test('Status 200 When correct credentials & Gives back correct user info', async () => {
+    const response = await api
+      .post('/api/auth/login')
+      .send(studentCreds)
+      .expect(200);
+
+    expect(response.body).toMatchObject({
+      username: 'S0001',
+      role: Role.Student,
+    });
+  });
+});
+
+describe('Trying with default Teacher Credentials', () => {
+  test('Status 200 When correct credentials & Gives back correct user info', async () => {
+    const response = await api
+      .post('/api/auth/login')
+      .send(teacherCreds)
+      .expect(200);
+
+    expect(response.body).toMatchObject({
+      username: 'T0001',
+      role: Role.Teacher,
+    });
+  });
+});
+
+describe('Trying evil scenarios', () => {
   test('Session data presists in Server', async () => {
     const response = await api
       .post('/api/auth/login')
@@ -48,7 +70,7 @@ describe('Try default Admin credentials', () => {
 
     expect(getInfo.body).toMatchObject({
       username: 'A0001',
-      role: 'Admin',
+      role: Role.Admin,
     });
   });
 

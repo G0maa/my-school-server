@@ -21,7 +21,17 @@ passport.use(
         return callback(null, false, {
           message: 'Incorrect username or password',
         });
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+
+      // If user didn't reset his password on the first login,
+      // then the password is saved as plain-text
+      if (!user.isReset) {
+        if (password !== user.password)
+          return callback(null, false, {
+            message: 'Incorrect username or password',
+          });
+        else return callback(null, user.dataValues);
+      }
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises, @typescript-eslint/no-unsafe-argument
       verifyPassword(password, user.dataValues.password).then(
         (isPasswordCorrect) => {
           if (!isPasswordCorrect)

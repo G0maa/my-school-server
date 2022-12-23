@@ -1,7 +1,7 @@
 import supertest from 'supertest';
 import { app } from '../app';
-import { PostFullStudent, PostStudent } from '../validator/student.validator';
 import { loginAdmin } from './helpers';
+import { PostTeacher } from '../validator/teacher.validator';
 
 const api = supertest(app);
 
@@ -13,12 +13,8 @@ beforeAll(async () => {
 });
 
 // must not provide username & password as they're auto created.
-const dummyStudent: PostStudent = {
-  class: '1',
-} as PostStudent;
-
-// TS doesn't recognize that role is automatically created.
-const fullStudent = {
+const dummyTeacher: PostTeacher = {} as PostTeacher;
+const fullTeacher = {
   firstName: 'Mohammed',
   lastName: 'Gomaa',
   gender: 'Male',
@@ -27,47 +23,45 @@ const fullStudent = {
   dateOfBirth: new Date('1995-01-01'),
   bloodGroup: 'O+',
   address: 'Egypt',
-  email: 'example@example.com',
-  class: '1',
-  educationType: 'Sceiences',
-  parentName: 'Gomaa',
-  parentPhonenumber: 'Mohammed',
-} as PostFullStudent;
+  email: 'exampleTeacher@example.com', // email is unique in table users
+  department: 'CS',
+  education: 'HTI',
+};
 
-describe('CRUD of Student', () => {
-  test('POST & GET simpleified student', async () => {
-    // const postStudent = await api
-
+describe('CRUD of Teacher', () => {
+  test('POST & GET simpleified Teacher', async () => {
+    // Two requests for testing that the
+    // serialization of username works correctly
     await api
-      .post('/api/student')
+      .post('/api/teacher')
       .set('Cookie', [sessionId])
-      .send(dummyStudent)
+      .send(dummyTeacher)
       .expect(200);
 
     const res = await api
-      .post('/api/student')
+      .post('/api/teacher')
       .set('Cookie', [sessionId])
-      .send(dummyStudent)
+      .send(dummyTeacher)
       .expect(200);
 
     const get = await api
-      .get(`/api/student/${res.body.id}`)
+      .get(`/api/teacher/${res.body.id}`)
       .set('Cookie', [sessionId])
       .expect(200);
 
-    expect(get.body.user.role).toMatch('Student');
-    expect(get.body.user.username).toEqual('S0003');
+    expect(get.body.user.role).toMatch('Teacher');
+    expect(get.body.user.username).toEqual('T0003');
   });
 
-  test('POST & GET full student', async () => {
+  test('POST & GET full teacher', async () => {
     const res = await api
-      .post('/api/student?type=full')
+      .post('/api/teacher?type=full')
       .set('Cookie', [sessionId])
-      .send(fullStudent)
+      .send(fullTeacher)
       .expect(200);
 
     await api
-      .get(`/api/student/${res.body.id}`)
+      .get(`/api/teacher/${res.body.id}`)
       .set('Cookie', [sessionId])
       .expect(200);
   });
