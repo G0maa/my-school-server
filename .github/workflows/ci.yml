@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
       - name: Running ESlint
-        run: npm run elsint
+        run: npm run eslint
       - name: Running Prettieri
         run: npm run prettier
       - name: Installing Dependencies
