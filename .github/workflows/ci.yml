@@ -1,0 +1,23 @@
+name: Continuous Integration Pipeline
+
+on:
+  push:
+    branches:
+      - master # or main
+  pull_request:
+    branches: [master]
+    types: [opened, synchronize]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+      - name: Running ESlint
+        run: npm run elsint
+      - name: Running Prettieri
+        run: npm run prettier
+      - name: Installing Dependencies
+        run: npm install
+
