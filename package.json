@@ -15,7 +15,8 @@
     "eslint": "npx eslint ./src/**/*.ts",
     "prettier": "npx prettier --check ./src/**/*.ts",
     "test": "jest --verbose --runInBand --forceExit",
-    "docker:ci": "docker compose -f postgres-compose.yml up -d"
+    "ci:docker": "docker compose -f postgres-compose.yml up -d",
+    "ci:test": "jest --silent --verbose --runInBand --forceExit"
   },
   "author": "g0maa",
   "license": "ISC",
