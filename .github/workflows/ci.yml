@@ -28,3 +28,5 @@ jobs:
         run: npm run ci:docker
       - name: Running API Tests
         run: npm run ci:test
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
