@@ -20,4 +20,9 @@ jobs:
         run: npm run eslint
       - name: Running Prettier
         run: npm run prettier
-
+      - name: Renaming .sample.env to .env
+        run: mv .sample.env .env
+      - name: Starting Docker DB Container
+        run: npm run docker:ci
+      - name: Running API Tests
+        run: npm run test
