@@ -10,6 +10,14 @@ import { AnyZodObject } from 'zod';
 import { Role } from '../types';
 import logger from './logger';
 
+const requestLogger = (req: Request, _res: Response, next: NextFunction) => {
+  logger.info('Method:', req.method);
+  logger.info('Path:  ', req.path);
+  logger.info('Body:  ', req.body);
+  logger.info('---');
+  next();
+};
+
 const setAuthorizedRoles = (allowedRoles: Role[]) => {
   return (req: Request, _res: Response, next: NextFunction) => {
     req.allowedRoles = allowedRoles;
@@ -81,4 +89,5 @@ export {
   isAuthenticated,
   setAuthorizedRoles,
   validate,
+  requestLogger,
 };

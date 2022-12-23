@@ -16,6 +16,7 @@ import devRouter from './controllers/dev';
 import loginRouter from './controllers/auth';
 import studentRouter from './controllers/student';
 import teacherRouter from './controllers/teacher';
+import { requestLogger } from './utils/middleware';
 // import logger from './utils/logger';
 
 const app = express();
@@ -47,6 +48,7 @@ app.use(express.json());
 
 // Unsure about the cause of this...
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+if (config.NODE_ENV !== 'PROD') app.use(requestLogger);
 app.use(morgan('tiny'));
 
 if (config.NODE_ENV !== 'PROD') app.use('/', devRouter);
