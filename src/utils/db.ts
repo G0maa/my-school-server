@@ -3,6 +3,7 @@ import { Umzug, SequelizeStorage } from 'umzug';
 import logger from './logger';
 import config from './config';
 import { Admin, Student, Teacher, User } from '../models';
+import Subject from '../models/subject';
 
 const sequelize = new Sequelize(config.DATABASE_URL, {
   dialectOptions: {
@@ -16,7 +17,7 @@ const sequelize = new Sequelize(config.DATABASE_URL, {
   },
 });
 
-sequelize.addModels([Admin, Student, User, Teacher]);
+sequelize.addModels([Admin, Student, User, Teacher, Subject]);
 
 const migrationConf = {
   migrations: {

@@ -17,6 +17,7 @@ import loginRouter from './controllers/auth';
 import studentRouter from './controllers/student';
 import teacherRouter from './controllers/teacher';
 import { requestLogger } from './utils/middleware';
+import subjectRouter from './controllers/subject';
 // import logger from './utils/logger';
 
 const app = express();
@@ -56,6 +57,7 @@ if (config.NODE_ENV !== 'PROD') app.use('/', devRouter);
 app.use('/api/auth/', loginRouter);
 app.use('/api/student/', studentRouter);
 app.use('/api/teacher/', teacherRouter);
+app.use('/api/subject/', subjectRouter);
 
 app.get('/api/ping', (_, response) => {
   response.send('<p>pong</p>');
