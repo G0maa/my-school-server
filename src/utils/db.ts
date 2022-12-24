@@ -4,6 +4,7 @@ import logger from './logger';
 import config from './config';
 import { Admin, Student, Teacher, User } from '../models';
 import Subject from '../models/subject';
+import StudyClass from '../models/class';
 
 const sequelize = new Sequelize(config.DATABASE_URL, {
   dialectOptions: {
@@ -17,7 +18,7 @@ const sequelize = new Sequelize(config.DATABASE_URL, {
   },
 });
 
-sequelize.addModels([Admin, Student, User, Teacher, Subject]);
+sequelize.addModels([Admin, Student, User, Teacher, Subject, StudyClass]);
 
 const migrationConf = {
   migrations: {
