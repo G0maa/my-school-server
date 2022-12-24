@@ -4,6 +4,7 @@ import { loginAdmin } from './helpers';
 import { PostTeacher } from '../validator/teacher.validator';
 
 const api = supertest(app);
+const teacherRoute = '/api/teacher/';
 
 let sessionId: string;
 beforeAll(async () => {
@@ -33,19 +34,19 @@ describe('CRUD of Teacher', () => {
     // Two requests for testing that the
     // serialization of username works correctly
     await api
-      .post('/api/teacher')
+      .post(teacherRoute)
       .set('Cookie', [sessionId])
       .send(dummyTeacher)
       .expect(200);
 
     const res = await api
-      .post('/api/teacher')
+      .post(teacherRoute)
       .set('Cookie', [sessionId])
       .send(dummyTeacher)
       .expect(200);
 
     const get = await api
-      .get(`/api/teacher/${res.body.id}`)
+      .get(`${teacherRoute}${res.body.id}`)
       .set('Cookie', [sessionId])
       .expect(200);
 
@@ -55,13 +56,13 @@ describe('CRUD of Teacher', () => {
 
   test('POST & GET full teacher', async () => {
     const res = await api
-      .post('/api/teacher?type=full')
+      .post(`${teacherRoute}?type=full`)
       .set('Cookie', [sessionId])
       .send(fullTeacher)
       .expect(200);
 
     await api
-      .get(`/api/teacher/${res.body.id}`)
+      .get(`${teacherRoute}${res.body.id}`)
       .set('Cookie', [sessionId])
       .expect(200);
   });

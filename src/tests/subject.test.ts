@@ -5,6 +5,7 @@ import { PostSubject } from '../validator/subject.validator';
 import { Class, EducationTypes } from '../types';
 
 const api = supertest(app);
+const subjectRoute = '/api/subject/';
 
 let sessionId: string;
 beforeAll(async () => {
@@ -24,13 +25,13 @@ describe('CRUD of Subject', () => {
     // Two requests for testing that the
     // serialization of username works correctly
     await api
-      .post('/api/subject')
+      .post(subjectRoute)
       .set('Cookie', [sessionId])
       .send(dummySubject)
       .expect(200);
 
     const get = await api
-      .get(`/api/subject/${dummySubject.subjectId}`)
+      .get(`${subjectRoute}${dummySubject.subjectId}`)
       .set('Cookie', [sessionId])
       .expect(200);
 
