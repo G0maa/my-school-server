@@ -5,8 +5,14 @@ import {
   Column,
   AllowNull,
   PrimaryKey,
+  BelongsToMany,
+  HasMany,
 } from 'sequelize-typescript';
 import { Class, EducationTypes } from '../types';
+import ActiveSubject from './activeSubject';
+import Student from './student';
+import Subject from './subject';
+import Teacher from './teacher';
 
 @Table({
   timestamps: false,
@@ -25,6 +31,15 @@ class StudyClass extends Model {
   @AllowNull(false)
   @Column(DataType.ENUM(...Object.values(EducationTypes)))
   educationType!: EducationTypes;
+
+  @BelongsToMany(() => Subject, () => ActiveSubject)
+  subjects!: Subject[];
+
+  @BelongsToMany(() => Teacher, () => ActiveSubject)
+  teachers!: Teacher[];
+
+  @HasMany(() => Student)
+  students!: Student[];
 }
 
 export default StudyClass;

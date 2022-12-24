@@ -9,7 +9,11 @@ import {
   AllowNull,
   PrimaryKey,
   AutoIncrement,
+  BelongsToMany,
 } from 'sequelize-typescript';
+import ActiveSubject from './activeSubject';
+import StudyClass from './class';
+import Subject from './subject';
 
 import User from './user';
 
@@ -37,6 +41,12 @@ class Teacher extends Model {
   @AllowNull(true)
   @Column(DataType.STRING(64))
   department!: string;
+
+  @BelongsToMany(() => StudyClass, () => ActiveSubject)
+  studyClasses!: StudyClass[];
+
+  @BelongsToMany(() => Subject, () => ActiveSubject)
+  subjects!: Subject[];
 }
 
 export default Teacher;

@@ -11,6 +11,7 @@ import {
   AutoIncrement,
 } from 'sequelize-typescript';
 import { Class, EducationTypes } from '../types';
+import StudyClass from './class';
 
 import User from './user';
 
@@ -47,6 +48,10 @@ class Student extends Model {
   @AllowNull(true)
   @Column(DataType.STRING(16))
   parentPhonenumber!: string;
+
+  @ForeignKey(() => StudyClass)
+  @Column(DataType.STRING(6))
+  classId!: string;
 }
 
 export default Student;
