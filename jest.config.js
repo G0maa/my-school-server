@@ -4,7 +4,12 @@ module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
   collectCoverage: true,
-  collectCoverageFrom: ['**/src/**/**', '!**/src/migrations/**'], // This may not reflect actual coverage.
+  collectCoverageFrom: [
+    '**/src/**/**',
+    '!**/src/migrations/**',
+    '!**/src/validator/**',
+    '!**/src/models/**',
+  ], // This may not reflect actual coverage.
   coverageProvider: 'v8',
   coverageReporters: ['cobertura', 'text', 'text-summary'],
   globalSetup: './src/tests/setup.ts',
