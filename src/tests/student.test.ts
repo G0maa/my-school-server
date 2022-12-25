@@ -4,6 +4,7 @@ import { PostFullStudent, PostStudent } from '../validator/student.validator';
 import { loginAdmin } from './helpers';
 
 const api = supertest(app);
+const studentRoute = '/api/student/';
 
 let sessionId: string;
 beforeAll(async () => {
@@ -39,19 +40,19 @@ describe('CRUD of Student', () => {
     // const postStudent = await api
 
     await api
-      .post('/api/student')
+      .post(studentRoute)
       .set('Cookie', [sessionId])
       .send(dummyStudent)
       .expect(200);
 
     const res = await api
-      .post('/api/student')
+      .post(studentRoute)
       .set('Cookie', [sessionId])
       .send(dummyStudent)
       .expect(200);
 
     const get = await api
-      .get(`/api/student/${res.body.id}`)
+      .get(`${studentRoute}${res.body.id}`)
       .set('Cookie', [sessionId])
       .expect(200);
 
@@ -61,13 +62,13 @@ describe('CRUD of Student', () => {
 
   test('POST & GET full student', async () => {
     const res = await api
-      .post('/api/student?type=full')
+      .post(`${studentRoute}?type=full`)
       .set('Cookie', [sessionId])
       .send(fullStudent)
       .expect(200);
 
     await api
-      .get(`/api/student/${res.body.id}`)
+      .get(`${studentRoute}${res.body.id}`)
       .set('Cookie', [sessionId])
       .expect(200);
   });

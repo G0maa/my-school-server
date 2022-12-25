@@ -17,6 +17,9 @@ import loginRouter from './controllers/auth';
 import studentRouter from './controllers/student';
 import teacherRouter from './controllers/teacher';
 import { requestLogger } from './utils/middleware';
+import subjectRouter from './controllers/subject';
+import studyClassRouter from './controllers/studyClass';
+import activeSubjectRouter from './controllers/activeSubject';
 // import logger from './utils/logger';
 
 const app = express();
@@ -48,7 +51,7 @@ app.use(express.json());
 
 // Unsure about the cause of this...
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-if (config.NODE_ENV !== 'PROD') app.use(requestLogger);
+if (config.NODE_ENV === 'DEV') app.use(requestLogger);
 app.use(morgan('tiny'));
 
 if (config.NODE_ENV !== 'PROD') app.use('/', devRouter);
@@ -56,6 +59,9 @@ if (config.NODE_ENV !== 'PROD') app.use('/', devRouter);
 app.use('/api/auth/', loginRouter);
 app.use('/api/student/', studentRouter);
 app.use('/api/teacher/', teacherRouter);
+app.use('/api/subject/', subjectRouter);
+app.use('/api/studyClass/', studyClassRouter);
+app.use('/api/activeSubject/', activeSubjectRouter);
 
 app.get('/api/ping', (_, response) => {
   response.send('<p>pong</p>');

@@ -49,7 +49,7 @@ passport.use(
 // This gets called ONLY after call of passport.authenticate('local')
 // i.e. sets which data will be stored in expess-session store
 passport.serializeUser((user, callback) => {
-  console.log('serializeUser', user);
+  // console.log('serializeUser', user);
   return callback(null, {
     id: user.id,
     username: user.username,
@@ -61,7 +61,7 @@ passport.serializeUser((user, callback) => {
 // Better not have a +1 DB request.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 passport.deserializeUser((user: Express.User, callback) => {
-  console.log('deserializeUser', user);
+  // console.log('deserializeUser', user);
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   return callback(null, user);
 });
