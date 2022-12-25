@@ -50,8 +50,8 @@ describe('CRUD of Teacher', () => {
       .set('Cookie', [sessionId])
       .expect(200);
 
-    expect(get.body.user.role).toMatch('Teacher');
-    expect(get.body.user.username).toEqual('T0003');
+    expect(get.body.user.role).toEqual('Teacher');
+    expect(get.body.user.username).toMatch('T');
   });
 
   test('POST & GET full teacher', async () => {

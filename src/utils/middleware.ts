@@ -80,6 +80,9 @@ const errorHandler: ErrorRequestHandler = (error, _request, response, next) => {
   if (error.name === 'SequelizeValidationError') {
     return response.status(400).json(error.errors);
   }
+  if (error.name === 'SequelizeForeignKeyConstraintError') {
+    return response.status(400).json(error.message);
+  }
   return next(error);
 };
 

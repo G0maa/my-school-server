@@ -14,7 +14,7 @@ beforeAll(async () => {
   await api.get('/testAuth').set('Cookie', [sessionId]).expect(200);
 });
 
-const dummySubject: PostSubject = {
+export const dummySubject: PostSubject = {
   subjectId: 'BSC123',
   class: Class.First,
   educationType: EducationTypes.Literature,

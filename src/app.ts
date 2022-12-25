@@ -51,7 +51,7 @@ app.use(express.json());
 
 // Unsure about the cause of this...
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-if (config.NODE_ENV !== 'PROD') app.use(requestLogger);
+if (config.NODE_ENV === 'DEV') app.use(requestLogger);
 app.use(morgan('tiny'));
 
 if (config.NODE_ENV !== 'PROD') app.use('/', devRouter);

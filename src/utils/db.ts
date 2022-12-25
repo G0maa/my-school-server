@@ -17,6 +17,7 @@ const sequelize = new Sequelize(config.DATABASE_URL, {
           }
         : null,
   },
+  logging: config.NODE_ENV === 'DEV' ? true : false,
 });
 
 sequelize.addModels([
