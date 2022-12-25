@@ -4,7 +4,7 @@ import express, { Request, Response } from 'express';
 import { Student, User } from '../models';
 import { Role } from '../types';
 import { setAuthorizedRoles, isAuthenticated } from '../utils/middleware';
-import { Roles, ZStudent, ZUser } from '../validator/student.validator';
+import { ZStudent, ZUser } from '../validator/student.validator';
 
 const studentRouter = express.Router();
 
@@ -37,8 +37,19 @@ studentRouter.post(
     const zUser = ZUser.parse(req.body);
     const zStudent = ZStudent.parse(req.body);
 
-    const user = await User.create({ ...zUser, role: Roles.enum.Student });
-    await user.$create('student', zStudent);
+    // const user = await User.create({ ...zUser, role: Roles.enum.Student });
+    // await user.$create('student', zStudent);
+
+    const student = await User.create(
+      {
+        ...zUser,
+        role: Role.Student,
+        student: { ...zStudent },
+      },
+      {
+        include: Student,
+      }
+    );
 
     // 3rd one for actually giving student info to client.
     // #fix... was that ever needed?
@@ -46,7 +57,7 @@ studentRouter.post(
     //   include: Student,
     //   where: { id: user.id },
     // });
-    return res.status(200).json(user).end();
+    return res.status(200).json(student).end();
   }
 );
 
