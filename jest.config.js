@@ -11,7 +11,7 @@ module.exports = {
     '!**/src/models/**',
   ], // This may not reflect actual coverage.
   coverageProvider: 'v8',
-  coverageReporters: ['cobertura', 'text', 'text-summary'],
+  coverageReporters: ['lcov', 'text', 'text-summary'],
   globalSetup: './src/tests/setup.ts',
   globalTeardown: './src/tests/teardown.ts',
 };
