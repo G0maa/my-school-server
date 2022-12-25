@@ -1,6 +1,6 @@
 import supertest from 'supertest';
 import { app } from '../app';
-import { PostFullStudent, PostStudent } from '../validator/student.validator';
+import { ZStudent, ZUser } from '../validator/student.validator';
 import { loginAdmin } from './helpers';
 
 const api = supertest(app);
@@ -14,9 +14,9 @@ beforeAll(async () => {
 });
 
 // must not provide username & password as they're auto created.
-const dummyStudent: PostStudent = {
+const dummyStudent: ZStudent = {
   class: '1',
-} as PostStudent;
+} as ZStudent;
 
 // TS doesn't recognize that role is automatically created.
 const fullStudent = {
@@ -33,7 +33,7 @@ const fullStudent = {
   educationType: 'Sceiences',
   parentName: 'Gomaa',
   parentPhonenumber: 'Mohammed',
-} as PostFullStudent;
+} as ZStudent & ZUser;
 
 describe('CRUD of Student', () => {
   test('POST & GET simpleified student', async () => {
