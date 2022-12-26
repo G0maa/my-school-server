@@ -34,22 +34,23 @@ studentRouter.post(
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req: Request, res: Response) => {
-    // Caveat: Can't set a default role for user now..
     const zUser = ZUser.parse(req.body);
     const zStudent = ZStudent.parse(req.body);
 
-    const user = await User.create(
+    // Caveat: Can't set a default role for user now..
+    zUser.role = 'Student';
+
+    const student = await Student.create(
       {
-        ...zUser,
-        role: ZRole.enum.Student, // is there antoher way to set this?
-        student: { ...zStudent },
+        ...zStudent,
+        user: { ...zUser },
       },
       {
-        include: Student,
+        include: User,
       }
     );
 
-    return res.status(200).json(user).end();
+    return res.status(200).json(student).end();
   }
 );
 

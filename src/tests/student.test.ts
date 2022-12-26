@@ -54,7 +54,7 @@ describe('CRUD of Student', () => {
       .expect(200);
 
     const get = await api
-      .get(`${studentRoute}${res.body.id}`)
+      .get(`${studentRoute}${res.body.userId}`)
       .set('Cookie', [sessionId])
       .expect(200);
 
@@ -70,7 +70,7 @@ describe('CRUD of Student', () => {
       .expect(200);
 
     await api
-      .get(`${studentRoute}${res.body.id}`)
+      .get(`${studentRoute}${res.body.userId}`)
       .set('Cookie', [sessionId])
       .expect(200);
   });

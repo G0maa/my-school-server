@@ -37,12 +37,19 @@ teacherRouter.post(
     const zUser = ZUser.parse(req.body);
     const zTeacher = ZTeacher.parse(req.body);
 
-    zUser.role = ZRole.enum.Teacher;
+    zUser.role = 'Teacher';
 
-    const user = await User.create(zUser);
-    await user.$create('teacher', zTeacher);
+    const teacher = await Teacher.create(
+      {
+        ...zTeacher,
+        user: { ...zUser },
+      },
+      {
+        include: User,
+      }
+    );
 
-    return res.status(200).json(user).end();
+    return res.status(200).json(teacher).end();
   }
 );
 
