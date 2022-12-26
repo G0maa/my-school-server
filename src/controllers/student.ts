@@ -54,4 +54,7 @@ studentRouter.post(
   }
 );
 
+// To-do Delete student , test with classId existing, add classId to Validator
+// test that classId actually references an actualy studyClass, etc...
+
 export default studentRouter;

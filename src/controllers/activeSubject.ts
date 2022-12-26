@@ -43,4 +43,16 @@ activeSubjectRouter.post(
   }
 );
 
+// Not-tested
+activeSubjectRouter.delete(
+  '/:id',
+  setAuthorizedRoles([ZRole.enum.Admin]),
+  isAuthenticated,
+  async (req: Request, res: Response) => {
+    const activeSubject = await ActiveSubject.destroy({
+      where: { serial: req.params.id },
+    });
+    return res.status(200).json(activeSubject).end();
+  }
+);
 export default activeSubjectRouter;
