@@ -1,11 +1,9 @@
 import { z } from 'zod';
-import { EducationTypes, StudentClass } from './student.validator';
+import { ZEducationType, ZStudyYear } from './general.validator';
 
 export const StudyClass = z.object({
   classId: z.string().max(6),
-  class: StudentClass,
-  educationType: EducationTypes,
+  class: ZStudyYear.optional(),
+  educationType: ZEducationType.optional(),
 });
-
-export const PostStudyClass = StudyClass.omit({});
-export type PostStudyClass = z.infer<typeof PostStudyClass>;
+export type StudyClass = z.infer<typeof StudyClass>;
