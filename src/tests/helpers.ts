@@ -2,7 +2,11 @@ import supertest from 'supertest';
 import { User } from '../models';
 import StudyClass from '../models/class';
 import Subject from '../models/subject';
-import { Class, EducationTypes, Role } from '../types';
+import {
+  ZEducationType,
+  ZRole,
+  ZStudyYear,
+} from '../validator/general.validator';
 
 const adminCreds = {
   username: 'A0001',
@@ -24,8 +28,8 @@ export const getDummyClassId = async () => {
     where: { classId: 'CCC000' },
     defaults: {
       classId: 'CCC000',
-      class: Class.First,
-      educationType: EducationTypes.Literature,
+      class: ZStudyYear.Enum[1],
+      educationType: ZEducationType.Enum.Literature,
     },
   });
 
@@ -37,15 +41,16 @@ export const getDummySubjectId = async () => {
     where: { subjectId: 'SSS000' },
     defaults: {
       subjectId: 'SSS000',
-      class: Class.First,
-      educationType: EducationTypes.Literature,
+      class: ZStudyYear.Enum[1],
+      educationType: ZEducationType.Enum.Literature,
     },
   });
   return subject.subjectId;
 };
 
 export const getDummyTeacher = async () => {
-  const user = await User.create({ role: Role.Teacher });
+  // To-Do, change to new syntax.
+  const user = await User.create({ role: ZRole.Enum.Teacher });
   await user.$create('teacher', { id: user.id });
 
   return user;

@@ -1,8 +1,7 @@
 import supertest from 'supertest';
 import { app } from '../app';
 import { loginAdmin } from './helpers';
-import { PostSubject } from '../validator/subject.validator';
-import { Class, EducationTypes } from '../types';
+import { ZSubject } from '../validator/subject.validator';
 
 const api = supertest(app);
 const subjectRoute = '/api/subject/';
@@ -14,10 +13,10 @@ beforeAll(async () => {
   await api.get('/testAuth').set('Cookie', [sessionId]).expect(200);
 });
 
-export const dummySubject: PostSubject = {
+export const dummySubject: ZSubject = {
   subjectId: 'BSC123',
-  class: Class.First,
-  educationType: EducationTypes.Literature,
+  class: '1',
+  educationType: 'Literature',
 };
 
 describe('CRUD of Subject', () => {

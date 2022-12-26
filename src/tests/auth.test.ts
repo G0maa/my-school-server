@@ -1,10 +1,10 @@
 import supertest from 'supertest';
 import { app } from '../app';
-import { Role } from '../types';
+import { ZRole } from '../validator/general.validator';
 
 const api = supertest(app);
 
-// #17 WET Code
+// #17 WET Code or is it?
 const adminCreds = { username: 'A0001', password: '000000' };
 const studentCreds = { username: 'S0001', password: '000000' };
 const teacherCreds = { username: 'T0001', password: '000000' };
@@ -33,7 +33,7 @@ describe('Trying with default Student Credentials', () => {
 
     expect(response.body).toMatchObject({
       username: 'S0001',
-      role: Role.Student,
+      role: ZRole.Enum.Student,
     });
   });
 });
@@ -47,7 +47,7 @@ describe('Trying with default Teacher Credentials', () => {
 
     expect(response.body).toMatchObject({
       username: 'T0001',
-      role: Role.Teacher,
+      role: ZRole.Enum.Teacher,
     });
   });
 });
@@ -70,7 +70,7 @@ describe('Trying evil scenarios', () => {
 
     expect(getInfo.body).toMatchObject({
       username: 'A0001',
-      role: Role.Admin,
+      role: ZRole.Enum.Admin,
     });
   });
 

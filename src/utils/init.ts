@@ -1,5 +1,5 @@
 import { Admin, User } from '../models';
-import { Role } from '../types';
+import { ZRole } from '../validator/general.validator';
 import { hashPassword } from './helpers';
 
 const init = async () => {
@@ -18,23 +18,24 @@ const init = async () => {
   const admin = await User.create({
     username: 'A0001',
     password: hashedPassword,
-    role: Role.Admin,
+    role: ZRole.Enum.Admin,
     isReset: true,
   });
 
   const student = await User.create({
     username: 'S0001',
     password,
-    role: Role.Student,
+    role: ZRole.Enum.Student,
     class: '1',
   });
 
   const teacher = await User.create({
     username: 'T0001',
     password,
-    role: Role.Teacher,
+    role: ZRole.Enum.Teacher,
   });
 
+  // To-Do: Use the newly discovered syntax.
   await admin.$create('admin', { id: admin.id });
   await student.$create('student', { id: student.id, class: '1' });
   await teacher.$create('teacher', { id: teacher.id });

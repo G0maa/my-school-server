@@ -1,6 +1,7 @@
 import supertest from 'supertest';
 import { app } from '../app';
-import { ZStudent, ZUser } from '../validator/student.validator';
+import { ZStudent } from '../validator/student.validator';
+import { ZUser } from '../validator/user.validator';
 import { loginAdmin } from './helpers';
 
 const api = supertest(app);
@@ -15,7 +16,7 @@ beforeAll(async () => {
 
 // must not provide username & password as they're auto created.
 const dummyStudent: ZStudent = {
-  class: '1',
+  studyYear: '1',
 } as ZStudent;
 
 // TS doesn't recognize that role is automatically created.
@@ -29,10 +30,11 @@ const fullStudent = {
   bloodGroup: 'O+',
   address: 'Egypt',
   email: 'example@example.com',
-  class: '1',
+  studyYear: '1',
   educationType: 'Sceiences',
   parentName: 'Gomaa',
   parentPhonenumber: 'Mohammed',
+  // role: 'Student',
 } as ZStudent & ZUser;
 
 describe('CRUD of Student', () => {
