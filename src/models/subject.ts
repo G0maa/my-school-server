@@ -7,7 +7,12 @@ import {
   PrimaryKey,
   BelongsToMany,
 } from 'sequelize-typescript';
-import { Class, EducationTypes } from '../types';
+import {
+  EducationType,
+  StudyYear,
+  ZEducationType,
+  ZStudyYear,
+} from '../validator/general.validator';
 import ActiveSubject from './activeSubject';
 import StudyClass from './class';
 import Teacher from './teacher';
@@ -27,12 +32,12 @@ class Subject extends Model {
   name!: string;
 
   @AllowNull(false)
-  @Column(DataType.ENUM(...Object.values(Class)))
-  class!: Class;
+  @Column(DataType.ENUM(...Object.values(ZStudyYear.enum)))
+  studyYear!: StudyYear;
 
   @AllowNull(false)
-  @Column(DataType.ENUM(...Object.values(EducationTypes)))
-  educationType!: EducationTypes;
+  @Column(DataType.ENUM(...Object.values(ZEducationType.Enum)))
+  educationType!: EducationType;
 
   @BelongsToMany(() => StudyClass, () => ActiveSubject)
   studyClasses!: StudyClass[];

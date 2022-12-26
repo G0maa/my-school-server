@@ -1,7 +1,8 @@
 import supertest from 'supertest';
 import { app } from '../app';
+import { ZTeacher } from '../validator/teacher.validator';
+import { ZUser } from '../validator/user.validator';
 import { loginAdmin } from './helpers';
-import { PostTeacher } from '../validator/teacher.validator';
 
 const api = supertest(app);
 const teacherRoute = '/api/teacher/';
@@ -14,7 +15,7 @@ beforeAll(async () => {
 });
 
 // must not provide username & password as they're auto created.
-const dummyTeacher: PostTeacher = {} as PostTeacher;
+const dummyTeacher: ZTeacher = {};
 const fullTeacher = {
   firstName: 'Mohammed',
   lastName: 'Gomaa',
@@ -27,7 +28,10 @@ const fullTeacher = {
   email: 'exampleTeacher@example.com', // email is unique in table users
   department: 'CS',
   education: 'HTI',
-};
+  // This can be safely omitted, although TS will complain.
+  // it's given by default in the backend.
+  // role: 'Teacher',
+} as ZTeacher & ZUser;
 
 describe('CRUD of Teacher', () => {
   test('POST & GET simpleified Teacher', async () => {
@@ -46,7 +50,7 @@ describe('CRUD of Teacher', () => {
       .expect(200);
 
     const get = await api
-      .get(`${teacherRoute}${res.body.id}`)
+      .get(`${teacherRoute}${res.body.userId}`)
       .set('Cookie', [sessionId])
       .expect(200);
 
@@ -62,7 +66,7 @@ describe('CRUD of Teacher', () => {
       .expect(200);
 
     await api
-      .get(`${teacherRoute}${res.body.id}`)
+      .get(`${teacherRoute}${res.body.userId}`)
       .set('Cookie', [sessionId])
       .expect(200);
   });

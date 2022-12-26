@@ -1,5 +1,6 @@
 import { DataTypes } from 'sequelize';
-import { Class, EducationTypes, Migration } from '../types';
+import { Migration } from '../types';
+import { ZEducationType, ZStudyYear } from '../validator/general.validator';
 
 // These two functions get passed the context in migrationConf in db.js
 export const up: Migration = async ({ context: queryInterface }) => {
@@ -14,12 +15,13 @@ export const up: Migration = async ({ context: queryInterface }) => {
       allowNull: false,
       references: { model: 'users', key: 'id' },
     },
-    class: {
-      type: DataTypes.ENUM(...Object.values(Class)),
+    study_year: {
+      type: DataTypes.ENUM(...Object.values(ZStudyYear.enum)),
       allowNull: true,
     },
     education_type: {
-      type: DataTypes.ENUM(...Object.values(EducationTypes)),
+      type: DataTypes.ENUM(...Object.values(ZEducationType.enum)),
+      // type: DataTypes.ENUM(ZEducationType.Enum),
       allowNull: true,
     },
     parent_name: {
@@ -36,7 +38,7 @@ export const up: Migration = async ({ context: queryInterface }) => {
 export const down: Migration = async ({ context: queryInterface }) => {
   await queryInterface.dropTable('students', {});
   await queryInterface.sequelize.query(
-    'DROP TYPE IF EXISTS enum_students_class'
+    'DROP TYPE IF EXISTS enum_students_study_year'
   );
   await queryInterface.sequelize.query(
     'DROP TYPE IF EXISTS enum_students_education_type'

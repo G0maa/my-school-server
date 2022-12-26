@@ -1,6 +1,7 @@
 import supertest from 'supertest';
 import { app } from '../app';
-import { PostFullStudent, PostStudent } from '../validator/student.validator';
+import { ZStudent } from '../validator/student.validator';
+import { ZUser } from '../validator/user.validator';
 import { loginAdmin } from './helpers';
 
 const api = supertest(app);
@@ -14,9 +15,9 @@ beforeAll(async () => {
 });
 
 // must not provide username & password as they're auto created.
-const dummyStudent: PostStudent = {
-  class: '1',
-} as PostStudent;
+const dummyStudent: ZStudent = {
+  studyYear: '1',
+} as ZStudent;
 
 // TS doesn't recognize that role is automatically created.
 const fullStudent = {
@@ -29,11 +30,12 @@ const fullStudent = {
   bloodGroup: 'O+',
   address: 'Egypt',
   email: 'example@example.com',
-  class: '1',
+  studyYear: '1',
   educationType: 'Sceiences',
   parentName: 'Gomaa',
   parentPhonenumber: 'Mohammed',
-} as PostFullStudent;
+  // role: 'Student',
+} as ZStudent & ZUser;
 
 describe('CRUD of Student', () => {
   test('POST & GET simpleified student', async () => {
@@ -52,7 +54,7 @@ describe('CRUD of Student', () => {
       .expect(200);
 
     const get = await api
-      .get(`${studentRoute}${res.body.id}`)
+      .get(`${studentRoute}${res.body.userId}`)
       .set('Cookie', [sessionId])
       .expect(200);
 
@@ -68,7 +70,7 @@ describe('CRUD of Student', () => {
       .expect(200);
 
     await api
-      .get(`${studentRoute}${res.body.id}`)
+      .get(`${studentRoute}${res.body.userId}`)
       .set('Cookie', [sessionId])
       .expect(200);
   });

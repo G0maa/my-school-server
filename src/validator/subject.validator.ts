@@ -1,15 +1,10 @@
 import { z } from 'zod';
-import { EducationTypes, StudentClass } from './student.validator';
+import { ZEducationType, ZStudyYear } from './general.validator';
 
-export const Subject = z.object({
+export const ZSubject = z.object({
   subjectId: z.string().max(6),
-  name: z.string().max(64),
-  class: StudentClass,
-  educationType: EducationTypes,
+  name: z.string().max(64).optional(),
+  studyYear: ZStudyYear,
+  educationType: ZEducationType,
 });
-
-// Less WET?
-export const PostSubject = Subject.omit({}).extend({
-  name: Subject.shape.name.optional(),
-});
-export type PostSubject = z.infer<typeof PostSubject>;
+export type ZSubject = z.infer<typeof ZSubject>;

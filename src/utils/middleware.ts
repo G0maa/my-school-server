@@ -7,7 +7,7 @@ import type {
   Response,
 } from 'express';
 import { AnyZodObject } from 'zod';
-import { Role } from '../types';
+import { Role } from '../validator/general.validator';
 import logger from './logger';
 
 const requestLogger = (req: Request, _res: Response, next: NextFunction) => {

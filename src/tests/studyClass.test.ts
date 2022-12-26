@@ -1,8 +1,7 @@
 import supertest from 'supertest';
 import { app } from '../app';
 import { loginAdmin } from './helpers';
-import { Class, EducationTypes } from '../types';
-import { PostStudyClass } from '../validator/studyClass.validator';
+import { ZStudyClass } from '../validator/studyClass.validator';
 
 const api = supertest(app);
 const studyClassRoute = '/api/studyClass/';
@@ -14,10 +13,10 @@ beforeAll(async () => {
   await api.get('/testAuth').set('Cookie', [sessionId]).expect(200);
 });
 
-export const dummyClass: PostStudyClass = {
+export const dummyClass: ZStudyClass = {
   classId: 'BSC123',
-  class: Class.First,
-  educationType: EducationTypes.Literature,
+  studyYear: '1',
+  educationType: 'Literature',
 };
 
 describe('CRUD of StudyClass', () => {
@@ -36,6 +35,6 @@ describe('CRUD of StudyClass', () => {
       .expect(200);
 
     expect(get.body.classId).toMatch('BSC123');
-    expect(get.body.class).toEqual('1');
+    expect(get.body.studyYear).toEqual('1');
   });
 });

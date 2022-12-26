@@ -6,13 +6,13 @@ import {
   getDummyTeacher,
   loginAdmin,
 } from './helpers';
-import { PostActiveSubject } from '../validator/activeSubject.validator';
+import { ZActiveSubject } from '../validator/activeSubject.validator';
 
 const api = supertest(app);
 const activeSubjectRoute = '/api/activeSubject/';
 
 let sessionId: string;
-const dummyActiveSubject: PostActiveSubject = {
+const dummyActiveSubject: ZActiveSubject = {
   subjectId: '',
   classId: '',
   teacherId: '',
@@ -52,7 +52,7 @@ describe('CRUD of ActiveSubject', () => {
 
 describe('Testing referrential integrity of activeSubject attributes', () => {
   test('Fails when Teacher does not exist', async () => {
-    const wrongActiveSubject: PostActiveSubject = {
+    const wrongActiveSubject: ZActiveSubject = {
       ...dummyActiveSubject,
       teacherId: 'aed69a4a-ef04-4b64-929e-9bbb1f86f7f9',
     };
@@ -65,7 +65,7 @@ describe('Testing referrential integrity of activeSubject attributes', () => {
   });
 
   test('Fails when Subject does not exist', async () => {
-    const wrongActiveSubject: PostActiveSubject = {
+    const wrongActiveSubject: ZActiveSubject = {
       ...dummyActiveSubject,
       subjectId: 'ZZZ000', // too lazy to make a separate function for this one.
     };
@@ -78,7 +78,7 @@ describe('Testing referrential integrity of activeSubject attributes', () => {
   });
 
   test('Fails when studyClass does not exist', async () => {
-    const wrongActiveSubject: PostActiveSubject = {
+    const wrongActiveSubject: ZActiveSubject = {
       ...dummyActiveSubject,
       classId: 'ZZZ000',
     };

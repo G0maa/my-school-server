@@ -1,5 +1,5 @@
-import { Admin, User } from '../models';
-import { Role } from '../types';
+import { Admin, Student, Teacher, User } from '../models';
+import { ZRole } from '../validator/general.validator';
 import { hashPassword } from './helpers';
 
 const init = async () => {
@@ -15,29 +15,72 @@ const init = async () => {
   // this is solely for the purpose of testing if the user has a hashed password.
   // also #bug, isReset logic is illogical, if true => user can & should reset,
   // if false => user cannot reset.
-  const admin = await User.create({
-    username: 'A0001',
-    password: hashedPassword,
-    role: Role.Admin,
-    isReset: true,
-  });
+  // const admin = await User.create({
+  //   username: 'A0001',
+  //   password: hashedPassword,
+  //   role: ZRole.enum.Admin,
+  //   isReset: true,
+  // });
 
-  const student = await User.create({
-    username: 'S0001',
-    password,
-    role: Role.Student,
-    class: '1',
-  });
+  await Admin.create(
+    {
+      user: {
+        username: 'A0001',
+        password: hashedPassword,
+        role: ZRole.Enum.Admin,
+        isReset: true,
+      },
+    },
+    {
+      include: User,
+    }
+  );
 
-  const teacher = await User.create({
-    username: 'T0001',
-    password,
-    role: Role.Teacher,
-  });
+  await Student.create(
+    {
+      studyYear: '1',
+      user: {
+        username: 'S0001',
+        password,
+        role: ZRole.enum.Student,
+        studyYear: '1',
+      },
+    },
+    {
+      include: User,
+    }
+  );
 
-  await admin.$create('admin', { id: admin.id });
-  await student.$create('student', { id: student.id, class: '1' });
-  await teacher.$create('teacher', { id: teacher.id });
+  await Teacher.create(
+    {
+      user: {
+        username: 'T0001',
+        password,
+        role: ZRole.enum.Teacher,
+      },
+    },
+    {
+      include: User,
+    }
+  );
+
+  // const student = await User.create({
+  //   username: 'S0001',
+  //   password,
+  //   role: ZRole.enum.Student,
+  //   studyYear: '1',
+  // });
+
+  // const teacher = await User.create({
+  // username: 'T0001',
+  // password,
+  // role: ZRole.enum.Teacher,
+  // });
+
+  // // To-Do: Use the newly discovered syntax.
+  // await admin.$create('admin', { id: admin.id });
+  // await student.$create('student', { userId: student.id, studyYear: '1' });
+  // await teacher.$create('teacher', { userId: teacher.id });
 };
 
 export default init;
