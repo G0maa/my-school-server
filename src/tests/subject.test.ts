@@ -37,4 +37,31 @@ describe('CRUD of Subject', () => {
     expect(get.body.subjectId).toMatch('BSC123');
     expect(get.body.studyYear).toEqual('1');
   });
+
+  test('Success delete Subject when theres no Referrenetial Integerity', async () => {
+    const subject = await api
+      .post(subjectRoute)
+      .set('Cookie', [sessionId])
+      .send(dummySubject)
+      .expect(200);
+
+    await api
+      .delete(`${subjectRoute}${subject.body.subjectId}`)
+      .set('Cookie', [sessionId])
+      .expect(200);
+
+    const subjects = await api
+      .get(subjectRoute)
+      .set('Cookie', [sessionId])
+      .expect(200);
+
+    expect(subjects.body).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          subjectId: subject.body.subjectId,
+        }),
+      ])
+    );
+  });
 });
