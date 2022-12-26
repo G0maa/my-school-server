@@ -19,6 +19,7 @@ export const up: Migration = async ({ context: queryInterface }) => {
     },
     teacher_id: {
       type: DataTypes.UUID(),
+      // onDelete: 'SET NULL', also keep it on default for now.
       references: { model: 'teachers', key: 'user_id' },
     },
     subject_schedule: {

@@ -56,5 +56,14 @@ studentRouter.post(
 
 // To-do Delete student , test with classId existing, add classId to Validator
 // test that classId actually references an actualy studyClass, etc...
+studentRouter.delete(
+  '/:id',
+  setAuthorizedRoles([ZRole.enum.Admin]),
+  isAuthenticated,
+  async (req: Request, res: Response) => {
+    const student = await Student.destroy({ where: { userId: req.params.id } });
+    return res.status(200).json(student).end();
+  }
+);
 
 export default studentRouter;

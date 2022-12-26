@@ -83,6 +83,7 @@ export const up: Migration = async ({ context: queryInterface }) => {
     user_id: {
       type: DataTypes.UUID(),
       allowNull: false,
+      onDelete: 'CASCADE',
       references: { model: 'users', key: 'id' },
     },
   });

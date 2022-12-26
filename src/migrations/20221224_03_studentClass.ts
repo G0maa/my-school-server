@@ -6,6 +6,7 @@ export const up: Migration = async ({ context: queryInterface }) => {
   await queryInterface.addColumn('students', 'class_id', {
     type: DataTypes.STRING(6),
     allowNull: true,
+    // onDelete: 'SET NULL', Keep it on ?restrict? for now.
     references: { model: 'study_classes', key: 'class_id' },
   });
 };
