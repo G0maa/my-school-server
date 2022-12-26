@@ -13,11 +13,18 @@ import {
   HasOne,
   BeforeValidate,
 } from 'sequelize-typescript';
-import { BloodGroups, Gender, Role } from '../types';
 import {
   generateRandomPassword,
   generateSerialUsername,
 } from '../utils/helpers';
+import {
+  BloodGroup,
+  Gender,
+  Role,
+  ZBloodGroup,
+  ZGender,
+  ZRole,
+} from '../validator/general.validator';
 import Admin from './admin';
 import Student from './student';
 import Teacher from './teacher';
@@ -46,7 +53,7 @@ class User extends Model {
   lastName!: string;
 
   @AllowNull(true)
-  @Column(DataType.ENUM(...Object.values(Gender)))
+  @Column(DataType.ENUM(...Object.values(ZGender.enum)))
   gender!: Gender;
 
   @AllowNull(true)
@@ -66,8 +73,8 @@ class User extends Model {
   address!: string;
 
   @AllowNull(true)
-  @Column(DataType.ENUM(...Object.values(BloodGroups)))
-  bloodGroup!: BloodGroups;
+  @Column(DataType.ENUM(...Object.values(ZBloodGroup.enum)))
+  bloodGroup!: BloodGroup;
 
   @AllowNull(true)
   @Unique(true)
@@ -86,7 +93,7 @@ class User extends Model {
   password!: string;
 
   @AllowNull(false)
-  @Column(DataType.ENUM(...Object.values(Role)))
+  @Column(DataType.ENUM(...Object.values(ZRole.Enum)))
   role!: Role;
 
   @Default(false)

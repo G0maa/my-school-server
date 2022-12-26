@@ -1,5 +1,6 @@
 import { DataTypes } from 'sequelize';
-import { BloodGroups, Gender, Migration, Role } from '../types';
+import { Migration } from '../types';
+import { ZBloodGroup, ZGender, ZRole } from '../validator/general.validator';
 
 // These two functions get passed the context in migrationConf in db.js
 export const up: Migration = async ({ context: queryInterface }) => {
@@ -18,15 +19,15 @@ export const up: Migration = async ({ context: queryInterface }) => {
       allowNull: true,
     },
     gender: {
-      type: DataTypes.ENUM(...Object.values(Gender)),
+      type: DataTypes.ENUM(...Object.values(ZGender.Enum)),
       allowNull: true,
     },
     blood_group: {
-      type: DataTypes.ENUM(...Object.values(BloodGroups)),
+      type: DataTypes.ENUM(...Object.values(ZBloodGroup.Enum)),
       allowNull: true,
     },
     role: {
-      type: DataTypes.ENUM(...Object.values(Role)),
+      type: DataTypes.ENUM(...Object.values(ZRole.Enum)),
       allowNull: false,
     },
     email: {

@@ -1,5 +1,6 @@
 import { DataTypes } from 'sequelize';
-import { Class, EducationTypes, Migration } from '../types';
+import { Migration } from '../types';
+import { ZEducationType, ZStudyYear } from '../validator/general.validator';
 
 // These two functions get passed the context in migrationConf in db.js
 export const up: Migration = async ({ context: queryInterface }) => {
@@ -14,12 +15,12 @@ export const up: Migration = async ({ context: queryInterface }) => {
       allowNull: false,
       references: { model: 'users', key: 'id' },
     },
-    class: {
-      type: DataTypes.ENUM(...Object.values(Class)),
+    study_year: {
+      type: DataTypes.ENUM(...Object.values(ZStudyYear.Enum)),
       allowNull: true,
     },
     education_type: {
-      type: DataTypes.ENUM(...Object.values(EducationTypes)),
+      type: DataTypes.ENUM(...Object.values(ZEducationType.enum)),
       allowNull: true,
     },
     parent_name: {

@@ -10,7 +10,12 @@ import {
   PrimaryKey,
   AutoIncrement,
 } from 'sequelize-typescript';
-import { Class, EducationTypes } from '../types';
+import {
+  EducationType,
+  StudyYear,
+  ZEducationType,
+  ZStudyYear,
+} from '../validator/general.validator';
 import StudyClass from './class';
 
 import User from './user';
@@ -34,12 +39,12 @@ class Student extends Model {
   userId!: string;
 
   @AllowNull(false)
-  @Column(DataType.ENUM(...Object.values(Class)))
-  class!: Class;
+  @Column(DataType.ENUM(...Object.values(ZStudyYear.Enum)))
+  class!: StudyYear;
 
   @AllowNull(true)
-  @Column(DataType.ENUM(...Object.values(EducationTypes)))
-  educationType!: EducationTypes;
+  @Column(DataType.ENUM(...Object.values(ZEducationType.Enum)))
+  educationType!: EducationType;
 
   @AllowNull(true)
   @Column(DataType.STRING(64))

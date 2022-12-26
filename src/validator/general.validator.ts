@@ -17,4 +17,8 @@ export const ZBloodGroup = z.enum([
 export const ZEducationType = z.enum(['Sceiences', 'Literature', 'Other']);
 
 // Inferred Types
+export type StudyYear = z.infer<typeof ZStudyYear>;
 export type Role = z.infer<typeof ZRole>;
+export type Gender = z.infer<typeof ZGender>;
+export type BloodGroup = z.infer<typeof ZBloodGroup>;
+export type EducationType = z.infer<typeof ZEducationType>;

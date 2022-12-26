@@ -1,5 +1,6 @@
 import { DataTypes } from 'sequelize';
-import { EducationTypes, Class, Migration } from '../types';
+import { Migration } from '../types';
+import { ZEducationType, ZStudyYear } from '../validator/general.validator';
 
 // subjectId is a code similar, which convention is to be decided.
 export const up: Migration = async ({ context: queryInterface }) => {
@@ -12,12 +13,12 @@ export const up: Migration = async ({ context: queryInterface }) => {
       type: DataTypes.STRING(64),
       allowNull: true,
     },
-    class: {
-      type: DataTypes.ENUM(...Object.values(Class)),
+    study_year: {
+      type: DataTypes.ENUM(...Object.values(ZStudyYear.Enum)),
       allowNull: false,
     },
     education_type: {
-      type: DataTypes.ENUM(...Object.values(EducationTypes)),
+      type: DataTypes.ENUM(...Object.values(ZEducationType.Enum)),
       allowNull: false,
     },
   });
