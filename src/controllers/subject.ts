@@ -2,16 +2,16 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import express, { Request, Response } from 'express';
 import Subject from '../models/subject';
-import { Role } from '../types';
 import { setAuthorizedRoles, isAuthenticated } from '../utils/middleware';
-import { PostSubject } from '../validator/subject.validator';
+import { ZRole } from '../validator/general.validator';
+import { ZSubject } from '../validator/subject.validator';
 
 const subjectRouter = express.Router();
 
 // #17 very WET CRUD operations.
 subjectRouter.get(
   '/',
-  setAuthorizedRoles([Role.Admin, Role.Student]),
+  setAuthorizedRoles([ZRole.Enum.Admin, ZRole.Enum.Student]),
   isAuthenticated,
   async (_req, res) => {
     const query = await Subject.findAll();
@@ -28,11 +28,11 @@ subjectRouter.get('/:id', isAuthenticated, async (req, res) => {
 
 subjectRouter.post(
   '/',
-  setAuthorizedRoles([Role.Admin]),
+  setAuthorizedRoles([ZRole.Enum.Admin]),
   isAuthenticated,
   async (req: Request, res: Response) => {
-    const postSubject = PostSubject.parse(req.body);
-    const subject = await Subject.create(postSubject);
+    const zSubject = ZSubject.parse(req.body);
+    const subject = await Subject.create(zSubject);
     return res.status(200).json(subject).end();
   }
 );

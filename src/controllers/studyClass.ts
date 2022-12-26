@@ -2,16 +2,16 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import express, { Request, Response } from 'express';
 import StudyClass from '../models/class';
-import { Role } from '../types';
 import { setAuthorizedRoles, isAuthenticated } from '../utils/middleware';
-import { PostStudyClass } from '../validator/studyClass.validator';
+import { ZRole } from '../validator/general.validator';
+import { ZStudyClass } from '../validator/studyClass.validator';
 
 const studyClassRouter = express.Router();
 
 // #17 very WET CRUD operations.
 studyClassRouter.get(
   '/',
-  setAuthorizedRoles([Role.Admin, Role.Student]),
+  setAuthorizedRoles([ZRole.Enum.Admin, ZRole.Enum.Student]),
   isAuthenticated,
   async (_req, res) => {
     const query = await StudyClass.findAll();
@@ -28,11 +28,11 @@ studyClassRouter.get('/:id', isAuthenticated, async (req, res) => {
 
 studyClassRouter.post(
   '/',
-  setAuthorizedRoles([Role.Admin]),
+  setAuthorizedRoles([ZRole.Enum.Admin]),
   isAuthenticated,
   async (req: Request, res: Response) => {
-    const postClass = PostStudyClass.parse(req.body);
-    const studyClass = await StudyClass.create(postClass);
+    const zStudyClass = ZStudyClass.parse(req.body);
+    const studyClass = await StudyClass.create(zStudyClass);
     return res.status(200).json(studyClass).end();
   }
 );

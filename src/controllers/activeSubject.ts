@@ -2,16 +2,16 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import express, { Request, Response } from 'express';
 import ActiveSubject from '../models/activeSubject';
-import { Role } from '../types';
 import { setAuthorizedRoles, isAuthenticated } from '../utils/middleware';
-import { PostActiveSubject } from '../validator/activeSubject.validator';
+import { ZActiveSubject } from '../validator/activeSubject.validator';
+import { ZRole } from '../validator/general.validator';
 
 const activeSubjectRouter = express.Router();
 
 // #17 very WET CRUD operations.
 activeSubjectRouter.get(
   '/',
-  setAuthorizedRoles([Role.Admin]),
+  setAuthorizedRoles([ZRole.Enum.Admin]),
   isAuthenticated,
   async (_req, res) => {
     const query = await ActiveSubject.findAll();
@@ -34,11 +34,11 @@ activeSubjectRouter.get('/:id', isAuthenticated, async (req, res) => {
 // To-Do: This needs to be throughly tested.
 activeSubjectRouter.post(
   '/',
-  setAuthorizedRoles([Role.Admin]),
+  setAuthorizedRoles([ZRole.Enum.Admin]),
   isAuthenticated,
   async (req: Request, res: Response) => {
-    const postActiveSubject = PostActiveSubject.parse(req.body);
-    const activeSubject = await ActiveSubject.create(postActiveSubject);
+    const zActiveSubject = ZActiveSubject.parse(req.body);
+    const activeSubject = await ActiveSubject.create(zActiveSubject);
     return res.status(200).json(activeSubject).end();
   }
 );
