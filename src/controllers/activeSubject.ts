@@ -11,7 +11,7 @@ const activeSubjectRouter = express.Router();
 // #17 very WET CRUD operations.
 activeSubjectRouter.get(
   '/',
-  setAuthorizedRoles([ZRole.Enum.Admin]),
+  setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (_req, res) => {
     const query = await ActiveSubject.findAll();
@@ -34,7 +34,7 @@ activeSubjectRouter.get('/:id', isAuthenticated, async (req, res) => {
 // To-Do: This needs to be throughly tested.
 activeSubjectRouter.post(
   '/',
-  setAuthorizedRoles([ZRole.Enum.Admin]),
+  setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req: Request, res: Response) => {
     const zActiveSubject = ZActiveSubject.parse(req.body);

@@ -27,7 +27,7 @@ export const up: Migration = async ({ context: queryInterface }) => {
       allowNull: true,
     },
     role: {
-      type: DataTypes.ENUM(...Object.values(ZRole.Enum)),
+      type: DataTypes.ENUM(...Object.values(ZRole.enum)),
       allowNull: false,
     },
     email: {

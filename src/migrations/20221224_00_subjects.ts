@@ -27,7 +27,7 @@ export const up: Migration = async ({ context: queryInterface }) => {
 export const down: Migration = async ({ context: queryInterface }) => {
   await queryInterface.dropTable('subjects', {});
   await queryInterface.sequelize.query(
-    'DROP TYPE IF EXISTS enum_subjects_class'
+    'DROP TYPE IF EXISTS enum_subjects_study_year'
   );
   await queryInterface.sequelize.query(
     'DROP TYPE IF EXISTS enum_subjects_education_type'

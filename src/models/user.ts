@@ -13,6 +13,7 @@ import {
   HasOne,
   BeforeValidate,
 } from 'sequelize-typescript';
+import { Role } from '../validator/general.validator';
 import {
   generateRandomPassword,
   generateSerialUsername,
@@ -20,7 +21,6 @@ import {
 import {
   BloodGroup,
   Gender,
-  Role,
   ZBloodGroup,
   ZGender,
   ZRole,
@@ -93,7 +93,7 @@ class User extends Model {
   password!: string;
 
   @AllowNull(false)
-  @Column(DataType.ENUM(...Object.values(ZRole.Enum)))
+  @Column(DataType.ENUM(...Object.values(ZRole.enum)))
   role!: Role;
 
   @Default(false)

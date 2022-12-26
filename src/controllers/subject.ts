@@ -11,7 +11,7 @@ const subjectRouter = express.Router();
 // #17 very WET CRUD operations.
 subjectRouter.get(
   '/',
-  setAuthorizedRoles([ZRole.Enum.Admin, ZRole.Enum.Student]),
+  setAuthorizedRoles([ZRole.enum.Admin, ZRole.enum.Student]),
   isAuthenticated,
   async (_req, res) => {
     const query = await Subject.findAll();
@@ -28,7 +28,7 @@ subjectRouter.get('/:id', isAuthenticated, async (req, res) => {
 
 subjectRouter.post(
   '/',
-  setAuthorizedRoles([ZRole.Enum.Admin]),
+  setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req: Request, res: Response) => {
     const zSubject = ZSubject.parse(req.body);

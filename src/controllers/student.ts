@@ -12,7 +12,7 @@ const studentRouter = express.Router();
 // GET, GET:id, POST, DELETE, PUT
 studentRouter.get(
   '/',
-  setAuthorizedRoles([ZRole.Enum.Admin]),
+  setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (_req, res) => {
     const query = await Student.findAll();
@@ -31,7 +31,7 @@ studentRouter.get('/:id', isAuthenticated, async (req, res) => {
 // Very broken route, will fix eventually.
 studentRouter.post(
   '/',
-  setAuthorizedRoles([ZRole.Enum.Admin]),
+  setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req: Request, res: Response) => {
     // Caveat: Can't set a default role for user now..
@@ -41,7 +41,7 @@ studentRouter.post(
     const user = await User.create(
       {
         ...zUser,
-        role: ZRole.Enum.Student, // is there antoher way to set this?
+        role: ZRole.enum.Student, // is there antoher way to set this?
         student: { ...zStudent },
       },
       {

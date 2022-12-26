@@ -18,27 +18,27 @@ const init = async () => {
   const admin = await User.create({
     username: 'A0001',
     password: hashedPassword,
-    role: ZRole.Enum.Admin,
+    role: ZRole.enum.Admin,
     isReset: true,
   });
 
   const student = await User.create({
     username: 'S0001',
     password,
-    role: ZRole.Enum.Student,
-    class: '1',
+    role: ZRole.enum.Student,
+    studyYear: '1',
   });
 
   const teacher = await User.create({
     username: 'T0001',
     password,
-    role: ZRole.Enum.Teacher,
+    role: ZRole.enum.Teacher,
   });
 
   // To-Do: Use the newly discovered syntax.
   await admin.$create('admin', { id: admin.id });
-  await student.$create('student', { id: student.id, class: '1' });
-  await teacher.$create('teacher', { id: teacher.id });
+  await student.$create('student', { userId: student.id, studyYear: '1' });
+  await teacher.$create('teacher', { userId: teacher.id });
 };
 
 export default init;

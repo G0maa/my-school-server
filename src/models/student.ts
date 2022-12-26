@@ -40,7 +40,7 @@ class Student extends Model {
 
   @AllowNull(false)
   @Column(DataType.ENUM(...Object.values(ZStudyYear.Enum)))
-  class!: StudyYear;
+  studyYear!: StudyYear;
 
   @AllowNull(true)
   @Column(DataType.ENUM(...Object.values(ZEducationType.Enum)))

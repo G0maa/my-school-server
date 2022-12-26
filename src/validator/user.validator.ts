@@ -21,6 +21,6 @@ export const ZUser = z
     isVerified: z.boolean(),
     isReset: z.boolean(),
   })
-  .partial()
-  .required({ role: true });
+  .partial();
+// .required({ role: true }); cannot set defaults now.
 export type ZUser = z.infer<typeof ZUser>;

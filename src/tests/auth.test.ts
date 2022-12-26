@@ -33,7 +33,7 @@ describe('Trying with default Student Credentials', () => {
 
     expect(response.body).toMatchObject({
       username: 'S0001',
-      role: ZRole.Enum.Student,
+      role: ZRole.enum.Student,
     });
   });
 });
@@ -47,7 +47,7 @@ describe('Trying with default Teacher Credentials', () => {
 
     expect(response.body).toMatchObject({
       username: 'T0001',
-      role: ZRole.Enum.Teacher,
+      role: ZRole.enum.Teacher,
     });
   });
 });
@@ -70,7 +70,7 @@ describe('Trying evil scenarios', () => {
 
     expect(getInfo.body).toMatchObject({
       username: 'A0001',
-      role: ZRole.Enum.Admin,
+      role: ZRole.enum.Admin,
     });
   });
 

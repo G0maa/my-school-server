@@ -11,7 +11,7 @@ const studyClassRouter = express.Router();
 // #17 very WET CRUD operations.
 studyClassRouter.get(
   '/',
-  setAuthorizedRoles([ZRole.Enum.Admin, ZRole.Enum.Student]),
+  setAuthorizedRoles([ZRole.enum.Admin, ZRole.enum.Student]),
   isAuthenticated,
   async (_req, res) => {
     const query = await StudyClass.findAll();
@@ -28,7 +28,7 @@ studyClassRouter.get('/:id', isAuthenticated, async (req, res) => {
 
 studyClassRouter.post(
   '/',
-  setAuthorizedRoles([ZRole.Enum.Admin]),
+  setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req: Request, res: Response) => {
     const zStudyClass = ZStudyClass.parse(req.body);

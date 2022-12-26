@@ -28,7 +28,7 @@ export const getDummyClassId = async () => {
     where: { classId: 'CCC000' },
     defaults: {
       classId: 'CCC000',
-      class: ZStudyYear.Enum[1],
+      studyYear: ZStudyYear.Enum[1],
       educationType: ZEducationType.Enum.Literature,
     },
   });
@@ -41,7 +41,7 @@ export const getDummySubjectId = async () => {
     where: { subjectId: 'SSS000' },
     defaults: {
       subjectId: 'SSS000',
-      class: ZStudyYear.Enum[1],
+      studyYear: ZStudyYear.Enum[1],
       educationType: ZEducationType.Enum.Literature,
     },
   });
@@ -50,7 +50,7 @@ export const getDummySubjectId = async () => {
 
 export const getDummyTeacher = async () => {
   // To-Do, change to new syntax.
-  const user = await User.create({ role: ZRole.Enum.Teacher });
+  const user = await User.create({ role: ZRole.enum.Teacher });
   await user.$create('teacher', { id: user.id });
 
   return user;

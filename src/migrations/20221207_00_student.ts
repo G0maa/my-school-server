@@ -16,11 +16,12 @@ export const up: Migration = async ({ context: queryInterface }) => {
       references: { model: 'users', key: 'id' },
     },
     study_year: {
-      type: DataTypes.ENUM(...Object.values(ZStudyYear.Enum)),
+      type: DataTypes.ENUM(...Object.values(ZStudyYear.enum)),
       allowNull: true,
     },
     education_type: {
       type: DataTypes.ENUM(...Object.values(ZEducationType.enum)),
+      // type: DataTypes.ENUM(ZEducationType.Enum),
       allowNull: true,
     },
     parent_name: {
@@ -37,7 +38,7 @@ export const up: Migration = async ({ context: queryInterface }) => {
 export const down: Migration = async ({ context: queryInterface }) => {
   await queryInterface.dropTable('students', {});
   await queryInterface.sequelize.query(
-    'DROP TYPE IF EXISTS enum_students_class'
+    'DROP TYPE IF EXISTS enum_students_study_year'
   );
   await queryInterface.sequelize.query(
     'DROP TYPE IF EXISTS enum_students_education_type'

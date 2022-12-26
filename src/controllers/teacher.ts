@@ -12,7 +12,7 @@ const teacherRouter = express.Router();
 // #17 very WET CRUD operations.
 teacherRouter.get(
   '/',
-  setAuthorizedRoles([ZRole.Enum.Admin]),
+  setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (_req, res) => {
     const query = await Teacher.findAll();
@@ -31,11 +31,13 @@ teacherRouter.get('/:id', isAuthenticated, async (req, res) => {
 // Remains for Teacher: doing this the correct way.
 teacherRouter.post(
   '/',
-  setAuthorizedRoles([ZRole.Enum.Admin]),
+  setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req: Request, res: Response) => {
     const zUser = ZUser.parse(req.body);
     const zTeacher = ZTeacher.parse(req.body);
+
+    zUser.role = ZRole.enum.Teacher;
 
     const user = await User.create(zUser);
     await user.$create('teacher', zTeacher);

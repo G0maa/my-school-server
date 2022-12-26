@@ -15,7 +15,7 @@ beforeAll(async () => {
 
 export const dummyClass: ZStudyClass = {
   classId: 'BSC123',
-  class: '1',
+  studyYear: '1',
   educationType: 'Literature',
 };
 
@@ -35,6 +35,6 @@ describe('CRUD of StudyClass', () => {
       .expect(200);
 
     expect(get.body.classId).toMatch('BSC123');
-    expect(get.body.class).toEqual('1');
+    expect(get.body.studyYear).toEqual('1');
   });
 });
