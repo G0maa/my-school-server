@@ -1,6 +1,6 @@
 import supertest from 'supertest';
 import { app } from '../app';
-import { loginAdmin } from './helpers';
+import { getDummySubjectId, loginAdmin } from './helpers';
 import { ZSubject } from '../validator/subject.validator';
 
 const api = supertest(app);
@@ -39,14 +39,10 @@ describe('CRUD of Subject', () => {
   });
 
   test('Success delete Subject when theres no Referrenetial Integerity', async () => {
-    const subject = await api
-      .post(subjectRoute)
-      .set('Cookie', [sessionId])
-      .send(dummySubject)
-      .expect(200);
+    const subjectId = await getDummySubjectId();
 
     await api
-      .delete(`${subjectRoute}${subject.body.subjectId}`)
+      .delete(`${subjectRoute}${subjectId}`)
       .set('Cookie', [sessionId])
       .expect(200);
 
@@ -59,7 +55,7 @@ describe('CRUD of Subject', () => {
       expect.arrayContaining([
         expect.objectContaining({
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          subjectId: subject.body.subjectId,
+          subjectId: subjectId,
         }),
       ])
     );

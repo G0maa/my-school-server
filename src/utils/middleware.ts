@@ -59,6 +59,7 @@ const unknownEndpoint = (_req: Request, res: Response) => {
   res.status(404).send({ error: 'unknown endpoint' });
 };
 
+// Errors probably need to be typed, also it's pretty WET code.
 const errorHandler: ErrorRequestHandler = (error, _request, response, next) => {
   logger.error('Error name: ', error.name);
   logger.error('Error message: ', error.message);
@@ -81,6 +82,9 @@ const errorHandler: ErrorRequestHandler = (error, _request, response, next) => {
     return response.status(400).json(error.errors);
   }
   if (error.name === 'SequelizeForeignKeyConstraintError') {
+    return response.status(400).json(error.message);
+  }
+  if (error.name === 'SequelizeUniqueConstraintError') {
     return response.status(400).json(error.message);
   }
   return next(error);
