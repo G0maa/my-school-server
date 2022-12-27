@@ -37,4 +37,17 @@ studyClassRouter.post(
   }
 );
 
+// Not tested
+studyClassRouter.delete(
+  '/:id',
+  setAuthorizedRoles([ZRole.enum.Admin]),
+  isAuthenticated,
+  async (req: Request, res: Response) => {
+    const studyClass = await StudyClass.destroy({
+      where: { classId: req.params.id },
+    });
+    return res.status(200).json(studyClass).end();
+  }
+);
+
 export default studyClassRouter;

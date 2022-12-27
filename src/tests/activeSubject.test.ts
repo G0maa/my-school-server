@@ -12,7 +12,7 @@ const api = supertest(app);
 const activeSubjectRoute = '/api/activeSubject/';
 
 let sessionId: string;
-const dummyActiveSubject: ZActiveSubject = {
+export const dummyActiveSubject: ZActiveSubject = {
   subjectId: '',
   classId: '',
   teacherId: '',

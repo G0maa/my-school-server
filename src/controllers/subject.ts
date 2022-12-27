@@ -37,4 +37,16 @@ subjectRouter.post(
   }
 );
 
+subjectRouter.delete(
+  '/:id',
+  setAuthorizedRoles([ZRole.enum.Admin]),
+  isAuthenticated,
+  async (req: Request, res: Response) => {
+    const subject = await Subject.destroy({
+      where: { subjectId: req.params.id },
+    });
+    return res.status(200).json(subject).end();
+  }
+);
+
 export default subjectRouter;

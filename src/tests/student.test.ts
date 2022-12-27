@@ -2,7 +2,7 @@ import supertest from 'supertest';
 import { app } from '../app';
 import { ZStudent } from '../validator/student.validator';
 import { ZUser } from '../validator/user.validator';
-import { loginAdmin } from './helpers';
+import { getDummyClassId, loginAdmin } from './helpers';
 
 const api = supertest(app);
 const studentRoute = '/api/student/';
@@ -39,8 +39,6 @@ const fullStudent = {
 
 describe('CRUD of Student', () => {
   test('POST & GET simpleified student', async () => {
-    // const postStudent = await api
-
     await api
       .post(studentRoute)
       .set('Cookie', [sessionId])
@@ -73,5 +71,68 @@ describe('CRUD of Student', () => {
       .get(`${studentRoute}${res.body.userId}`)
       .set('Cookie', [sessionId])
       .expect(200);
+  });
+
+  test('Success when adding a Student with an existent Class', async () => {
+    const classId = await getDummyClassId();
+
+    const res = await api
+      .post(`${studentRoute}`)
+      .set('Cookie', [sessionId])
+      .send({ ...dummyStudent, classId })
+      .expect(200);
+
+    const res2 = await api
+      .get(`${studentRoute}${res.body.userId}`)
+      .set('Cookie', [sessionId])
+      .expect(200);
+
+    expect(res2.body.classId).toEqual(classId);
+  });
+
+  test('Fails when adding a Student with a non-existent Class', async () => {
+    const res = await api
+      .post(`${studentRoute}`)
+      .set('Cookie', [sessionId])
+      .send({ ...dummyStudent, classId: 'ZZZ000' })
+      .expect(400);
+
+    // Dirty coverage of code.
+    const allStudentsReq = await api
+      .get(studentRoute)
+      .set('Cookie', [sessionId])
+      .expect(200);
+
+    expect(allStudentsReq.body).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          userId: res.body.userId,
+        }),
+      ])
+    );
+  });
+
+  test('Deletion of a Student without Study Class', async () => {
+    const res = await api
+      .post(`${studentRoute}`)
+      .set('Cookie', [sessionId])
+      .send(dummyStudent)
+      .expect(200);
+
+    // Dirty coverage of code.
+    const allStudentsReq = await api
+      .delete(`${studentRoute}${res.body.userId}`)
+      .set('Cookie', [sessionId])
+      .expect(200);
+
+    expect(allStudentsReq.body).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          userId: res.body.userId,
+        }),
+      ])
+    );
   });
 });

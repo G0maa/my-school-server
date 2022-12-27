@@ -24,15 +24,23 @@ class ActiveSubject extends Model {
   serial!: number;
 
   @ForeignKey(() => StudyClass)
-  @Column(DataType.STRING(6))
+  @Column({
+    type: DataType.STRING(6),
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
   classId!: string;
 
   @ForeignKey(() => Subject)
-  @Column(DataType.STRING(6))
+  @Column({
+    type: DataType.STRING(6),
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
   subjectId!: string;
 
   @ForeignKey(() => Teacher)
-  @Column(DataType.UUID())
+  @Column({ type: DataType.UUID(), onDelete: 'SET NULL', onUpdate: 'CASCADE' })
   teacherId!: string;
 
   @AllowNull(false)
