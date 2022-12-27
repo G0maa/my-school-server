@@ -2,12 +2,19 @@ import supertest from 'supertest';
 import { app } from '../app';
 import { getDummySubjectId, loginAdmin } from './helpers';
 import { ZSubject } from '../validator/subject.validator';
+// import Subject from '../models/subject';
+import ActiveSubject from '../models/activeSubject';
 
 const api = supertest(app);
 const subjectRoute = '/api/subject/';
 
 let sessionId: string;
 beforeAll(async () => {
+  // Temporary fix, need to come up/find an actual methodolgy for tests
+  // i.e. make test files (at least) completely stand alone,
+  // i.e. if other tests run before or after them => it won't affect them ?or affect other tests?
+  await ActiveSubject.destroy({ where: {} });
+  // await Subject.destroy({});
   // P.S: Can be a student too, something code coverage won't get.
   sessionId = (await loginAdmin(api)) as string;
   await api.get('/testAuth').set('Cookie', [sessionId]).expect(200);
