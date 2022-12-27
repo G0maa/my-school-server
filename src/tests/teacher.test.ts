@@ -101,7 +101,7 @@ describe('CRUD of Teacher', () => {
     );
   });
 
-  test('Fails when Teacher is attached to an ActiveSubject', async () => {
+  test('Success when Teacher is attached to an ActiveSubject', async () => {
     const teacher = await api
       .post(teacherRoute)
       .set('Cookie', [sessionId])
@@ -115,11 +115,9 @@ describe('CRUD of Teacher', () => {
       .send({ ...dummyActiveSubject, teacherId: teacher.body.userId })
       .expect(200);
 
-    const res = await api
+    await api
       .delete(`${teacherRoute}${teacher.body.userId}`)
       .set('Cookie', [sessionId])
-      .expect(400);
-
-    expect(res.body).toMatch('violates foreign key constraint');
+      .expect(200);
   });
 });

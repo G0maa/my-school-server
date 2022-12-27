@@ -31,7 +31,7 @@ class Teacher extends Model {
   @ForeignKey(() => User) // is this needed?
   @BelongsTo(() => User, { as: 'user' }) // student
   @Default(DataType.UUIDV4) // to allow creation on this side.
-  @Column({ type: DataType.UUID, onDelete: 'CASCADE' })
+  @Column({ type: DataType.UUID, onDelete: 'CASCADE', onUpdate: 'CASCADE' })
   userId!: string;
 
   @AllowNull(true)

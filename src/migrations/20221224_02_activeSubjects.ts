@@ -11,15 +11,20 @@ export const up: Migration = async ({ context: queryInterface }) => {
     },
     class_id: {
       type: DataTypes.STRING(6),
+      onDelete: 'SET NULL',
+      onUpdate: 'CASCADE',
       references: { model: 'study_classes', key: 'class_id' },
     },
     subject_id: {
       type: DataTypes.STRING(6),
+      onDelete: 'SET NULL',
+      onUpdate: 'CASCADE',
       references: { model: 'subjects', key: 'subject_id' },
     },
     teacher_id: {
       type: DataTypes.UUID(),
-      // onDelete: 'SET NULL', also keep it on default for now.
+      onDelete: 'SET NULL',
+      onUpdate: 'CASCADE',
       references: { model: 'teachers', key: 'user_id' },
     },
     subject_schedule: {

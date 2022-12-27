@@ -14,6 +14,7 @@ export const up: Migration = async ({ context: queryInterface }) => {
       allowNull: false,
       unique: true,
       onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
       references: { model: 'users', key: 'id' },
     },
     education: {

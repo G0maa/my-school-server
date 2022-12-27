@@ -27,7 +27,7 @@ class Admin extends Model {
   @ForeignKey(() => User)
   @PrimaryKey
   @AllowNull(false)
-  @Column(DataType.UUID)
+  @Column({ type: DataType.UUID, onDelete: 'RESTRICT', onUpdate: 'RESTRICT' })
   userId!: string;
 }
 
