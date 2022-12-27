@@ -1,9 +1,11 @@
 import { z } from 'zod';
 import { ZEducationType, ZStudyYear } from './general.validator';
+import { ZStudyClass } from './studyClass.validator';
 
 export const ZStudent = z
   .object({
     userId: z.string().uuid(),
+    classId: ZStudyClass.shape.classId,
     studyYear: ZStudyYear,
     educationType: ZEducationType,
     parentName: z.string().max(64),

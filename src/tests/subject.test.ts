@@ -1,13 +1,20 @@
 import supertest from 'supertest';
 import { app } from '../app';
-import { loginAdmin } from './helpers';
+import { getDummySubjectId, loginAdmin } from './helpers';
 import { ZSubject } from '../validator/subject.validator';
+// import Subject from '../models/subject';
+import ActiveSubject from '../models/activeSubject';
 
 const api = supertest(app);
 const subjectRoute = '/api/subject/';
 
 let sessionId: string;
 beforeAll(async () => {
+  // Temporary fix, need to come up/find an actual methodolgy for tests
+  // i.e. make test files (at least) completely stand alone,
+  // i.e. if other tests run before or after them => it won't affect them ?or affect other tests?
+  await ActiveSubject.destroy({ where: {} });
+  // await Subject.destroy({});
   // P.S: Can be a student too, something code coverage won't get.
   sessionId = (await loginAdmin(api)) as string;
   await api.get('/testAuth').set('Cookie', [sessionId]).expect(200);
@@ -36,5 +43,28 @@ describe('CRUD of Subject', () => {
 
     expect(get.body.subjectId).toMatch('BSC123');
     expect(get.body.studyYear).toEqual('1');
+  });
+
+  test('Success delete Subject when theres no Referrenetial Integerity', async () => {
+    const subjectId = await getDummySubjectId();
+
+    await api
+      .delete(`${subjectRoute}${subjectId}`)
+      .set('Cookie', [sessionId])
+      .expect(200);
+
+    const subjects = await api
+      .get(subjectRoute)
+      .set('Cookie', [sessionId])
+      .expect(200);
+
+    expect(subjects.body).not.toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          subjectId: subjectId,
+        }),
+      ])
+    );
   });
 });

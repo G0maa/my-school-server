@@ -83,6 +83,10 @@ export const up: Migration = async ({ context: queryInterface }) => {
     user_id: {
       type: DataTypes.UUID(),
       allowNull: false,
+      // This particular one is RESTRICT,
+      // because deletion of an admin is kind of dangerous.
+      onDelete: 'RESTRICT',
+      onUpdate: 'RESTRICT',
       references: { model: 'users', key: 'id' },
     },
   });
