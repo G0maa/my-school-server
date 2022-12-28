@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { Bug } from '../types';
 // type CreateStudent = z.infer<typeof CreateStudent>; I forget how to do this a lot.
+export const ZUuid = z.string().uuid();
 export const ZStudyYear = z.enum(['1', '2', '3']);
 export const ZRole = z.enum(['Student', 'Teacher', 'Admin']);
 // export const ZRole = z.nativeEnum(zRole);
