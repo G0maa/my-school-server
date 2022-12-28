@@ -3,6 +3,7 @@
 import { Teacher, User } from '../models';
 import { ZTeacher } from '../validator/teacher.validator';
 import { ZUser } from '../validator/user.validator';
+import { deleteUser } from './user.service';
 
 const getTeachers = async () => {
   const query = await Teacher.findAll();
@@ -37,7 +38,7 @@ const createTeacher = async (user: ZUser, teacher: ZTeacher) => {
 // i.e. this teacher might be in some record in ActiveCourses.
 // current implementation => Don't delete and give a not so useful error message.
 const deleteTeacher = async (userId: string) => {
-  const teacher = await Teacher.destroy({ where: { userId } });
+  const teacher = await deleteUser(userId);
   return teacher;
 };
 

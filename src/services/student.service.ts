@@ -3,6 +3,7 @@
 import { Student, User } from '../models';
 import { ZStudent } from '../validator/student.validator';
 import { ZUser } from '../validator/user.validator';
+import { deleteUser } from './user.service';
 
 const getStudents = async () => {
   const query = await Student.findAll();
@@ -33,10 +34,8 @@ const createStudent = async (zUser: ZUser, zStudent: ZStudent) => {
   return student;
 };
 
-// To-do Delete student , test with classId existing, add classId to Validator
-// test that classId actually references an actualy studyClass, etc...
 const deleteStudent = async (userId: string) => {
-  const student = await Student.destroy({ where: { userId } });
+  const student = await deleteUser(userId);
   return student;
 };
 
