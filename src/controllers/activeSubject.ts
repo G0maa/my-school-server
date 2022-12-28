@@ -1,7 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import express, { Request, Response } from 'express';
-import ActiveSubject from '../models/activeSubject';
+import {
+  createActiveSubject,
+  deleteActiveSubject,
+  getActiveSubject,
+  getActiveSubjects,
+} from '../services/activeSubject.service';
 import { setAuthorizedRoles, isAuthenticated } from '../utils/middleware';
 import { ZActiveSubject } from '../validator/activeSubject.validator';
 import { ZRole } from '../validator/general.validator';
@@ -14,7 +19,7 @@ activeSubjectRouter.get(
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (_req, res) => {
-    const query = await ActiveSubject.findAll();
+    const query = await getActiveSubjects();
     return res.status(200).json(query).end();
   }
 );
@@ -25,9 +30,7 @@ activeSubjectRouter.get(
 // /api/activeSubjects/:id?query=studyClass i.e. all subjects & teachers for this class
 // /api/activeSubjects/:id?query=subject i.e. all classes & teachers for this subject
 activeSubjectRouter.get('/:id', isAuthenticated, async (req, res) => {
-  const query = await ActiveSubject.findOne({
-    where: { serial: req.params.id },
-  });
+  const query = await getActiveSubject(req.params.id);
   return res.status(200).json(query).end();
 });
 
@@ -38,7 +41,7 @@ activeSubjectRouter.post(
   isAuthenticated,
   async (req: Request, res: Response) => {
     const zActiveSubject = ZActiveSubject.parse(req.body);
-    const activeSubject = await ActiveSubject.create(zActiveSubject);
+    const activeSubject = await createActiveSubject(zActiveSubject);
     return res.status(200).json(activeSubject).end();
   }
 );
@@ -49,9 +52,7 @@ activeSubjectRouter.delete(
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req: Request, res: Response) => {
-    const activeSubject = await ActiveSubject.destroy({
-      where: { serial: req.params.id },
-    });
+    const activeSubject = await deleteActiveSubject(req.params.id);
     return res.status(200).json(activeSubject).end();
   }
 );

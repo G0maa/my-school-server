@@ -1,7 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import express, { Request, Response } from 'express';
-import Subject from '../models/subject';
+import {
+  createSubject,
+  deleteSubject,
+  getSubject,
+  getSubjects,
+} from '../services/subject.service';
 import { setAuthorizedRoles, isAuthenticated } from '../utils/middleware';
 import { ZRole } from '../validator/general.validator';
 import { ZSubject } from '../validator/subject.validator';
@@ -14,15 +19,14 @@ subjectRouter.get(
   setAuthorizedRoles([ZRole.enum.Admin, ZRole.enum.Student]),
   isAuthenticated,
   async (_req, res) => {
-    const query = await Subject.findAll();
+    const query = await getSubjects();
     return res.status(200).json(query).end();
   }
 );
 
 subjectRouter.get('/:id', isAuthenticated, async (req, res) => {
-  const query = await Subject.findOne({
-    where: { subjectId: req.params.id },
-  });
+  const zSubjectId = ZSubject.shape.subjectId.parse(req.params.id);
+  const query = await getSubject(zSubjectId);
   return res.status(200).json(query).end();
 });
 
@@ -32,7 +36,7 @@ subjectRouter.post(
   isAuthenticated,
   async (req: Request, res: Response) => {
     const zSubject = ZSubject.parse(req.body);
-    const subject = await Subject.create(zSubject);
+    const subject = await createSubject(zSubject);
     return res.status(200).json(subject).end();
   }
 );
@@ -42,9 +46,8 @@ subjectRouter.delete(
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req: Request, res: Response) => {
-    const subject = await Subject.destroy({
-      where: { subjectId: req.params.id },
-    });
+    const zSubjectId = ZSubject.shape.subjectId.parse(req.params.id);
+    const subject = await deleteSubject(zSubjectId);
     return res.status(200).json(subject).end();
   }
 );

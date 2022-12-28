@@ -1,17 +1,8 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import express from 'express';
 import { isAuthenticated } from '../utils/middleware';
-import { rollbackAllMigrations } from '../utils/db';
-import init from '../utils/init';
 
 const devRouter = express.Router();
-
-// This might be useless #deprecated
-devRouter.get('/deleteAllRecords', async (_req, res) => {
-  await rollbackAllMigrations();
-  await init();
-  return res.status(200).end();
-});
 
 // Another option to test GET requests
 devRouter.get('/login', (_req, res) => {

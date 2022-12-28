@@ -1,9 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import express, { Request, Response } from 'express';
-import { Teacher, User } from '../models';
+import {
+  createTeacher,
+  deleteTeacher,
+  getTeacher,
+  getTeachers,
+} from '../services/teacher.service';
 import { setAuthorizedRoles, isAuthenticated } from '../utils/middleware';
-import { ZRole } from '../validator/general.validator';
+import { ZRole, ZUuid } from '../validator/general.validator';
 import { ZTeacher } from '../validator/teacher.validator';
 import { ZUser } from '../validator/user.validator';
 
@@ -15,16 +20,14 @@ teacherRouter.get(
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (_req, res) => {
-    const query = await Teacher.findAll();
+    const query = await getTeachers();
     return res.status(200).json(query).end();
   }
 );
 
 teacherRouter.get('/:id', isAuthenticated, async (req, res) => {
-  const query = await Teacher.findOne({
-    include: User,
-    where: { userId: req.params.id },
-  });
+  const zUuid = ZUuid.parse(req.params.id);
+  const query = await getTeacher(zUuid);
   return res.status(200).json(query).end();
 });
 
@@ -37,17 +40,7 @@ teacherRouter.post(
     const zUser = ZUser.parse(req.body);
     const zTeacher = ZTeacher.parse(req.body);
 
-    zUser.role = 'Teacher';
-
-    const teacher = await Teacher.create(
-      {
-        ...zTeacher,
-        user: { ...zUser },
-      },
-      {
-        include: User,
-      }
-    );
+    const teacher = await createTeacher(zUser, zTeacher);
 
     return res.status(200).json(teacher).end();
   }
@@ -61,7 +54,8 @@ teacherRouter.delete(
   setAuthorizedRoles([ZRole.Enum.Admin]),
   isAuthenticated,
   async (req, res) => {
-    const teacher = await Teacher.destroy({ where: { userId: req.params.id } });
+    const zUuid = ZUuid.parse(req.params.id);
+    const teacher = await deleteTeacher(zUuid);
     return res.status(200).json(teacher).end();
   }
 );

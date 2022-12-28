@@ -1,7 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import express, { Request, Response } from 'express';
-import StudyClass from '../models/class';
+import {
+  createStudyClass,
+  deleteStudyClass,
+  getStudyClass,
+  getStudyClasses,
+} from '../services/studyClass.service';
 import { setAuthorizedRoles, isAuthenticated } from '../utils/middleware';
 import { ZRole } from '../validator/general.validator';
 import { ZStudyClass } from '../validator/studyClass.validator';
@@ -14,15 +19,14 @@ studyClassRouter.get(
   setAuthorizedRoles([ZRole.enum.Admin, ZRole.enum.Student]),
   isAuthenticated,
   async (_req, res) => {
-    const query = await StudyClass.findAll();
+    const query = await getStudyClasses();
     return res.status(200).json(query).end();
   }
 );
 
 studyClassRouter.get('/:id', isAuthenticated, async (req, res) => {
-  const query = await StudyClass.findOne({
-    where: { classId: req.params.id },
-  });
+  const zStudyClassId = ZStudyClass.shape.classId.parse(req.params.id);
+  const query = await getStudyClass(zStudyClassId);
   return res.status(200).json(query).end();
 });
 
@@ -32,7 +36,7 @@ studyClassRouter.post(
   isAuthenticated,
   async (req: Request, res: Response) => {
     const zStudyClass = ZStudyClass.parse(req.body);
-    const studyClass = await StudyClass.create(zStudyClass);
+    const studyClass = await createStudyClass(zStudyClass);
     return res.status(200).json(studyClass).end();
   }
 );
@@ -43,9 +47,9 @@ studyClassRouter.delete(
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req: Request, res: Response) => {
-    const studyClass = await StudyClass.destroy({
-      where: { classId: req.params.id },
-    });
+    const zStudyClassId = ZStudyClass.shape.classId.parse(req.params.id);
+
+    const studyClass = await deleteStudyClass(zStudyClassId);
     return res.status(200).json(studyClass).end();
   }
 );
