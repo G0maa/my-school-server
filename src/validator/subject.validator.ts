@@ -7,4 +7,7 @@ export const ZSubject = z.object({
   studyYear: ZStudyYear,
   educationType: ZEducationType,
 });
+
+export const ZSubjectQuery = ZSubject.partial();
 export type ZSubject = z.infer<typeof ZSubject>;
+export type ZSubjectQuery = z.infer<typeof ZSubjectQuery>;

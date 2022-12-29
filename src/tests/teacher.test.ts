@@ -10,6 +10,7 @@ const teacherRoute = '/api/teacher/';
 
 let sessionId: string;
 beforeAll(async () => {
+  jest.setTimeout(20000);
   sessionId = (await loginAdmin(api)) as string;
   // Can be moved to its own function
   await api.get('/testAuth').set('Cookie', [sessionId]).expect(200);
