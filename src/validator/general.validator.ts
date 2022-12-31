@@ -18,16 +18,10 @@ export const ZBloodGroup = z.enum([
   'AB-',
 ]);
 export const ZEducationType = z.enum(['Sceiences', 'Literature', 'Other']);
-export const ZToQuery = z
-  .object({})
-  .catchall(z.coerce.string())
-  .transform((obj: Record<string, string>) => {
-    const res: Record<string, object> = {};
-    for (const k in obj) {
-      res[k] = { [Op.like]: `%${obj[k]}%` };
-    }
-    return res;
-  });
+export const ToLikeQuery = (attribute: string | undefined) => {
+  if (!attribute) return;
+  return { [Op.like]: `%${attribute}%` };
+};
 
 // Inferred Types
 export type StudyYear = z.infer<typeof ZStudyYear>;
