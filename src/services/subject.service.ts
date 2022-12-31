@@ -1,16 +1,7 @@
 import Subject from '../models/subject';
-// import { ZSubject } from '../validator/subject.validator';
 import { ZSubject, ZSubjectQuery } from '../validator/subject.validator';
 
-// Fast:
-// const getSubjects = async () => {
-//   const query = await Subject.findAll();
-//   return query;
-// };
-
-// Slow:
 const getSubjects = async (searchQuery: ZSubjectQuery) => {
-  // const query = await Subject.findAll();
   const query = await Subject.findAll({
     where: { ...searchQuery },
   });

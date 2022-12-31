@@ -8,26 +8,14 @@ import {
   getSubjects,
 } from '../services/subject.service';
 import { setAuthorizedRoles, isAuthenticated } from '../utils/middleware';
-// import { ZRole } from '../validator/general.validator';
-// import { ZSubject } from '../validator/subject.validator';
 import { ZRole, ZToQuery } from '../validator/general.validator';
 import { ZSubject, ZSubjectQuery } from '../validator/subject.validator';
 
 const subjectRouter = express.Router();
 
 // #17 very WET CRUD operations.
-// Fast:
-// subjectRouter.get(
-//   '/',
-//   setAuthorizedRoles([ZRole.enum.Admin, ZRole.enum.Student]),
-//   isAuthenticated,
-//   async (_req, res) => {
-//     const query = await getSubjects();
-//     return res.status(200).json(query).end();
-//   }
-// );
-
-// Slow:
+// Searching not tested,
+// Bug: Can't search for enums.
 subjectRouter.get(
   '/',
   setAuthorizedRoles([ZRole.enum.Admin, ZRole.enum.Student]),
