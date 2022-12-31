@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { ToLikeQuery } from './general.validator';
 
 // Caveat of this re-work,
 // you're not veryfing referrentail integrtity here,
@@ -10,4 +11,12 @@ export const ZTeacher = z
     education: z.string().max(64),
   })
   .partial();
+
+export const ZTeacherQuery = ZTeacher.extend({
+  department: ZTeacher.shape.department.transform((attribute) =>
+    ToLikeQuery(attribute)
+  ),
+}).partial();
+export type ZTeacherQuery = z.infer<typeof ZTeacherQuery>;
+
 export type ZTeacher = z.infer<typeof ZTeacher>;

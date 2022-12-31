@@ -1,12 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Teacher, User } from '../models';
-import { ZTeacher } from '../validator/teacher.validator';
-import { ZUser } from '../validator/user.validator';
+import { ZTeacher, ZTeacherQuery } from '../validator/teacher.validator';
+import { ZUser, ZUserQuery } from '../validator/user.validator';
 import { deleteUser } from './user.service';
 
-const getTeachers = async () => {
-  const query = await Teacher.findAll();
+const getTeachers = async (
+  searchQueryUser: ZUserQuery,
+  searchQueryTeacher: ZTeacherQuery
+) => {
+  const query = await Teacher.findAll({
+    include: { model: User, where: { ...searchQueryUser } },
+    where: { ...searchQueryTeacher },
+  });
   return query;
 };
 

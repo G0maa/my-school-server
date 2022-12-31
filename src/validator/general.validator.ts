@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import { z } from 'zod';
 import { Bug } from '../types';
 // type CreateStudent = z.infer<typeof CreateStudent>; I forget how to do this a lot.
@@ -17,6 +18,10 @@ export const ZBloodGroup = z.enum([
   'AB-',
 ]);
 export const ZEducationType = z.enum(['Sceiences', 'Literature', 'Other']);
+export const ToLikeQuery = (attribute: string | undefined) => {
+  if (!attribute) return;
+  return { [Op.like]: `%${attribute}%` };
+};
 
 // Inferred Types
 export type StudyYear = z.infer<typeof ZStudyYear>;

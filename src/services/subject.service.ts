@@ -1,10 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-misused-promises */
 import Subject from '../models/subject';
-import { ZSubject } from '../validator/subject.validator';
+import { ZSubject, ZSubjectQuery } from '../validator/subject.validator';
 
-const getSubjects = async () => {
-  const query = await Subject.findAll();
+const getSubjects = async (searchQuery: ZSubjectQuery) => {
+  const query = await Subject.findAll({
+    where: { ...searchQuery },
+  });
   return query;
 };
 

@@ -1,12 +1,19 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Student, User } from '../models';
-import { ZStudent } from '../validator/student.validator';
-import { ZUser } from '../validator/user.validator';
+import { ZStudent, ZStudentQuery } from '../validator/student.validator';
+import { ZUser, ZUserQuery } from '../validator/user.validator';
 import { deleteUser } from './user.service';
 
-const getStudents = async () => {
-  const query = await Student.findAll();
+// Searching not tested
+const getStudents = async (
+  searchQueryUser: ZUserQuery,
+  searchQueryStudent: ZStudentQuery
+) => {
+  const query = await Student.findAll({
+    include: { model: User, where: { ...searchQueryUser } },
+    where: { ...searchQueryStudent },
+  });
   return query;
 };
 

@@ -8,7 +8,10 @@ import {
   getActiveSubjects,
 } from '../services/activeSubject.service';
 import { setAuthorizedRoles, isAuthenticated } from '../utils/middleware';
-import { ZActiveSubject } from '../validator/activeSubject.validator';
+import {
+  ZActiveSubject,
+  ZActiveSubjectQuery,
+} from '../validator/activeSubject.validator';
 import { ZRole } from '../validator/general.validator';
 
 const activeSubjectRouter = express.Router();
@@ -18,17 +21,13 @@ activeSubjectRouter.get(
   '/',
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
-  async (_req, res) => {
-    const query = await getActiveSubjects();
+  async (req, res) => {
+    const searchQuery = ZActiveSubjectQuery.parse(req.query);
+    const query = await getActiveSubjects(searchQuery);
     return res.status(200).json(query).end();
   }
 );
 
-// Lots of variations in this one.
-// To-Do
-// /api/activeSubjects/:id?query=teacher i.e. all classes & subjects for this teacher id
-// /api/activeSubjects/:id?query=studyClass i.e. all subjects & teachers for this class
-// /api/activeSubjects/:id?query=subject i.e. all classes & teachers for this subject
 activeSubjectRouter.get('/:id', isAuthenticated, async (req, res) => {
   const query = await getActiveSubject(req.params.id);
   return res.status(200).json(query).end();

@@ -9,7 +9,10 @@ import {
 } from '../services/studyClass.service';
 import { setAuthorizedRoles, isAuthenticated } from '../utils/middleware';
 import { ZRole } from '../validator/general.validator';
-import { ZStudyClass } from '../validator/studyClass.validator';
+import {
+  ZStudyClass,
+  ZStudyClassQuery,
+} from '../validator/studyClass.validator';
 
 const studyClassRouter = express.Router();
 
@@ -18,8 +21,9 @@ studyClassRouter.get(
   '/',
   setAuthorizedRoles([ZRole.enum.Admin, ZRole.enum.Student]),
   isAuthenticated,
-  async (_req, res) => {
-    const query = await getStudyClasses();
+  async (req, res) => {
+    const searchQuery = ZStudyClassQuery.parse(req.query);
+    const query = await getStudyClasses(searchQuery);
     return res.status(200).json(query).end();
   }
 );

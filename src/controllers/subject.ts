@@ -9,17 +9,20 @@ import {
 } from '../services/subject.service';
 import { setAuthorizedRoles, isAuthenticated } from '../utils/middleware';
 import { ZRole } from '../validator/general.validator';
-import { ZSubject } from '../validator/subject.validator';
+import { ZSubject, ZSubjectQuery } from '../validator/subject.validator';
 
 const subjectRouter = express.Router();
 
 // #17 very WET CRUD operations.
+// Searching not tested,
 subjectRouter.get(
   '/',
   setAuthorizedRoles([ZRole.enum.Admin, ZRole.enum.Student]),
   isAuthenticated,
-  async (_req, res) => {
-    const query = await getSubjects();
+  async (req, res) => {
+    const searchQuery = ZSubjectQuery.parse(req.query);
+
+    const query = await getSubjects(searchQuery);
     return res.status(200).json(query).end();
   }
 );

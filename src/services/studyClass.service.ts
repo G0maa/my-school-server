@@ -1,10 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import StudyClass from '../models/class';
-import { ZStudyClass } from '../validator/studyClass.validator';
+import {
+  ZStudyClass,
+  ZStudyClassQuery,
+} from '../validator/studyClass.validator';
 
-const getStudyClasses = async () => {
-  const query = await StudyClass.findAll();
+// Searching not well tested
+const getStudyClasses = async (searchQuery: ZStudyClassQuery) => {
+  const query = await StudyClass.findAll({ where: { ...searchQuery } });
   return query;
 };
 

@@ -9,8 +9,8 @@ import {
 } from '../services/teacher.service';
 import { setAuthorizedRoles, isAuthenticated } from '../utils/middleware';
 import { ZRole, ZUuid } from '../validator/general.validator';
-import { ZTeacher } from '../validator/teacher.validator';
-import { ZUser } from '../validator/user.validator';
+import { ZTeacher, ZTeacherQuery } from '../validator/teacher.validator';
+import { ZUser, ZUserQuery } from '../validator/user.validator';
 
 const teacherRouter = express.Router();
 
@@ -19,8 +19,11 @@ teacherRouter.get(
   '/',
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
-  async (_req, res) => {
-    const query = await getTeachers();
+  async (req, res) => {
+    const searchQueryUser = ZUserQuery.parse(req.query);
+    const searchQueryTeacher = ZTeacherQuery.parse(req.query);
+
+    const query = await getTeachers(searchQueryUser, searchQueryTeacher);
     return res.status(200).json(query).end();
   }
 );
