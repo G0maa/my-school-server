@@ -25,6 +25,9 @@ export const ZUser = z
 // .required({ role: true }); cannot set defaults now.
 
 export const ZUserQuery = ZUser.extend({
+  username: ZUser.shape.username.transform((attribute) =>
+    ToLikeQuery(attribute)
+  ),
   firstName: ZUser.shape.firstName.transform((attribute) =>
     ToLikeQuery(attribute)
   ),
