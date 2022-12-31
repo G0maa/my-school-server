@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ZBloodGroup, ZGender, ZRole } from './general.validator';
+import { ToLikeQuery, ZBloodGroup, ZGender, ZRole } from './general.validator';
 
 export const ZUser = z
   .object({
@@ -23,4 +23,12 @@ export const ZUser = z
   })
   .partial();
 // .required({ role: true }); cannot set defaults now.
+
+export const ZUserQuery = ZUser.extend({
+  firstName: ZUser.shape.firstName.transform((attribute) =>
+    ToLikeQuery(attribute)
+  ),
+}).partial();
+export type ZUserQuery = z.infer<typeof ZUserQuery>;
+
 export type ZUser = z.infer<typeof ZUser>;
