@@ -56,7 +56,11 @@ subjectRouter.put(
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req: Request, res: Response) => {
-    const zSubject = ZSubjectPut.parse(req.body);
+    // Replacing the subjectId in req.body, if it exists.
+    const zSubject = ZSubjectPut.parse({
+      ...req.body,
+      subjectId: req.params.id,
+    });
     // returns undefiend if not found => to-do: Return a proper message
     const subject = await updateSubject(zSubject);
     return res.status(200).json(subject).end();
