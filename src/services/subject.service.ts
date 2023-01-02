@@ -20,6 +20,21 @@ const createSubject = async (zSubject: ZSubject) => {
   return subject;
 };
 
+const updateSubject = async (zSubject: ZSubject) => {
+  const subject = await Subject.findOne({
+    where: {
+      subjectId: zSubject.subjectId,
+    },
+  });
+
+  if (!subject) return;
+
+  subject.set({ ...zSubject });
+
+  await subject.save();
+  return subject;
+};
+
 const deleteSubject = async (subjectId: string) => {
   const subject = await Subject.destroy({
     where: { subjectId },
@@ -27,4 +42,4 @@ const deleteSubject = async (subjectId: string) => {
   return subject;
 };
 
-export { getSubject, getSubjects, createSubject, deleteSubject };
+export { getSubject, getSubjects, createSubject, updateSubject, deleteSubject };
