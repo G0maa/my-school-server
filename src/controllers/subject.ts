@@ -6,10 +6,15 @@ import {
   deleteSubject,
   getSubject,
   getSubjects,
+  updateSubject,
 } from '../services/subject.service';
 import { setAuthorizedRoles, isAuthenticated } from '../utils/middleware';
 import { ZRole } from '../validator/general.validator';
-import { ZSubject, ZSubjectQuery } from '../validator/subject.validator';
+import {
+  ZSubject,
+  ZSubjectPut,
+  ZSubjectQuery,
+} from '../validator/subject.validator';
 
 const subjectRouter = express.Router();
 
@@ -40,6 +45,24 @@ subjectRouter.post(
   async (req: Request, res: Response) => {
     const zSubject = ZSubject.parse(req.body);
     const subject = await createSubject(zSubject);
+    return res.status(200).json(subject).end();
+  }
+);
+
+// Not tested
+// P.S: RESTful-wise, you have to send data for the whole resource.
+subjectRouter.put(
+  '/:id',
+  setAuthorizedRoles([ZRole.enum.Admin]),
+  isAuthenticated,
+  async (req: Request, res: Response) => {
+    // Replacing the subjectId in req.body, if it exists.
+    const zSubject = ZSubjectPut.parse({
+      ...req.body,
+      subjectId: req.params.id,
+    });
+    // returns undefiend if not found => to-do: Return a proper message
+    const subject = await updateSubject(zSubject);
     return res.status(200).json(subject).end();
   }
 );
