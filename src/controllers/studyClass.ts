@@ -6,11 +6,13 @@ import {
   deleteStudyClass,
   getStudyClass,
   getStudyClasses,
+  updateStudyClass,
 } from '../services/studyClass.service';
 import { setAuthorizedRoles, isAuthenticated } from '../utils/middleware';
 import { ZRole } from '../validator/general.validator';
 import {
   ZStudyClass,
+  ZStudyClassPut,
   ZStudyClassQuery,
 } from '../validator/studyClass.validator';
 
@@ -45,6 +47,21 @@ studyClassRouter.post(
   }
 );
 
+// Not tested
+studyClassRouter.put(
+  '/:id',
+  setAuthorizedRoles([ZRole.enum.Admin]),
+  isAuthenticated,
+  async (req: Request, res: Response) => {
+    const zStudyClass = ZStudyClassPut.parse({
+      ...req.body,
+      subjectId: req.params.id,
+    });
+    // returns undefiend if not found => to-do: Return a proper message
+    const studyClass = await updateStudyClass(zStudyClass);
+    return res.status(200).json(studyClass).end();
+  }
+);
 // Not tested
 studyClassRouter.delete(
   '/:id',
