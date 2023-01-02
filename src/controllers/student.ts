@@ -6,11 +6,16 @@ import {
   deleteStudent,
   getStudent,
   getStudents,
+  updateStudent,
 } from '../services/student.service';
 import { setAuthorizedRoles, isAuthenticated } from '../utils/middleware';
 import { ZRole, ZUuid } from '../validator/general.validator';
-import { ZStudent, ZStudentQuery } from '../validator/student.validator';
-import { ZUser, ZUserQuery } from '../validator/user.validator';
+import {
+  ZStudent,
+  ZStudentPut,
+  ZStudentQuery,
+} from '../validator/student.validator';
+import { ZUser, ZUserPut, ZUserQuery } from '../validator/user.validator';
 
 const studentRouter = express.Router();
 
@@ -44,6 +49,21 @@ studentRouter.post(
     const newStudent = await createStudent(zUser, zStudent);
 
     return res.status(200).json(newStudent).end();
+  }
+);
+
+// Not tested
+studentRouter.put(
+  '/:id',
+  setAuthorizedRoles([ZRole.enum.Admin]),
+  isAuthenticated,
+  async (req: Request, res: Response) => {
+    const zUser = ZUserPut.parse({ ...req.body, id: req.params.id });
+    const zStudent = ZStudentPut.parse({ ...req.body, userId: req.params.id });
+
+    const student = await updateStudent(zUser, zStudent);
+
+    return res.status(200).json(student).end();
   }
 );
 

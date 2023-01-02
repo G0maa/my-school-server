@@ -6,11 +6,16 @@ import {
   deleteTeacher,
   getTeacher,
   getTeachers,
+  updateTeacher,
 } from '../services/teacher.service';
 import { setAuthorizedRoles, isAuthenticated } from '../utils/middleware';
 import { ZRole, ZUuid } from '../validator/general.validator';
-import { ZTeacher, ZTeacherQuery } from '../validator/teacher.validator';
-import { ZUser, ZUserQuery } from '../validator/user.validator';
+import {
+  ZTeacher,
+  ZTeacherPut,
+  ZTeacherQuery,
+} from '../validator/teacher.validator';
+import { ZUser, ZUserPut, ZUserQuery } from '../validator/user.validator';
 
 const teacherRouter = express.Router();
 
@@ -49,6 +54,22 @@ teacherRouter.post(
   }
 );
 
+// Erm... I can change the role to Admin.
+// ORM doesn't care about patch or put, it's the same Model.set({}).
+// Not tested
+teacherRouter.put(
+  '/:id',
+  setAuthorizedRoles([ZRole.enum.Admin]),
+  isAuthenticated,
+  async (req: Request, res: Response) => {
+    const zUser = ZUserPut.parse({ ...req.body, id: req.params.id });
+    const zTeacher = ZTeacherPut.parse({ ...req.body, userId: req.params.id });
+
+    const teacher = await updateTeacher(zUser, zTeacher);
+
+    return res.status(200).json(teacher).end();
+  }
+);
 // Deletion in an School System might be tricky,
 // i.e. this teacher might be in some record in ActiveCourses.
 // current implementation => Don't delete and give a not so useful error message.

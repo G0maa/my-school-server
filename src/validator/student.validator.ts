@@ -5,7 +5,7 @@ import { ZStudyClass } from './studyClass.validator';
 export const ZStudent = z
   .object({
     userId: z.string().uuid(),
-    classId: ZStudyClass.shape.classId,
+    classId: ZStudyClass.shape.classId.nullable(),
     studyYear: ZStudyYear,
     educationType: ZEducationType,
     parentName: z.string().max(64),
@@ -28,6 +28,9 @@ export const ZStudentQuery = ZStudent.partial()
     ),
   })
   .partial();
+
+export const ZStudentPut = ZStudent.required();
+export type ZStudentPut = z.infer<typeof ZStudentPut>;
 export type ZStudentQuery = z.infer<typeof ZStudentQuery>;
 
 // What is this doing here?
