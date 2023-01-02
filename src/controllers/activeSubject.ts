@@ -6,10 +6,12 @@ import {
   deleteActiveSubject,
   getActiveSubject,
   getActiveSubjects,
+  updateActiveSubject,
 } from '../services/activeSubject.service';
 import { setAuthorizedRoles, isAuthenticated } from '../utils/middleware';
 import {
   ZActiveSubject,
+  ZActiveSubjectPut,
   ZActiveSubjectQuery,
 } from '../validator/activeSubject.validator';
 import { ZRole } from '../validator/general.validator';
@@ -41,6 +43,21 @@ activeSubjectRouter.post(
   async (req: Request, res: Response) => {
     const zActiveSubject = ZActiveSubject.parse(req.body);
     const activeSubject = await createActiveSubject(zActiveSubject);
+    return res.status(200).json(activeSubject).end();
+  }
+);
+
+// not-tested
+activeSubjectRouter.put(
+  '/:id',
+  setAuthorizedRoles([ZRole.enum.Admin]),
+  isAuthenticated,
+  async (req: Request, res: Response) => {
+    const zActiveSubject = ZActiveSubjectPut.parse({
+      ...req.body,
+      serial: req.params.id,
+    });
+    const activeSubject = await updateActiveSubject(zActiveSubject);
     return res.status(200).json(activeSubject).end();
   }
 );

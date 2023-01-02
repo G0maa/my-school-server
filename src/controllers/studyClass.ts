@@ -55,7 +55,7 @@ studyClassRouter.put(
   async (req: Request, res: Response) => {
     const zStudyClass = ZStudyClassPut.parse({
       ...req.body,
-      subjectId: req.params.id,
+      classId: req.params.id,
     });
     // returns undefiend if not found => to-do: Return a proper message
     const studyClass = await updateStudyClass(zStudyClass);
