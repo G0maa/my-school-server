@@ -8,7 +8,7 @@
   },
   "scripts": {
     "tsc": "tsc",
-    "start": "tsc && node dist/index.js",
+    "start": "node dist/index.js",
     "dev": "ts-node-dev src/index.ts",
     "migration:down": "ts-node-dev src/utils/rollback.ts",
     "migration:downAll": "ts-node-dev src/utils/rollbackAll.ts",

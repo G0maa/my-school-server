@@ -29,6 +29,11 @@
     - Trivial `SELECT typname, typnamespace FROM pg_type WHERE typnamespace=2200;`
   - Through `sequelize` using `umzug`:
     - `npm run migration:downAll`
+- Access `EC2` instance:
+  - Make sure that the `Security Group` allows `SSH`.
+  - `ssh -i "C:\Users\Lenovo\.ssh\<.pem file>" <rest of aws ip>`
+- Access `RDS` instance:
+  - `psql <postgres_url>`
 
 ## Decisions:
 
