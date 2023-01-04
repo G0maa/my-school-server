@@ -3,8 +3,6 @@ require('express-async-errors');
 
 import cors from 'cors';
 import morgan from 'morgan';
-import passport from 'passport';
-import session from 'express-session';
 
 import { connectToDatabase } from './utils/db';
 import init from './utils/init';
@@ -23,23 +21,6 @@ import activeSubjectRouter from './controllers/activeSubject';
 // import logger from './utils/logger';
 
 const app = express();
-
-app.use(
-  session({
-    secret: config.SECRET,
-    resave: false,
-    saveUninitialized: false,
-    // store: new MemoryStore(),
-    cookie: {
-      httpOnly: true,
-      maxAge: 1000 * 60 * 60 * 24 * 30, // 1  month
-      sameSite: true,
-    },
-  })
-);
-
-// This makes passport 'deserializeUser' work on session.
-app.use(passport.authenticate('session'));
 
 app.use(
   cors({
