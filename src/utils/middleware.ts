@@ -91,9 +91,23 @@ const errorHandler: ErrorRequestHandler = (error, _request, response, next) => {
   return next(error);
 };
 
-// Need refactoring
 const uploadFile = multer({
   dest: 'uploads/temp/',
+  fileFilter: (_req, file, cb) => {
+    const fileExtension = file.originalname
+      .substring(file.originalname.lastIndexOf('.') + 1)
+      .toLowerCase();
+
+    if (
+      fileExtension === 'pdf' ||
+      fileExtension === 'jpg' ||
+      fileExtension === 'png'
+    ) {
+      cb(null, true);
+    }
+    cb(null, false);
+  },
+  limits: { fileSize: 10 * 1048576 }, // 10MB
 });
 
 export {

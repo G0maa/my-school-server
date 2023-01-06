@@ -3,6 +3,7 @@
 import express, { Request, Response } from 'express';
 import {
   addSubjectMaterial,
+  deleteOneSubjectMaterial,
   getOneSubjectMaterial,
   getSubjectMaterial,
   getSubjectsMaterial,
@@ -23,23 +24,16 @@ const subjectMaterialRouter = express.Router();
 
 // Needs testing
 // This router is very experimental, lots of validations & verifications are missing.
-subjectMaterialRouter.get(
-  '/',
-  setAuthorizedRoles([ZRole.enum.Admin, ZRole.enum.Student]),
-  isAuthenticated,
-  async (_req, res) => {
-    const query = await getSubjectsMaterial();
-    return res.status(200).json(query).end();
-  }
-);
+subjectMaterialRouter.get('/', isAuthenticated, async (_req, res) => {
+  const query = await getSubjectsMaterial();
+  return res.status(200).json(query).end();
+});
 
 // Download, needs some love.
 subjectMaterialRouter.get(
   '/:subjectId/:serial',
-  setAuthorizedRoles([ZRole.enum.Admin, ZRole.enum.Student]),
   isAuthenticated,
   async (req, res) => {
-    console.log('req.params', req.params);
     const requestObject = ZSubjectsMaterialVerify.parse(req.params);
 
     const oneSubjectMaterial = await getOneSubjectMaterial(requestObject);
@@ -81,6 +75,18 @@ subjectMaterialRouter.post(
       return res.status(401).json({ message: 'Subject non-existent' }).end();
 
     return res.status(200).json(subjectMaterial).end();
+  }
+);
+
+subjectMaterialRouter.delete(
+  '/:subjectId/:serial',
+  setAuthorizedRoles([ZRole.enum.Admin, ZRole.enum.Teacher]),
+  isAuthenticated,
+  async (req: Request, res: Response) => {
+    const zObject = ZSubjectsMaterialVerify.parse(req.params);
+
+    await deleteOneSubjectMaterial(zObject);
+    return res.status(204).end();
   }
 );
 

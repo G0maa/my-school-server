@@ -1,6 +1,6 @@
 import fs from 'fs';
 import Subject from '../models/subject';
-import SubjectMaterial from '../models/subjectsMaterial';
+import SubjectsMaterial from '../models/subjectsMaterial';
 import { ZSubjectId } from '../validator/subject.validator';
 import {
   ZSubjectsMaterial,
@@ -8,12 +8,12 @@ import {
 } from '../validator/subjectsMaterial.validator';
 
 const getSubjectsMaterial = async () => {
-  const subjectMaterial = await SubjectMaterial.findAll();
+  const subjectMaterial = await SubjectsMaterial.findAll();
   return subjectMaterial;
 };
 
 const getSubjectMaterial = async (subjectId: ZSubjectId) => {
-  const subjectMaterial = await SubjectMaterial.findAll({
+  const subjectMaterial = await SubjectsMaterial.findAll({
     where: { subjectId },
   });
   return subjectMaterial;
@@ -21,7 +21,7 @@ const getSubjectMaterial = async (subjectId: ZSubjectId) => {
 
 // Refactor, very similar to the one above, & rename
 const getOneSubjectMaterial = async (verifyObject: ZSubjectsMaterialVerify) => {
-  const subjectMaterial = await SubjectMaterial.findOne({
+  const subjectMaterial = await SubjectsMaterial.findOne({
     where: { ...verifyObject },
   });
 
@@ -48,11 +48,26 @@ const addSubjectMaterial = async (
 
   fs.renameSync(file.path, filePath);
 
-  const subjectMaterial = await SubjectMaterial.create({
+  const subjectMaterial = await SubjectsMaterial.create({
     ...zSubjectMaterial,
     filePath,
   });
   return subjectMaterial;
+};
+
+const deleteOneSubjectMaterial = async (
+  verifyObject: ZSubjectsMaterialVerify
+) => {
+  const deletedMaterial = await SubjectsMaterial.findOne({
+    where: { ...verifyObject },
+  });
+
+  if (!deletedMaterial) return;
+
+  fs.unlinkSync(deletedMaterial.filePath);
+
+  await deletedMaterial.destroy();
+  return;
 };
 
 export {
@@ -60,4 +75,5 @@ export {
   getSubjectMaterial,
   addSubjectMaterial,
   getOneSubjectMaterial,
+  deleteOneSubjectMaterial,
 };
