@@ -15,6 +15,9 @@ export const ZSubjectQuery = ZSubject.extend({
   name: ZSubject.shape.name.transform((attribute) => ToLikeQuery(attribute)),
 }).partial();
 
+export const ZSubjectId = ZSubject.shape.subjectId;
 export const ZSubjectPut = ZSubject.required();
+
+export type ZSubjectId = z.infer<typeof ZSubjectId>;
 export type ZSubject = z.infer<typeof ZSubject>;
 export type ZSubjectQuery = z.infer<typeof ZSubjectQuery>;

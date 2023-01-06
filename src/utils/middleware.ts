@@ -6,6 +6,7 @@ import type {
   Request,
   Response,
 } from 'express';
+import multer from 'multer';
 import { AnyZodObject } from 'zod';
 import { Role } from '../validator/general.validator';
 import logger from './logger';
@@ -90,6 +91,11 @@ const errorHandler: ErrorRequestHandler = (error, _request, response, next) => {
   return next(error);
 };
 
+// Need refactoring
+const uploadFile = multer({
+  dest: 'uploads/temp/',
+});
+
 export {
   unknownEndpoint,
   errorHandler,
@@ -97,4 +103,5 @@ export {
   setAuthorizedRoles,
   validate,
   requestLogger,
+  uploadFile,
 };
