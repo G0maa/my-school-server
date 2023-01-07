@@ -6,6 +6,7 @@ import { Admin, Student, Teacher, User } from '../models';
 import Subject from '../models/subject';
 import StudyClass from '../models/class';
 import ActiveSubject from '../models/activeSubject';
+import SubjectsMaterial from '../models/subjectsMaterial';
 
 const sequelize = new Sequelize(config.DATABASE_URL, {
   dialectOptions: {
@@ -28,6 +29,7 @@ sequelize.addModels([
   Subject,
   StudyClass,
   ActiveSubject,
+  SubjectsMaterial,
 ]);
 
 const migrationConf = {

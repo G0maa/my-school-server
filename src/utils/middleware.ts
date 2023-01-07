@@ -6,6 +6,8 @@ import type {
   Request,
   Response,
 } from 'express';
+import multer from 'multer';
+import path from 'path';
 import { AnyZodObject } from 'zod';
 import { Role } from '../validator/general.validator';
 import logger from './logger';
@@ -90,6 +92,34 @@ const errorHandler: ErrorRequestHandler = (error, _request, response, next) => {
   return next(error);
 };
 
+const storage = multer.diskStorage({
+  destination: function (_req, _file, callback) {
+    callback(null, 'uploads/temp/');
+  },
+  // to-do add random number in-case file already exists.
+  filename: function (_req, file, callback) {
+    callback(null, file.originalname);
+  },
+});
+
+const uploadFile = multer({
+  storage,
+  fileFilter: (_req, file, cb) => {
+    const fileExtension = path.extname(file.originalname);
+
+    if (
+      fileExtension === '.pdf' ||
+      fileExtension === '.jpg' ||
+      fileExtension === '.png' ||
+      fileExtension === '.txt'
+    ) {
+      cb(null, true);
+    }
+    cb(null, false);
+  },
+  limits: { fileSize: 10 * 1048576 }, // 10MB
+});
+
 export {
   unknownEndpoint,
   errorHandler,
@@ -97,4 +127,5 @@ export {
   setAuthorizedRoles,
   validate,
   requestLogger,
+  uploadFile,
 };

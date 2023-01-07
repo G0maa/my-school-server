@@ -1,3 +1,4 @@
+/* eslint-disable */
 // To-Do Deal with eslint
 import express from 'express';
 import passport from 'passport';
@@ -11,7 +12,6 @@ passport.use(
   new LocalStrategy((username: string, password: string, callback) => {
     // PassportJS uses callbacks, only..
     // let user: User = new User();
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     User.findOne({
       where: {
         username,
@@ -31,7 +31,7 @@ passport.use(
           });
         else return callback(null, user.dataValues);
       }
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises, @typescript-eslint/no-unsafe-argument
+
       verifyPassword(password, user.dataValues.password).then(
         (isPasswordCorrect) => {
           if (!isPasswordCorrect)
@@ -59,10 +59,8 @@ passport.serializeUser((user, callback) => {
 
 // This is the data from 'express-session' store, to req.body
 // Better not have a +1 DB request.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 passport.deserializeUser((user: Express.User, callback) => {
   // console.log('deserializeUser', user);
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   return callback(null, user);
 });
 
@@ -70,7 +68,6 @@ const loginRouter = express.Router();
 
 // Keep in mind that this route gets
 // the object passed in local strategy callback
-// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 loginRouter.post('/login', passport.authenticate('local'), (req, res) => {
   if (!req.user) return res.status(401).end();
 
