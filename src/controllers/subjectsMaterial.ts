@@ -60,7 +60,10 @@ subjectMaterialRouter.post(
   uploadFile.single('pdf'),
   async (req: Request, res: Response) => {
     if (!req.file)
-      return res.status(401).json({ message: 'No files were sent' }).end();
+      return res
+        .status(401)
+        .json({ message: 'Unsupported file extension' })
+        .end();
     const zSubjectMaterial = ZSubjectsMaterial.parse({
       ...req.body,
       subjectId: req.params.subjectId,
@@ -72,7 +75,7 @@ subjectMaterialRouter.post(
     );
 
     if (!subjectMaterial)
-      return res.status(401).json({ message: 'Subject non-existent' }).end();
+      return res.status(400).json({ message: 'Subject non-existent' }).end();
 
     return res.status(200).json(subjectMaterial).end();
   }

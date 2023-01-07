@@ -28,6 +28,7 @@ const getOneSubjectMaterial = async (verifyObject: ZSubjectsMaterialVerify) => {
   return subjectMaterial;
 };
 
+// Repeated file names get updated without updating the DB, also giving wrong status code.
 // From multer docs:
 // Note that req.body might not have been fully populated yet.
 // It depends on the order that the client transmits fields and files to the server.
@@ -44,9 +45,9 @@ const addSubjectMaterial = async (
   if (!subject) return;
 
   // Need to create said folders or will throw error
-  const filePath = `uploads\\subjectMaterial\\${zSubjectMaterial.subjectId}\\${file.originalname}`;
+  const filePath = `uploads\\subjectsMaterial\\${zSubjectMaterial.subjectId}\\${file.originalname}`;
 
-  fs.renameSync(file.path, filePath);
+  await fs.promises.rename(file.path, filePath);
 
   const subjectMaterial = await SubjectsMaterial.create({
     ...zSubjectMaterial,

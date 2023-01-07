@@ -63,7 +63,7 @@ app.use('/api/teacher/', teacherRouter);
 app.use('/api/subject/', subjectRouter);
 app.use('/api/studyClass/', studyClassRouter);
 app.use('/api/activeSubject/', activeSubjectRouter);
-app.use('/api/subjectMaterial/', subjectMaterialRouter);
+app.use('/api/subjectsMaterial/', subjectMaterialRouter);
 
 app.get('/api/ping', (_, response) => {
   response.send('<p>pong</p>');

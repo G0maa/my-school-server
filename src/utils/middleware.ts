@@ -7,6 +7,7 @@ import type {
   Response,
 } from 'express';
 import multer from 'multer';
+import path from 'path';
 import { AnyZodObject } from 'zod';
 import { Role } from '../validator/general.validator';
 import logger from './logger';
@@ -91,17 +92,26 @@ const errorHandler: ErrorRequestHandler = (error, _request, response, next) => {
   return next(error);
 };
 
+const storage = multer.diskStorage({
+  destination: function (_req, _file, callback) {
+    callback(null, 'uploads/temp/');
+  },
+  // to-do add random number in-case file already exists.
+  filename: function (_req, file, callback) {
+    callback(null, file.originalname);
+  },
+});
+
 const uploadFile = multer({
-  dest: 'uploads/temp/',
+  storage,
   fileFilter: (_req, file, cb) => {
-    const fileExtension = file.originalname
-      .substring(file.originalname.lastIndexOf('.') + 1)
-      .toLowerCase();
+    const fileExtension = path.extname(file.originalname);
 
     if (
-      fileExtension === 'pdf' ||
-      fileExtension === 'jpg' ||
-      fileExtension === 'png'
+      fileExtension === '.pdf' ||
+      fileExtension === '.jpg' ||
+      fileExtension === '.png' ||
+      fileExtension === '.txt'
     ) {
       cb(null, true);
     }
