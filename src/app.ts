@@ -21,6 +21,7 @@ import subjectRouter from './controllers/subject';
 import studyClassRouter from './controllers/studyClass';
 import activeSubjectRouter from './controllers/activeSubject';
 import subjectMaterialRouter from './controllers/subjectsMaterial';
+import holidayRouter from './controllers/holiday';
 // import logger from './utils/logger';
 
 const app = express();
@@ -64,6 +65,7 @@ app.use('/api/subject/', subjectRouter);
 app.use('/api/studyClass/', studyClassRouter);
 app.use('/api/activeSubject/', activeSubjectRouter);
 app.use('/api/subjectsMaterial/', subjectMaterialRouter);
+app.use('/api/holiday/', holidayRouter);
 
 app.get('/api/ping', (_, response) => {
   response.send('<p>pong</p>');
