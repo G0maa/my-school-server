@@ -1,3 +1,4 @@
+import fs from 'fs';
 import supertest from 'supertest';
 import { app } from '../app';
 import { getDummySubjectId, loginAdmin } from './helpers';
@@ -18,7 +19,7 @@ describe('CRUD Subjects Materials', () => {
   test('Upload & Download new subject material', async () => {
     // Probbably a good idea to refactor to a helper function.
     const filePath = 'src/tests/test.txt';
-    // await fs.promises.writeFile(filePath, 'Hello Jest\n');
+    await fs.promises.writeFile(filePath, 'Hello Jest\n');
 
     const oneSubjectMaterialRecord = await api
       .post(`${subjectsMaterialRoute}/${subjectId}`)
