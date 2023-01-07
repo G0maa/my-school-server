@@ -16,7 +16,7 @@
     "prettier": "npx prettier --check ./src/**/*.ts",
     "test": "jest --verbose --runInBand --forceExit",
     "ci:docker": "docker compose -f postgres-compose.yml up -d",
-    "ci:test": "jest --verbose --runInBand --forceExit -t 'Upload & Download new subject material'"
+    "ci:test": "jest --silent --verbose --runInBand --forceExit"
   },
   "author": "g0maa",
   "license": "ISC",
