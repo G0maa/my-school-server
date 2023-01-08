@@ -13,15 +13,10 @@ import { ZHoliday, ZHolidaySerial } from '../validator/holiday.validator';
 const holidayRouter = express.Router();
 
 // GET, POST, DELETE,
-holidayRouter.get(
-  '/',
-  setAuthorizedRoles([ZRole.enum.Admin]),
-  isAuthenticated,
-  async (_req, res) => {
-    const holidays = await getHolidays();
-    return res.status(200).json(holidays).end();
-  }
-);
+holidayRouter.get('/', isAuthenticated, async (_req, res) => {
+  const holidays = await getHolidays();
+  return res.status(200).json(holidays).end();
+});
 
 holidayRouter.post(
   '/',

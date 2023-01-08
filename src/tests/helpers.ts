@@ -2,6 +2,7 @@ import supertest from 'supertest';
 import { User } from '../models';
 import StudyClass from '../models/class';
 import Subject from '../models/subject';
+import { createStudent } from '../services/student.service';
 import {
   ZEducationType,
   ZRole,
@@ -54,4 +55,9 @@ export const getDummyTeacher = async () => {
   await user.$create('teacher', { id: user.id });
 
   return user;
+};
+
+export const getDummyStudent = async () => {
+  const student = createStudent({}, { studyYear: '1' });
+  return student;
 };

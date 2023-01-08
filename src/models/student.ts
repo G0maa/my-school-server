@@ -9,6 +9,7 @@ import {
   AllowNull,
   PrimaryKey,
   AutoIncrement,
+  HasMany,
 } from 'sequelize-typescript';
 import {
   EducationType,
@@ -17,6 +18,7 @@ import {
   ZStudyYear,
 } from '../validator/general.validator';
 import StudyClass from './class';
+import Fee from './fee';
 
 import User from './user';
 
@@ -61,6 +63,9 @@ class Student extends Model {
     onUpdate: 'CASCADE',
   })
   classId!: string;
+
+  @HasMany(() => Fee)
+  fees!: Fee[];
 }
 
 export default Student;
