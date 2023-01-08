@@ -7,8 +7,10 @@ import {
   PrimaryKey,
   AutoIncrement,
   ForeignKey,
+  HasMany,
 } from 'sequelize-typescript';
 import StudyClass from './class';
+import Grade from './grade';
 import Subject from './subject';
 import Teacher from './teacher';
 
@@ -46,6 +48,9 @@ class ActiveSubject extends Model {
   @AllowNull(false)
   @Column(DataType.STRING(6))
   subjectSchedule!: string;
+
+  @HasMany(() => Grade)
+  studentGrades!: Grade[];
 }
 
 export default ActiveSubject;

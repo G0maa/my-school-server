@@ -19,6 +19,7 @@ import {
 } from '../validator/general.validator';
 import StudyClass from './class';
 import Fee from './fee';
+import Grade from './grade';
 
 import User from './user';
 
@@ -66,6 +67,9 @@ class Student extends Model {
 
   @HasMany(() => Fee)
   fees!: Fee[];
+
+  @HasMany(() => Grade)
+  grades!: Grade[];
 }
 
 export default Student;
