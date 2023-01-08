@@ -13,5 +13,7 @@ export const ZStudyClassQuery = ZStudyClass.extend({
   ),
 }).partial();
 
+export const ZStudyClassPut = ZStudyClass.required();
+export type ZStudyClassPut = z.infer<typeof ZStudyClassPut>;
 export type ZStudyClassQuery = z.infer<typeof ZStudyClassQuery>;
 export type ZStudyClass = z.infer<typeof ZStudyClass>;

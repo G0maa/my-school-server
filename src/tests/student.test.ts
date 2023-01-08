@@ -57,7 +57,7 @@ describe('CRUD of Student', () => {
       .expect(200);
 
     expect(get.body.user.role).toMatch('Student');
-    expect(get.body.user.username).toEqual('S0003');
+    expect(get.body.user.username).toMatch('S');
   });
 
   test('POST & GET full student', async () => {

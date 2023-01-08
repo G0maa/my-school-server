@@ -24,5 +24,10 @@ export const ZActiveSubjectQuery = ZActiveSubject.extend({
     ToLikeQuery(attribute)
   ),
 }).partial();
+
+// This represents REST PUT,
+// but doesn't represent DB SET NULL property on foreign keys.
+export const ZActiveSubjectPut = ZActiveSubject.required();
+export type ZActiveSubjectPut = z.infer<typeof ZActiveSubjectPut>;
 export type ZActiveSubjectQuery = z.infer<typeof ZActiveSubjectQuery>;
 export type ZActiveSubject = z.infer<typeof ZActiveSubject>;

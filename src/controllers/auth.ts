@@ -1,3 +1,4 @@
+/* eslint-disable */
 // To-Do Deal with eslint
 import express from 'express';
 import passport from 'passport';

@@ -3,6 +3,7 @@
 import StudyClass from '../models/class';
 import {
   ZStudyClass,
+  ZStudyClassPut,
   ZStudyClassQuery,
 } from '../validator/studyClass.validator';
 
@@ -24,6 +25,21 @@ const createStudyClass = async (studyClass: ZStudyClass) => {
   return res;
 };
 
+const updateStudyClass = async (zStudyClass: ZStudyClassPut) => {
+  const studyClass = await StudyClass.findOne({
+    where: {
+      classId: zStudyClass.classId,
+    },
+  });
+
+  if (!studyClass) return;
+
+  studyClass.set({ ...zStudyClass });
+
+  await studyClass.save();
+  return studyClass;
+};
+
 // Not tested
 const deleteStudyClass = async (classId: string) => {
   const res = await StudyClass.destroy({
@@ -32,4 +48,10 @@ const deleteStudyClass = async (classId: string) => {
   return res;
 };
 
-export { getStudyClass, getStudyClasses, createStudyClass, deleteStudyClass };
+export {
+  getStudyClass,
+  getStudyClasses,
+  createStudyClass,
+  updateStudyClass,
+  deleteStudyClass,
+};

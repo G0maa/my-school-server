@@ -4,6 +4,7 @@ import { ToLikeQuery } from './general.validator';
 // Caveat of this re-work,
 // you're not veryfing referrentail integrtity here,
 // which I guess is the job of the ORM?
+// where's serial?
 export const ZTeacher = z
   .object({
     userId: z.string().uuid(),
@@ -17,6 +18,9 @@ export const ZTeacherQuery = ZTeacher.extend({
     ToLikeQuery(attribute)
   ),
 }).partial();
-export type ZTeacherQuery = z.infer<typeof ZTeacherQuery>;
 
+export const ZTeacherPut = ZTeacher.required();
+
+export type ZTeacherPut = z.infer<typeof ZTeacherPut>;
+export type ZTeacherQuery = z.infer<typeof ZTeacherQuery>;
 export type ZTeacher = z.infer<typeof ZTeacher>;

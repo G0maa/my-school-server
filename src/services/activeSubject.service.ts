@@ -3,6 +3,7 @@
 import ActiveSubject from '../models/activeSubject';
 import {
   ZActiveSubject,
+  ZActiveSubjectPut,
   ZActiveSubjectQuery,
 } from '../validator/activeSubject.validator';
 
@@ -27,6 +28,17 @@ const createActiveSubject = async (zActiveSubject: ZActiveSubject) => {
   return activeSubject;
 };
 
+const updateActiveSubject = async (zActiveSubject: ZActiveSubjectPut) => {
+  const activeSubject = await ActiveSubject.findOne({
+    where: { serial: zActiveSubject.serial },
+  });
+
+  if (!activeSubject) return;
+
+  activeSubject.set({ ...zActiveSubject });
+  await activeSubject.save();
+};
+
 // Not-tested
 const deleteActiveSubject = async (serial: string) => {
   const activeSubject = await ActiveSubject.destroy({
@@ -39,5 +51,6 @@ export {
   getActiveSubject,
   getActiveSubjects,
   createActiveSubject,
+  updateActiveSubject,
   deleteActiveSubject,
 };

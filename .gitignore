@@ -9,3 +9,5 @@ out/
 test.ts
 package-lock.json
 coverage/
+uploads/
+src/tests/test.txt

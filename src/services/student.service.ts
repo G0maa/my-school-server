@@ -1,9 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import { Student, User } from '../models';
-import { ZStudent, ZStudentQuery } from '../validator/student.validator';
-import { ZUser, ZUserQuery } from '../validator/user.validator';
-import { deleteUser } from './user.service';
+import {
+  ZStudent,
+  ZStudentPut,
+  ZStudentQuery,
+} from '../validator/student.validator';
+import { ZUser, ZUserPut, ZUserQuery } from '../validator/user.validator';
+import { deleteUser, updateUser } from './user.service';
 
 // Searching not tested
 const getStudents = async (
@@ -41,9 +45,23 @@ const createStudent = async (zUser: ZUser, zStudent: ZStudent) => {
   return student;
 };
 
+const updateStudent = async (zUser: ZUserPut, zStudent: ZStudentPut) => {
+  await updateUser(zUser);
+
+  const student = await Student.findOne({ where: { userId: zStudent.userId } });
+
+  if (!student) return;
+
+  student.set({ ...zStudent });
+
+  await student.save();
+
+  return student;
+};
+
 const deleteStudent = async (userId: string) => {
   const student = await deleteUser(userId);
   return student;
 };
 
-export { getStudents, getStudent, createStudent, deleteStudent };
+export { getStudents, getStudent, createStudent, updateStudent, deleteStudent };

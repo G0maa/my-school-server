@@ -1,5 +1,9 @@
 import { rollbackMigration } from './db';
 
-// This gets called from CLI only, no need for eslint.
-// eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-floating-promises
-rollbackMigration();
+rollbackMigration()
+  .then(() => {
+    console.log('Rolling back the last migration: Down.');
+  })
+  .catch((error) => {
+    console.error('Rolling back the last migration: FAILED.', error);
+  });

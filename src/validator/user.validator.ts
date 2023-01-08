@@ -32,6 +32,13 @@ export const ZUserQuery = ZUser.extend({
     ToLikeQuery(attribute)
   ),
 }).partial();
-export type ZUserQuery = z.infer<typeof ZUserQuery>;
 
+export const ZUserPut = ZUser.omit({
+  isVerified: true,
+  isReset: true,
+  role: true,
+});
+
+export type ZUserPut = z.infer<typeof ZUserPut>;
+export type ZUserQuery = z.infer<typeof ZUserQuery>;
 export type ZUser = z.infer<typeof ZUser>;
