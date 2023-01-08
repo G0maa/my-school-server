@@ -2,7 +2,7 @@ import supertest from 'supertest';
 import { app } from '../app';
 import { ZStudent } from '../validator/student.validator';
 import { ZUser } from '../validator/user.validator';
-import { getDummyClassId, loginAdmin } from './helpers';
+import { getDummyClass, loginAdmin } from './helpers';
 
 const api = supertest(app);
 const studentRoute = '/api/student/';
@@ -74,7 +74,7 @@ describe('CRUD of Student', () => {
   });
 
   test('Success when adding a Student with an existent Class', async () => {
-    const classId = await getDummyClassId();
+    const classId = (await getDummyClass()).classId;
 
     const res = await api
       .post(`${studentRoute}`)
