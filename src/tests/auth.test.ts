@@ -53,26 +53,27 @@ describe('Trying with default Teacher Credentials', () => {
 });
 
 describe('Trying evil scenarios', () => {
-  test('Session data presists in Server', async () => {
-    const response = await api
-      .post('/api/auth/login')
-      .send(adminCreds)
-      .expect(200);
+  // Not applicable
+  // test('Session data presists in Server', async () => {
+  //   const response = await api
+  //     .post('/api/auth/login')
+  //     .send(adminCreds)
+  //     .expect(200);
 
-    // not now eslint
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const sessionId: string = response.headers['set-cookie'];
+  //   // not now eslint
+  //   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  //   const sessionId: string = response.headers['set-cookie'];
 
-    const getInfo = await api
-      .get('/testAuth')
-      .set('Cookie', [sessionId])
-      .expect(200);
+  //   const getInfo = await api
+  //     .get('/testAuth')
+  //     .set(adminHeader)
+  //     .expect(200);
 
-    expect(getInfo.body).toMatchObject({
-      username: 'A0001',
-      role: ZRole.enum.Admin,
-    });
-  });
+  //   expect(getInfo.body).toMatchObject({
+  //     username: 'A0001',
+  //     role: ZRole.enum.Admin,
+  //   });
+  // });
 
   test('Status 401 with wrong credentials', async () => {
     await api.post('/api/auth/login').send(wrongAdminCreds).expect(401);

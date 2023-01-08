@@ -1,15 +1,14 @@
 import supertest from 'supertest';
 import { app } from '../app';
-import { getDummyStudent, loginAdmin } from './helpers';
+import { getAdminCredentialsHeader, getDummyStudent } from './helpers';
 
 const api = supertest(app);
 const feeRoute = '/api/fee';
 
-let sessionId: string;
+let adminHeader: object;
 beforeAll(async () => {
   // P.S: Can be a student too, something code coverage won't get.
-  sessionId = (await loginAdmin(api)) as string;
-  await api.get('/testAuth').set('Cookie', [sessionId]).expect(200);
+  adminHeader = await getAdminCredentialsHeader(api, true);
 });
 
 // can't assign type cuz of dueDate, has to be new Date('2023-01-18')...
@@ -28,13 +27,13 @@ describe('CRUD of Fee', () => {
 
     const fee = await api
       .post(feeRoute)
-      .set('Cookie', [sessionId])
+      .set(adminHeader)
       .send(dummyFee)
       .expect(200);
 
     const get = await api
       .get(`${feeRoute}/${fee.body.serial}`)
-      .set('Cookie', [sessionId])
+      .set(adminHeader)
       .expect(200);
 
     expect(get.body).toMatchObject(dummyFee);

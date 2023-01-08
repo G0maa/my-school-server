@@ -2,16 +2,14 @@ import supertest from 'supertest';
 import { app } from '../app';
 import { ZStudent } from '../validator/student.validator';
 import { ZUser } from '../validator/user.validator';
-import { getDummyClass, loginAdmin } from './helpers';
+import { getAdminCredentialsHeader, getDummyClass } from './helpers';
 
 const api = supertest(app);
 const studentRoute = '/api/student/';
 
-let sessionId: string;
+let adminHeader: object;
 beforeAll(async () => {
-  sessionId = (await loginAdmin(api)) as string;
-  // Can be moved to its own function
-  await api.get('/testAuth').set('Cookie', [sessionId]).expect(200);
+  adminHeader = await getAdminCredentialsHeader(api, true);
 });
 
 // must not provide username & password as they're auto created.
@@ -41,19 +39,19 @@ describe('CRUD of Student', () => {
   test('POST & GET simpleified student', async () => {
     await api
       .post(studentRoute)
-      .set('Cookie', [sessionId])
+      .set(adminHeader)
       .send(dummyStudent)
       .expect(200);
 
     const res = await api
       .post(studentRoute)
-      .set('Cookie', [sessionId])
+      .set(adminHeader)
       .send(dummyStudent)
       .expect(200);
 
     const get = await api
       .get(`${studentRoute}${res.body.userId}`)
-      .set('Cookie', [sessionId])
+      .set(adminHeader)
       .expect(200);
 
     expect(get.body.user.role).toMatch('Student');
@@ -63,13 +61,13 @@ describe('CRUD of Student', () => {
   test('POST & GET full student', async () => {
     const res = await api
       .post(`${studentRoute}?type=full`)
-      .set('Cookie', [sessionId])
+      .set(adminHeader)
       .send(fullStudent)
       .expect(200);
 
     await api
       .get(`${studentRoute}${res.body.userId}`)
-      .set('Cookie', [sessionId])
+      .set(adminHeader)
       .expect(200);
   });
 
@@ -78,13 +76,13 @@ describe('CRUD of Student', () => {
 
     const res = await api
       .post(`${studentRoute}`)
-      .set('Cookie', [sessionId])
+      .set(adminHeader)
       .send({ ...dummyStudent, classId })
       .expect(200);
 
     const res2 = await api
       .get(`${studentRoute}${res.body.userId}`)
-      .set('Cookie', [sessionId])
+      .set(adminHeader)
       .expect(200);
 
     expect(res2.body.classId).toEqual(classId);
@@ -93,14 +91,14 @@ describe('CRUD of Student', () => {
   test('Fails when adding a Student with a non-existent Class', async () => {
     const res = await api
       .post(`${studentRoute}`)
-      .set('Cookie', [sessionId])
+      .set(adminHeader)
       .send({ ...dummyStudent, classId: 'ZZZ000' })
       .expect(400);
 
     // Dirty coverage of code.
     const allStudentsReq = await api
       .get(studentRoute)
-      .set('Cookie', [sessionId])
+      .set(adminHeader)
       .expect(200);
 
     expect(allStudentsReq.body).not.toEqual(
@@ -116,14 +114,14 @@ describe('CRUD of Student', () => {
   test('Deletion of a Student without Study Class', async () => {
     const res = await api
       .post(`${studentRoute}`)
-      .set('Cookie', [sessionId])
+      .set(adminHeader)
       .send(dummyStudent)
       .expect(200);
 
     // Dirty coverage of code.
     const allStudentsReq = await api
       .delete(`${studentRoute}${res.body.userId}`)
-      .set('Cookie', [sessionId])
+      .set(adminHeader)
       .expect(200);
 
     expect(allStudentsReq.body).not.toEqual(

@@ -4,14 +4,14 @@ import {
   getDummyClass,
   getDummySubject,
   getDummyTeacher,
-  loginAdmin,
+  getAdminCredentialsHeader,
 } from './helpers';
 import { ZActiveSubject } from '../validator/activeSubject.validator';
 
 const api = supertest(app);
 const activeSubjectRoute = '/api/activeSubject/';
 
-let sessionId: string;
+let adminHeader: object;
 export const dummyActiveSubject: ZActiveSubject = {
   subjectId: '',
   classId: '',
@@ -24,8 +24,7 @@ export const dummyActiveSubject: ZActiveSubject = {
 // Always allowed SSSXX, CCCXXX?
 beforeAll(async () => {
   // P.S: Can be a student too, something code coverage won't get.
-  sessionId = (await loginAdmin(api)) as string;
-  await api.get('/testAuth').set('Cookie', [sessionId]).expect(200);
+  adminHeader = await getAdminCredentialsHeader(api, true);
 
   dummyActiveSubject.classId = (await getDummyClass()).classId;
   dummyActiveSubject.subjectId = (await getDummySubject()).subjectId;
@@ -36,13 +35,13 @@ describe('CRUD of ActiveSubject', () => {
   test('POST & GET ActiveSubject', async () => {
     const post = await api
       .post(activeSubjectRoute)
-      .set('Cookie', [sessionId])
+      .set(adminHeader)
       .send(dummyActiveSubject)
       .expect(200);
 
     const get = await api
       .get(`${activeSubjectRoute}/${post.body.serial}`)
-      .set('Cookie', [sessionId])
+      .set(adminHeader)
       .expect(200);
 
     expect(get.body.subjectId).toMatch(dummyActiveSubject.subjectId);
@@ -59,7 +58,7 @@ describe('Testing referrential integrity of activeSubject attributes', () => {
 
     await api
       .post(activeSubjectRoute)
-      .set('Cookie', [sessionId])
+      .set(adminHeader)
       .send(wrongActiveSubject)
       .expect(400);
   });
@@ -72,7 +71,7 @@ describe('Testing referrential integrity of activeSubject attributes', () => {
 
     await api
       .post(activeSubjectRoute)
-      .set('Cookie', [sessionId])
+      .set(adminHeader)
       .send(wrongActiveSubject)
       .expect(400);
   });
@@ -85,7 +84,7 @@ describe('Testing referrential integrity of activeSubject attributes', () => {
 
     await api
       .post(activeSubjectRoute)
-      .set('Cookie', [sessionId])
+      .set(adminHeader)
       .send(wrongActiveSubject)
       .expect(400);
   });
