@@ -49,7 +49,7 @@ const addSubjectMaterial = async (
 
   // recursive option makes it not complain about folders already existing.
   await fs.promises.mkdir(
-    `uploads/temp/subjectsMaterial/${zSubjectMaterial.subjectId}`,
+    `uploads/subjectsMaterial/${zSubjectMaterial.subjectId}`,
     { recursive: true }
   );
   await fs.promises.rename(file.path, filePath);
