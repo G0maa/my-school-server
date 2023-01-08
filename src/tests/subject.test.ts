@@ -1,6 +1,6 @@
 import supertest from 'supertest';
 import { app } from '../app';
-import { getDummySubjectId, loginAdmin } from './helpers';
+import { getDummySubject, loginAdmin } from './helpers';
 import { ZSubject } from '../validator/subject.validator';
 // import Subject from '../models/subject';
 import ActiveSubject from '../models/activeSubject';
@@ -46,7 +46,7 @@ describe('CRUD of Subject', () => {
   });
 
   test('Success delete Subject when theres no Referrenetial Integerity', async () => {
-    const subjectId = await getDummySubjectId();
+    const subjectId = (await getDummySubject()).subjectId;
 
     await api
       .delete(`${subjectRoute}${subjectId}`)

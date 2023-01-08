@@ -1,8 +1,8 @@
 import supertest from 'supertest';
 import { app } from '../app';
 import {
-  getDummyClassId,
-  getDummySubjectId,
+  getDummyClass,
+  getDummySubject,
   getDummyTeacher,
   loginAdmin,
 } from './helpers';
@@ -27,8 +27,8 @@ beforeAll(async () => {
   sessionId = (await loginAdmin(api)) as string;
   await api.get('/testAuth').set('Cookie', [sessionId]).expect(200);
 
-  dummyActiveSubject.classId = await getDummyClassId();
-  dummyActiveSubject.subjectId = await getDummySubjectId();
+  dummyActiveSubject.classId = (await getDummyClass()).classId;
+  dummyActiveSubject.subjectId = (await getDummySubject()).subjectId;
   dummyActiveSubject.teacherId = (await getDummyTeacher()).id;
 });
 

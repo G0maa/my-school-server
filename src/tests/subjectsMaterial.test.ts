@@ -1,7 +1,7 @@
 import fs from 'fs';
 import supertest from 'supertest';
 import { app } from '../app';
-import { getDummySubjectId, loginAdmin } from './helpers';
+import { getDummySubject, loginAdmin } from './helpers';
 
 const api = supertest(app);
 const subjectsMaterialRoute = '/api/subjectsMaterial';
@@ -12,7 +12,7 @@ beforeAll(async () => {
   sessionId = (await loginAdmin(api)) as string;
   await api.get('/testAuth').set('Cookie', [sessionId]).expect(200);
 
-  subjectId = await getDummySubjectId();
+  subjectId = (await getDummySubject()).subjectId;
 });
 
 describe('CRUD Subjects Materials', () => {
