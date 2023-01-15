@@ -31,6 +31,8 @@ describe('CRUD of Fee', () => {
       .send(dummyFee)
       .expect(200);
 
+    console.log('fee.body', fee.body);
+
     const get = await api
       .get(`${feeRoute}/${fee.body.serial}`)
       .set(adminHeader)

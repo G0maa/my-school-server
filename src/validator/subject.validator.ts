@@ -4,6 +4,7 @@ import { ToLikeQuery, ZEducationType, ZStudyYear } from './general.validator';
 export const ZSubject = z.object({
   subjectId: z.string().max(6),
   name: z.string().max(64).optional(),
+  description: z.string().max(256).optional(),
   studyYear: ZStudyYear,
   educationType: ZEducationType,
 });
