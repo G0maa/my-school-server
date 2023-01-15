@@ -35,6 +35,11 @@ class Subject extends Model {
   @Column(DataType.ENUM(...Object.values(ZStudyYear.enum)))
   studyYear!: StudyYear;
 
+  // This column were not tested.
+  @AllowNull(true)
+  @Column(DataType.STRING(256))
+  description!: string;
+
   @AllowNull(false)
   @Column(DataType.ENUM(...Object.values(ZEducationType.Enum)))
   educationType!: EducationType;
