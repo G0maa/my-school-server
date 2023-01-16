@@ -31,7 +31,7 @@ const fullStudent = {
   address: 'Egypt',
   email: 'example@example.com',
   studyYear: '1',
-  educationType: 'Sceiences',
+  educationType: 'Sciences',
   parentName: 'Gomaa',
   parentPhonenumber: 'Mohammed',
   // role: 'Student',

@@ -12,37 +12,39 @@ passport.use(
   new LocalStrategy((username: string, password: string, callback) => {
     // PassportJS uses callbacks, only..
     // let user: User = new User();
-    User.findOne({
-      where: {
-        username,
-      },
-    }).then((user) => {
-      if (!user)
-        return callback(null, false, {
-          message: 'Incorrect username or password',
-        });
-
-      // If user didn't reset his password on the first login,
-      // then the password is saved as plain-text
-      if (!user.isReset) {
-        if (password !== user.password)
+    User.scope('withPassword')
+      .findOne({
+        where: {
+          username,
+        },
+      })
+      .then((user) => {
+        if (!user)
           return callback(null, false, {
             message: 'Incorrect username or password',
           });
-        else return callback(null, user.dataValues);
-      }
 
-      verifyPassword(password, user.dataValues.password).then(
-        (isPasswordCorrect) => {
-          if (!isPasswordCorrect)
+        // If user didn't reset his password on the first login,
+        // then the password is saved as plain-text
+        if (!user.isReset) {
+          if (password !== user.password)
             return callback(null, false, {
               message: 'Incorrect username or password',
             });
-
-          return callback(null, user.dataValues);
+          else return callback(null, user.dataValues);
         }
-      );
-    });
+
+        verifyPassword(password, user.dataValues.password).then(
+          (isPasswordCorrect) => {
+            if (!isPasswordCorrect)
+              return callback(null, false, {
+                message: 'Incorrect username or password',
+              });
+
+            return callback(null, user.dataValues);
+          }
+        );
+      });
   })
 );
 
