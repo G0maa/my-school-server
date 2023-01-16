@@ -17,42 +17,44 @@ passport.use(
       // PassportJS uses callbacks, only..
       // let user: User = new User();
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      User.findOne({
-        where: {
-          username,
-        },
-      }).then((user) => {
-        if (!user)
-          return callback(null, false, {
-            message: 'Incorrect username or password',
-          });
-
-        const tokenUser = {
-          id: user.id,
-          username: user.username,
-          role: user.role,
-        };
-        // If user didn't reset his password on the first login,
-        // then the password is saved as plain-text
-        if (!user.isReset) {
-          if (password !== user.password)
+      User.scope('withPassword')
+        .findOne({
+          where: {
+            username,
+          },
+        })
+        .then((user) => {
+          if (!user)
             return callback(null, false, {
               message: 'Incorrect username or password',
             });
-          else return callback(null, tokenUser);
-        }
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises, @typescript-eslint/no-unsafe-argument
-        verifyPassword(password, user.dataValues.password).then(
-          (isPasswordCorrect) => {
-            if (!isPasswordCorrect)
+
+          const tokenUser = {
+            id: user.id,
+            username: user.username,
+            role: user.role,
+          };
+          // If user didn't reset his password on the first login,
+          // then the password is saved as plain-text
+          if (!user.isReset) {
+            if (password !== user.password)
               return callback(null, false, {
                 message: 'Incorrect username or password',
               });
-
-            return callback(null, tokenUser);
+            else return callback(null, tokenUser);
           }
-        );
-      });
+          // eslint-disable-next-line @typescript-eslint/no-floating-promises, @typescript-eslint/no-unsafe-argument
+          verifyPassword(password, user.dataValues.password).then(
+            (isPasswordCorrect) => {
+              if (!isPasswordCorrect)
+                return callback(null, false, {
+                  message: 'Incorrect username or password',
+                });
+
+              return callback(null, tokenUser);
+            }
+          );
+        });
     }
   )
 );
