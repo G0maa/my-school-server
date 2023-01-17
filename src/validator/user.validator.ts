@@ -37,7 +37,7 @@ export const ZUserPut = ZUser.omit({
   isVerified: true,
   isReset: true,
   role: true,
-});
+}).partial();
 
 export type ZUserPut = z.infer<typeof ZUserPut>;
 export type ZUserQuery = z.infer<typeof ZUserQuery>;
