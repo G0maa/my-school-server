@@ -55,7 +55,7 @@ studentRouter.post(
 // Not tested
 studentRouter.put(
   '/:id',
-  setAuthorizedRoles([ZRole.enum.Admin]),
+  setAuthorizedRoles([ZRole.enum.Admin, ZRole.enum.Student]),
   isAuthenticated,
   async (req: Request, res: Response) => {
     const zUser = ZUserPut.parse({ ...req.body, id: req.params.id });
