@@ -21,7 +21,7 @@ const activeSubjectRouter = express.Router();
 // #17 very WET CRUD operations.
 activeSubjectRouter.get(
   '/',
-  setAuthorizedRoles([ZRole.enum.Admin]),
+  setAuthorizedRoles([ZRole.enum.Admin, ZRole.enum.Teacher]),
   isAuthenticated,
   async (req, res) => {
     const searchQuery = ZActiveSubjectQuery.parse(req.query);
