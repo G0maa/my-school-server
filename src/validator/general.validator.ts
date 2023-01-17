@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { Bug } from '../types';
 // type CreateStudent = z.infer<typeof CreateStudent>; I forget how to do this a lot.
 export const ZUuid = z.string().uuid();
-export const ZStudyYear = z.enum(['1', '2', '3']);
+export const ZStudyYear = z.enum(['1', '2', '3', '4', '5', '6']);
 export const ZRole = z.enum(['Student', 'Teacher', 'Admin']);
 // export const ZRole = z.nativeEnum(zRole);
 export const ZGender = z.enum(['Male', 'Female']);
@@ -17,7 +17,14 @@ export const ZBloodGroup = z.enum([
   'AB+',
   'AB-',
 ]);
-export const ZEducationType = z.enum(['Sceiences', 'Literature', 'Other']);
+export const ZEducationType = z.enum([
+  'Sciences',
+  'Literature',
+  'Middle',
+  'Elementary',
+  'Other',
+]);
+
 export const ToLikeQuery = (attribute: string | undefined | null) => {
   if (!attribute) return;
   return { [Op.like]: `%${attribute}%` };

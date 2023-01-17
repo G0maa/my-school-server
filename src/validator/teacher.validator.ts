@@ -19,7 +19,7 @@ export const ZTeacherQuery = ZTeacher.extend({
   ),
 }).partial();
 
-export const ZTeacherPut = ZTeacher.required();
+export const ZTeacherPut = ZTeacher.partial();
 
 export type ZTeacherPut = z.infer<typeof ZTeacherPut>;
 export type ZTeacherQuery = z.infer<typeof ZTeacherQuery>;

@@ -29,7 +29,7 @@ export const ZStudentQuery = ZStudent.partial()
   })
   .partial();
 
-export const ZStudentPut = ZStudent.required();
+export const ZStudentPut = ZStudent.partial();
 export type ZStudentPut = z.infer<typeof ZStudentPut>;
 export type ZStudentQuery = z.infer<typeof ZStudentQuery>;
 

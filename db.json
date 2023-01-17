@@ -1,0 +1,350 @@
+{
+  "libirary": [
+    {
+      "id": "002",
+      "no": "B123452",
+      "title": "java Black Book",
+      "subject": "java",
+      "date": "2035-02-06",
+      "department": "computer",
+      "type": "book",
+      "status": "in stock"
+    },
+    {
+      "id": "003",
+      "no": "B123453",
+      "title": "Parallel Computing",
+      "subject": "networking",
+      "date": "2019-02-13T14:22:18Z",
+      "department": "computer",
+      "type": "dvd",
+      "status": "out of stock"
+    },
+    {
+      "id": "004",
+      "no": "B123454",
+      "title": "Politics Science",
+      "subject": "politics",
+      "date": "2019-02-01T14:22:18Z",
+      "department": "computer",
+      "type": "book",
+      "status": "in stock"
+    },
+    {
+      "id": "005",
+      "no": "B123455",
+      "title": "networking",
+      "subject": "animation",
+      "date": "2019-02-02T14:22:18Z",
+      "department": "mathematics",
+      "type": "cd",
+      "status": "out of stock"
+    },
+    {
+      "id": "006",
+      "no": "B123456",
+      "title": "Time History",
+      "subject": "java",
+      "date": "2019-02-26T14:22:18Z",
+      "department": "mechanical",
+      "type": "book",
+      "status": "issue"
+    },
+    {
+      "id": "007",
+      "no": "B123457",
+      "title": "Politics",
+      "subject": "politics",
+      "date": "2019-02-22T14:22:18Z",
+      "department": "civil",
+      "type": "book",
+      "status": "issue"
+    },
+    {
+      "id": "008",
+      "no": "B123458",
+      "title": "networking",
+      "subject": "mathematics",
+      "date": "2019-02-19T14:22:18Z",
+      "department": "computer",
+      "type": "book",
+      "status": "repair"
+    },
+    {
+      "id": "009",
+      "no": "B123459",
+      "title": "Web Programming",
+      "subject": "networking",
+      "date": "2019-02-15T14:22:18Z",
+      "department": "civil",
+      "type": "book",
+      "status": "issue"
+    },
+    {
+      "id": "010",
+      "no": "B1234510",
+      "title": "Computer Fundamental",
+      "subject": "animation",
+      "date": "2019-02-27T14:22:18Z",
+      "department": "mathematics",
+      "type": "book",
+      "status": "issue"
+    },
+    {
+      "id": "011",
+      "no": "B1234511",
+      "title": "Computer Fundamental",
+      "subject": "other",
+      "date": "2019-02-21T14:22:18Z",
+      "department": "civil",
+      "type": "cd",
+      "status": "in stock"
+    },
+    {
+      "id": "012",
+      "no": "B1234512",
+      "title": "Time History",
+      "subject": "mathematics",
+      "date": "2019-02-10T14:22:18Z",
+      "department": "computer",
+      "type": "news paper",
+      "status": "out of stock"
+    },
+    {
+      "id": "013",
+      "no": "B1234513",
+      "title": "java Black Book",
+      "subject": "java",
+      "date": "2019-02-11T14:22:18Z",
+      "department": "management",
+      "type": "dvd",
+      "status": "out of stock"
+    },
+    {
+      "id": "014",
+      "no": "B1234514",
+      "title": "Parallel Computing",
+      "subject": "politics",
+      "date": "2019-02-16T14:22:18Z",
+      "department": "management",
+      "type": "book",
+      "status": "out of stock"
+    },
+    {
+      "id": "015",
+      "no": "B1234515",
+      "title": "Computer Fundamental",
+      "subject": "java",
+      "date": "2019-02-04T14:22:18Z",
+      "department": "mechanical",
+      "type": "book",
+      "status": "repair"
+    },
+    {
+      "id": "016",
+      "no": "B1234516",
+      "title": "Advance java",
+      "subject": "management",
+      "date": "2019-02-15T14:22:18Z",
+      "department": "civil",
+      "type": "book",
+      "status": "out of stock"
+    },
+    {
+      "id": "62229056",
+      "no": "B1000000",
+      "title": "aloooo",
+      "subject": "java",
+      "date": "2023-01-16",
+      "department": "mechanical",
+      "type": "book",
+      "status": "in stock"
+    },
+    {
+      "no": "B12321321",
+      "title": "Ahmed",
+      "subject": "mathematics",
+      "authorName": "Ahmed Hassan",
+      "publisher": "Nahdet Misr",
+      "department": "science",
+      "aType": "book",
+      "date": "2023-01-16T22:00:00.000Z",
+      "price": "100",
+      "status": "in stock",
+      "details": "Greatest Book ever",
+      "id": "ipBAhE2"
+    },
+    {
+      "id": "d6507180",
+      "no": "B123231",
+      "title": "TEST",
+      "subject": "java",
+      "date": "2023-01-16",
+      "department": "science",
+      "type": "book",
+      "status": "in stock"
+    }
+  ],
+  "staff": [
+    {
+      "id": "001",
+      "img": "assets/images/user/user1.jpg",
+      "designation": "Peon",
+      "email": "test@email.com",
+      "date": "2018-02-25T14:22:18Z",
+      "mobile": "1234567890",
+      "name": "Bertie Jones",
+      "address": "11,Shyam appt. Rajkot"
+    },
+    {
+      "id": "002",
+      "img": "assets/images/user/user2.jpg",
+      "designation": "Clerk",
+      "email": "test@email.com",
+      "date": "2018-02-12T14:22:18Z",
+      "mobile": "1234567890",
+      "name": "Sarah Smith",
+      "address": "22,tilak appt. surat"
+    },
+    {
+      "id": "003",
+      "img": "assets/images/user/user3.jpg",
+      "designation": "Librarian",
+      "email": "test@email.com",
+      "date": "2018-02-25T14:22:18Z",
+      "mobile": "1234567890",
+      "name": "Bethaney Spence",
+      "address": "201, Shyamal, Puna"
+    },
+    {
+      "id": "004",
+      "img": "assets/images/user/user4.jpg",
+      "designation": "Clerk",
+      "email": "test@email.com",
+      "date": "2018-02-25T14:22:18Z",
+      "mobile": "1234567890",
+      "name": "Jay Soni",
+      "address": "11,Shyam appt. Rajkot"
+    },
+    {
+      "id": "005",
+      "img": "assets/images/user/user5.jpg",
+      "designation": "Purchase Officer",
+      "email": "test@email.com",
+      "date": "2018-02-25T14:22:18Z",
+      "mobile": "1234567890",
+      "name": "Pam Abbott",
+      "address": "11,Shyam appt. Rajkot"
+    },
+    {
+      "id": "006",
+      "img": "assets/images/user/user6.jpg",
+      "designation": "Receptionist",
+      "email": "test@email.com",
+      "date": "2018-02-25T14:22:18Z",
+      "mobile": "1234567890",
+      "name": "Wesley Casey",
+      "address": "11,Shyam appt. Rajkot"
+    },
+    {
+      "id": "007",
+      "img": "assets/images/user/user7.jpg",
+      "designation": "Clerk",
+      "email": "test@email.com",
+      "date": "2018-02-25T14:22:18Z",
+      "mobile": "1234567890",
+      "name": "Ivan Bell",
+      "address": "11,Shyam appt. Rajkot"
+    },
+    {
+      "id": "008",
+      "img": "assets/images/user/user8.jpg",
+      "designation": "Teacher",
+      "email": "test@email.com",
+      "date": "2018-02-25T14:22:18Z",
+      "mobile": "1234567890",
+      "name": "Jay Soni",
+      "address": "11,Shyam appt. Rajkot"
+    },
+    {
+      "id": "009",
+      "img": "assets/images/user/user9.jpg",
+      "designation": "Driver",
+      "email": "test@email.com",
+      "date": "2018-02-25T14:22:18Z",
+      "mobile": "1234567890",
+      "name": "Robin Graves",
+      "address": "11,Shyam appt. Rajkot"
+    },
+    {
+      "id": "010",
+      "img": "assets/images/user/user10.jpg",
+      "designation": "Clerk",
+      "email": "test@email.com",
+      "date": "2018-02-25T14:22:18Z",
+      "mobile": "1234567890",
+      "name": "Elsie Cruz",
+      "address": "11,Shyam appt. Rajkot"
+    },
+    {
+      "id": "011",
+      "img": "assets/images/user/user1.jpg",
+      "designation": "Receptionist",
+      "email": "test@email.com",
+      "date": "2018-02-25T14:22:18Z",
+      "mobile": "1234567890",
+      "name": "Jay Soni",
+      "address": "11,Shyam appt. Rajkot"
+    },
+    {
+      "id": "012",
+      "img": "assets/images/user/user1.jpg",
+      "designation": "Peon",
+      "email": "test@email.com",
+      "date": "2018-02-25T14:22:18Z",
+      "mobile": "1234567890",
+      "name": "Justin Copeland",
+      "address": "11,Shyam appt. Rajkot"
+    },
+    {
+      "id": "013",
+      "img": "assets/images/user/user2.jpg",
+      "designation": "Clerk",
+      "email": "test@email.com",
+      "date": "2018-02-25T14:22:18Z",
+      "mobile": "1234567890",
+      "name": "Sarah Smith",
+      "address": "22,tilak appt. surat"
+    },
+    {
+      "id": "014",
+      "img": "assets/images/user/user3.jpg",
+      "designation": "Librarian",
+      "email": "test@email.com",
+      "date": "2018-02-25T14:22:18Z",
+      "mobile": "1234567890",
+      "name": "Kendra King",
+      "address": "201, Shyamal, Puna"
+    },
+    {
+      "id": "015",
+      "img": "assets/images/user/user4.jpg",
+      "designation": "Clerk",
+      "email": "test@email.com",
+      "date": "2018-02-25T14:22:18Z",
+      "mobile": "1234567890",
+      "name": "Jay Soni",
+      "address": "11,Shyam appt. Rajkot"
+    },
+    {
+      "id": "016",
+      "img": "assets/images/user/user5.jpg",
+      "designation": "Purchase Officer",
+      "email": "test@email.com",
+      "date": "2018-02-25T14:22:18Z",
+      "mobile": "1234567890",
+      "name": "Alexandra Clarke",
+      "address": "11,Shyam appt. Rajkot"
+    }
+  ]
+}

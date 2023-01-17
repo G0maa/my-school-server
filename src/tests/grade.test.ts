@@ -1,13 +1,17 @@
 import supertest from 'supertest';
 import { app } from '../app';
-import { getDummyActiveSubject, getDummyStudent, loginAdmin } from './helpers';
+import {
+  getAdminCredentialsHeader,
+  getDummyActiveSubject,
+  getDummyStudent,
+} from './helpers';
 import { ZActiveSubject } from '../validator/activeSubject.validator';
 import { ZGrade } from '../validator/grade.validator';
 
 const api = supertest(app);
 const gradeRoute = '/api/grade';
 
-let sessionId: string;
+let adminHeader: object;
 export const dummyActiveSubject: ZActiveSubject = {
   subjectId: '',
   classId: '',
@@ -17,8 +21,7 @@ export const dummyActiveSubject: ZActiveSubject = {
 
 beforeAll(async () => {
   // P.S: Can be a student too, something code coverage won't get.
-  sessionId = (await loginAdmin(api)) as string;
-  await api.get('/testAuth').set('Cookie', [sessionId]).expect(200);
+  adminHeader = await getAdminCredentialsHeader(api, true);
 });
 
 describe('CRUD of Grade', () => {
@@ -35,13 +38,13 @@ describe('CRUD of Grade', () => {
 
     const post = await api
       .post(gradeRoute)
-      .set('Cookie', [sessionId])
+      .set(adminHeader)
       .send(dummyGrade)
       .expect(200);
 
     const get = await api
       .get(`${gradeRoute}/${post.body.serial}`)
-      .set('Cookie', [sessionId])
+      .set(adminHeader)
       .expect(200);
 
     expect(get.body).toMatchObject(dummyGrade);
@@ -59,11 +62,7 @@ describe('CRUD of Grade', () => {
       exam: 40,
     };
 
-    await api
-      .post(gradeRoute)
-      .set('Cookie', [sessionId])
-      .send(dummyGrade)
-      .expect(400);
+    await api.post(gradeRoute).set(adminHeader).send(dummyGrade).expect(400);
   });
 
   test('Fails when studentId does not reference an existing student', async () => {
@@ -78,11 +77,7 @@ describe('CRUD of Grade', () => {
       exam: 40,
     };
 
-    await api
-      .post(gradeRoute)
-      .set('Cookie', [sessionId])
-      .send(dummyGrade)
-      .expect(400);
+    await api.post(gradeRoute).set(adminHeader).send(dummyGrade).expect(400);
   });
 
   test('Fails when exam grade is more than 60', async () => {
@@ -96,10 +91,6 @@ describe('CRUD of Grade', () => {
       exam: 61,
     };
 
-    await api
-      .post(gradeRoute)
-      .set('Cookie', [sessionId])
-      .send(dummyGrade)
-      .expect(400);
+    await api.post(gradeRoute).set(adminHeader).send(dummyGrade).expect(400);
   });
 });

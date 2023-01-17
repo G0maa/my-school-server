@@ -2,83 +2,88 @@
 // To-Do Deal with eslint
 import express from 'express';
 import passport from 'passport';
+import jwt from 'jsonwebtoken';
 import { Strategy as LocalStrategy } from 'passport-local';
 import { User } from '../models';
+import config from '../utils/config';
 import { verifyPassword } from '../utils/helpers';
 
 // this gets called as a middleware,
 // variables are taken from req.body
 passport.use(
-  new LocalStrategy((username: string, password: string, callback) => {
-    // PassportJS uses callbacks, only..
-    // let user: User = new User();
-    User.findOne({
-      where: {
-        username,
-      },
-    }).then((user) => {
-      if (!user)
-        return callback(null, false, {
-          message: 'Incorrect username or password',
-        });
-
-      // If user didn't reset his password on the first login,
-      // then the password is saved as plain-text
-      if (!user.isReset) {
-        if (password !== user.password)
-          return callback(null, false, {
-            message: 'Incorrect username or password',
-          });
-        else return callback(null, user.dataValues);
-      }
-
-      verifyPassword(password, user.dataValues.password).then(
-        (isPasswordCorrect) => {
-          if (!isPasswordCorrect)
+  new LocalStrategy(
+    { session: false },
+    (username: string, password: string, callback) => {
+      // PassportJS uses callbacks, only..
+      // let user: User = new User();
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      User.scope('withPassword')
+        .findOne({
+          where: {
+            username,
+          },
+        })
+        .then((user) => {
+          if (!user)
             return callback(null, false, {
               message: 'Incorrect username or password',
             });
 
-          return callback(null, user.dataValues);
-        }
-      );
-    });
-  })
+          const tokenUser = {
+            id: user.id,
+            username: user.username,
+            role: user.role,
+          };
+          // If user didn't reset his password on the first login,
+          // then the password is saved as plain-text
+          if (!user.isReset) {
+            if (password !== user.password)
+              return callback(null, false, {
+                message: 'Incorrect username or password',
+              });
+            else return callback(null, tokenUser);
+          }
+          // eslint-disable-next-line @typescript-eslint/no-floating-promises, @typescript-eslint/no-unsafe-argument
+          verifyPassword(password, user.dataValues.password).then(
+            (isPasswordCorrect) => {
+              if (!isPasswordCorrect)
+                return callback(null, false, {
+                  message: 'Incorrect username or password',
+                });
+
+              return callback(null, tokenUser);
+            }
+          );
+        });
+    }
+  )
 );
-
-// This gets called ONLY after call of passport.authenticate('local')
-// i.e. sets which data will be stored in expess-session store
-passport.serializeUser((user, callback) => {
-  // console.log('serializeUser', user);
-  return callback(null, {
-    id: user.id,
-    username: user.username,
-    role: user.role,
-  });
-});
-
-// This is the data from 'express-session' store, to req.body
-// Better not have a +1 DB request.
-passport.deserializeUser((user: Express.User, callback) => {
-  // console.log('deserializeUser', user);
-  return callback(null, user);
-});
 
 const loginRouter = express.Router();
 
 // Keep in mind that this route gets
 // the object passed in local strategy callback
-loginRouter.post('/login', passport.authenticate('local'), (req, res) => {
-  if (!req.user) return res.status(401).end();
+// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+loginRouter.post(
+  '/login',
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  passport.authenticate('local', { session: false }),
+  (req, res) => {
+    if (!req.user) return res.status(401).end();
 
-  return res
-    .status(200)
-    .json({
-      id: req.user.id,
-      username: req.user.username,
-      role: req.user.role,
-    })
-    .end();
-});
+    const token = jwt.sign(req.user, config.SECRET, {
+      expiresIn: 60 * 60 * 24 * 7,
+    });
+
+    // user: {id, username, role}
+    return res
+      .status(200)
+      .json({
+        ...req.user,
+        token,
+      })
+      .end();
+  }
+);
 
 export default loginRouter;

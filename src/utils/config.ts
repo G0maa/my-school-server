@@ -7,6 +7,10 @@ const { PORT, NODE_ENV, SECRET } = process.env;
 // const DATABASE_URL = ()
 //   NODE_ENV === 'PROD' ? process.env.DATABASE_URL : process.env.DEV_DATABASE_URL;
 
+// Make Dockerfile for server,
+// Make PROD DB URL is Docker postgreslq URL
+// Add to docker compose yml
+// also upload env file to yml..
 let DATABASE_URL;
 switch (NODE_ENV) {
   case 'PROD':

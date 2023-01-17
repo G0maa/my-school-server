@@ -16,14 +16,32 @@ const adminCreds = {
   password: '000000',
 };
 
-export const loginAdmin = async (api: supertest.SuperTest<supertest.Test>) => {
+export const getAdminCredentialsHeader = async (
+  api: supertest.SuperTest<supertest.Test>,
+  isJWT = false
+) => {
   const response = await api
     .post('/api/auth/login')
     .send(adminCreds)
     .expect(200);
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  return response.headers['set-cookie'];
+  console.log('response.body', response.body);
+
+  let header = {};
+  if (isJWT) {
+    const token = response.body.token as string;
+    header = { Authorization: `bearer ${token}` };
+
+    await api.get('/testAuth').set(header).expect(200);
+
+    return header;
+  } else {
+    const sessionId = response.headers['set-cookie'] as string;
+    header = ['Cookie', [sessionId]];
+
+    await api.get('/testAuth').set(header).expect(200);
+    return header;
+  }
 };
 
 export const getDummyClass = async () => {

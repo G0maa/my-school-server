@@ -1,3 +1,4 @@
+import { Student, User } from '../models';
 import Fee from '../models/fee';
 import {
   ZFee,
@@ -7,14 +8,36 @@ import {
 } from '../validator/fee.validator';
 
 const getFees = async (zFeeFind: ZFeeFind) => {
-  const fees = await Fee.findAll({ where: { ...zFeeFind } });
+  const fees = await Fee.findAll({
+    // include: [
+    //   {
+    //     model: Student,
+    //     include: [User],
+    //     // attributes: { include: ['studyClass', 'educationType'] },
+    //   },
+    // ],
+    where: { ...zFeeFind },
+  });
   return fees;
 };
 
 // To-do proper error message if not found.
 // To-do only student that has this fee can access it
 const getFee = async (serial: ZFeeSerial) => {
-  const fee = await Fee.findOne({ where: { serial } });
+  const fee = await Fee.findOne({
+    include: [
+      {
+        model: Student,
+        include: [
+          {
+            model: User,
+          },
+        ],
+      },
+    ],
+    where: { serial },
+  });
+
   return fee;
 };
 

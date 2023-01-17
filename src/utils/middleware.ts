@@ -9,8 +9,10 @@ import type {
 import multer from 'multer';
 import path from 'path';
 import { AnyZodObject } from 'zod';
+import jwt from 'jsonwebtoken';
 import { Role } from '../validator/general.validator';
 import logger from './logger';
+import config from './config';
 
 const requestLogger = (req: Request, _res: Response, next: NextFunction) => {
   logger.info('Method:', req.method);
@@ -29,8 +31,17 @@ const setAuthorizedRoles = (allowedRoles: Role[]) => {
 
 // and authorized.
 const isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
+  const authorization = req.get('authorization');
+
+  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+    const token = authorization.substring(7);
+    req.user = jwt.verify(token, config.SECRET) as Express.User;
+  } else {
+    return res.status(401).json({ message: 'Missing Token' });
+  }
+
   if (!req.user)
-    return res.status(401).json({ message: 'Unauthenticed User' }).end();
+    return res.status(401).json({ message: 'Invalid Token' }).end();
 
   // Every authenticated user is allowed to use this route.
   if (!req.allowedRoles) return next();

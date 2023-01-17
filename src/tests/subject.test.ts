@@ -1,6 +1,6 @@
 import supertest from 'supertest';
 import { app } from '../app';
-import { getDummySubject, loginAdmin } from './helpers';
+import { getAdminCredentialsHeader, getDummySubject } from './helpers';
 import { ZSubject } from '../validator/subject.validator';
 // import Subject from '../models/subject';
 import ActiveSubject from '../models/activeSubject';
@@ -8,7 +8,7 @@ import ActiveSubject from '../models/activeSubject';
 const api = supertest(app);
 const subjectRoute = '/api/subject/';
 
-let sessionId: string;
+let adminHeader: object;
 beforeAll(async () => {
   // Temporary fix, need to come up/find an actual methodolgy for tests
   // i.e. make test files (at least) completely stand alone,
@@ -16,8 +16,7 @@ beforeAll(async () => {
   await ActiveSubject.destroy({ where: {} });
   // await Subject.destroy({});
   // P.S: Can be a student too, something code coverage won't get.
-  sessionId = (await loginAdmin(api)) as string;
-  await api.get('/testAuth').set('Cookie', [sessionId]).expect(200);
+  adminHeader = await getAdminCredentialsHeader(api, true);
 });
 
 export const dummySubject: ZSubject = {
@@ -32,13 +31,13 @@ describe('CRUD of Subject', () => {
     // serialization of username works correctly
     await api
       .post(subjectRoute)
-      .set('Cookie', [sessionId])
+      .set(adminHeader)
       .send(dummySubject)
       .expect(200);
 
     const get = await api
       .get(`${subjectRoute}${dummySubject.subjectId}`)
-      .set('Cookie', [sessionId])
+      .set(adminHeader)
       .expect(200);
 
     expect(get.body.subjectId).toMatch('BSC123');
@@ -50,13 +49,10 @@ describe('CRUD of Subject', () => {
 
     await api
       .delete(`${subjectRoute}${subjectId}`)
-      .set('Cookie', [sessionId])
+      .set(adminHeader)
       .expect(200);
 
-    const subjects = await api
-      .get(subjectRoute)
-      .set('Cookie', [sessionId])
-      .expect(200);
+    const subjects = await api.get(subjectRoute).set(adminHeader).expect(200);
 
     expect(subjects.body).not.toEqual(
       expect.arrayContaining([

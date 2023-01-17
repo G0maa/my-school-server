@@ -1,16 +1,15 @@
 import fs from 'fs';
 import supertest from 'supertest';
 import { app } from '../app';
-import { getDummySubject, loginAdmin } from './helpers';
+import { getAdminCredentialsHeader, getDummySubject } from './helpers';
 
 const api = supertest(app);
 const subjectsMaterialRoute = '/api/subjectsMaterial';
 
-let sessionId: string;
+let adminHeader: object;
 let subjectId: string;
 beforeAll(async () => {
-  sessionId = (await loginAdmin(api)) as string;
-  await api.get('/testAuth').set('Cookie', [sessionId]).expect(200);
+  adminHeader = await getAdminCredentialsHeader(api, true);
 
   subjectId = (await getDummySubject()).subjectId;
 });
@@ -23,7 +22,7 @@ describe('CRUD Subjects Materials', () => {
 
     const oneSubjectMaterialRecord = await api
       .post(`${subjectsMaterialRoute}/${subjectId}`)
-      .set('Cookie', [sessionId])
+      .set(adminHeader)
       .set('Content-Type', 'multipart/form-data')
       .field('fileName', 'jest test')
       .attach('pdf', filePath)
@@ -34,7 +33,7 @@ describe('CRUD Subjects Materials', () => {
       .get(
         `${subjectsMaterialRoute}/${subjectId}/${oneSubjectMaterialRecord.body.serial}`
       )
-      .set('Cookie', [sessionId])
+      .set(adminHeader)
       .expect(200);
     expect(res.headers['content-length']).toEqual('11');
     console.log('res', res);

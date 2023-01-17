@@ -1,5 +1,6 @@
 import { DataTypes } from 'sequelize';
 import { Migration } from '../types';
+import { ZFeePaymentType, ZFeeStatus } from '../validator/fee.validator';
 
 export const up: Migration = async ({ context: queryInterface }) => {
   await queryInterface.createTable('fees', {
@@ -28,9 +29,12 @@ export const up: Migration = async ({ context: queryInterface }) => {
       type: DataTypes.DATEONLY(),
       allowNull: false,
     },
-    is_paid: {
-      type: DataTypes.BOOLEAN(),
-      defaultValue: false,
+    status: {
+      type: DataTypes.ENUM(...Object.values(ZFeeStatus.enum)),
+      allowNull: true,
+    },
+    payment_type: {
+      type: DataTypes.ENUM(...Object.values(ZFeePaymentType.enum)),
       allowNull: true,
     },
   });
@@ -38,4 +42,8 @@ export const up: Migration = async ({ context: queryInterface }) => {
 
 export const down: Migration = async ({ context: queryInterface }) => {
   await queryInterface.dropTable('fees', {});
+  await queryInterface.sequelize.query(
+    'DROP TYPE IF EXISTS enum_fees_payment_type'
+  );
+  await queryInterface.sequelize.query('DROP TYPE IF EXISTS enum_fees_status');
 };

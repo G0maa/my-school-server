@@ -14,7 +14,10 @@ const getTeachers = async (
   searchQueryTeacher: ZTeacherQuery
 ) => {
   const query = await Teacher.findAll({
-    include: { model: User, where: { ...searchQueryUser } },
+    include: {
+      model: User.scope('casePassword'),
+      where: { ...searchQueryUser },
+    },
     where: { ...searchQueryTeacher },
   });
   return query;

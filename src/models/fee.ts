@@ -10,6 +10,7 @@ import {
   BelongsTo,
   Default,
 } from 'sequelize-typescript';
+import { ZFeePaymentType, ZFeeStatus } from '../validator/fee.validator';
 import Student from './student';
 
 @Table({
@@ -40,12 +41,18 @@ class Fee extends Model {
   @Column
   dueDate!: Date;
 
-  @AllowNull(false)
-  @Default(false)
-  @Column
-  isPaid!: boolean;
+  @AllowNull(true)
+  @Default(ZFeeStatus.enum.Pending)
+  @Column(DataType.ENUM(...Object.values(ZFeeStatus.enum)))
+  status!: ZFeeStatus;
 
-  @BelongsTo(() => Student)
+  @AllowNull(true)
+  @Column(DataType.ENUM(...Object.values(ZFeePaymentType.enum)))
+  paymentType!: ZFeePaymentType;
+
+  // In consistent, if underscored is true,
+  // then targetKey should be also underscored i.e. user_id
+  @BelongsTo(() => Student, { targetKey: 'userId' })
   student!: Student;
 }
 
