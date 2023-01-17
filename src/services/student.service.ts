@@ -15,7 +15,10 @@ const getStudents = async (
   searchQueryStudent: ZStudentQuery
 ) => {
   const query = await Student.findAll({
-    include: { model: User, where: { ...searchQueryUser } },
+    include: {
+      model: User.scope('casePassword'),
+      where: { ...searchQueryUser },
+    },
     where: { ...searchQueryStudent },
   });
   return query;

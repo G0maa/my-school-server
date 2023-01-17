@@ -13,7 +13,6 @@ import {
   HasOne,
   BeforeValidate,
   Scopes,
-  DefaultScope,
 } from 'sequelize-typescript';
 import { Role } from '../validator/general.validator';
 import {
@@ -33,23 +32,22 @@ import Teacher from './teacher';
 import Sequelize from 'sequelize';
 
 // id, name, email, username, password, role, isVerified, isReset
-// Exclude by default, include by scope (password).
-// Or Include by default, exclude by scope?
+// Include by default, exclude by scope.
 @Scopes(() => ({
   withPassword: {
     attributes: { include: ['password'] },
   },
-}))
-@DefaultScope(() => ({
-  attributes: {
-    include: [
-      [
-        Sequelize.literal(
-          'CASE WHEN "user"."is_reset" = false THEN "user"."password" ELSE NULL END'
-        ),
-        'password',
+  casePassword: {
+    attributes: {
+      include: [
+        [
+          Sequelize.literal(
+            'CASE WHEN "user"."is_reset" = false THEN "user"."password" ELSE NULL END'
+          ),
+          'password',
+        ],
       ],
-    ],
+    },
   },
 }))
 @Table({

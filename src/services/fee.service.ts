@@ -9,16 +9,13 @@ import {
 
 const getFees = async (zFeeFind: ZFeeFind) => {
   const fees = await Fee.findAll({
-    include: [
-      {
-        model: User,
-        attributes: { include: ['firstName'] },
-      },
-      {
-        model: Student,
-        attributes: { include: ['studyClass', 'educationType'] },
-      },
-    ],
+    // include: [
+    //   {
+    //     model: Student,
+    //     include: [User],
+    //     // attributes: { include: ['studyClass', 'educationType'] },
+    //   },
+    // ],
     where: { ...zFeeFind },
   });
   return fees;
@@ -30,17 +27,17 @@ const getFee = async (serial: ZFeeSerial) => {
   const fee = await Fee.findOne({
     include: [
       {
-        model: User,
-        attributes: { include: ['firstName'] },
-      },
-      {
         model: Student,
-        attributes: { include: ['studyClass', 'educationType'] },
+        include: [
+          {
+            model: User,
+          },
+        ],
       },
     ],
-
     where: { serial },
   });
+
   return fee;
 };
 
