@@ -58,11 +58,11 @@ feeRouter.post(
 );
 
 feeRouter.put(
-  '/',
+  '/:serial',
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req: Request, res: Response) => {
-    const zFeePut = ZFeePut.parse(req.body);
+    const zFeePut = ZFeePut.parse(req.params.serial);
 
     const fee = await updateFee(zFeePut);
 
