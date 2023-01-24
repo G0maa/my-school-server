@@ -29,4 +29,5 @@ export type Role = z.infer<typeof ZRole>;
 export type Gender = z.infer<typeof ZGender>;
 export type BloodGroup = z.infer<typeof ZBloodGroup>;
 export type EducationType = z.infer<typeof ZEducationType>;
+export type ZUuid = z.infer<typeof ZUuid>;
 export type FixBug = Bug;

@@ -1,19 +1,9 @@
 import { z } from 'zod';
-import { ToLikeQuery, ZBloodGroup, ZGender, ZRole } from './general.validator';
+import { ToLikeQuery, ZRole, ZUuid } from './general.validator';
 
 export const ZUser = z
   .object({
     id: z.string().uuid(),
-    firstName: z.string().max(64),
-    lastName: z.string().max(64),
-    gender: ZGender,
-    mobile: z.string().max(20),
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-    registerDate: z.coerce.date(),
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-    dateOfBirth: z.coerce.date(),
-    bloodGroup: ZBloodGroup,
-    address: z.string().max(64),
     email: z.string().email().max(64),
     username: z.string().max(64),
     password: z.string().max(64),
@@ -21,24 +11,31 @@ export const ZUser = z
     isVerified: z.boolean(),
     isReset: z.boolean(),
   })
-  .partial();
-// .required({ role: true }); cannot set defaults now.
+  .partial()
+  .required({ role: true });
+export type ZUser = z.infer<typeof ZUser>;
 
 export const ZUserQuery = ZUser.extend({
   username: ZUser.shape.username.transform((attribute) =>
     ToLikeQuery(attribute)
   ),
-  firstName: ZUser.shape.firstName.transform((attribute) =>
-    ToLikeQuery(attribute)
-  ),
 }).partial();
-
-export const ZUserPut = ZUser.omit({
-  isVerified: true,
-  isReset: true,
-  role: true,
-});
-
-export type ZUserPut = z.infer<typeof ZUserPut>;
 export type ZUserQuery = z.infer<typeof ZUserQuery>;
-export type ZUser = z.infer<typeof ZUser>;
+
+export const ZUserPost = z.object({
+  body: z.object({
+    user: ZUser.omit({ isVerified: true, isReset: true, id: true })
+      .partial()
+      .required({ role: true }),
+  }),
+});
+export type ZUserPost = z.infer<typeof ZUserPost>;
+
+export const ZUserPut = z.object({
+  params: z.object({ id: ZUuid }),
+  body: z.object({
+    user: ZUser.pick({ email: true }),
+    // userDetails: ZUserDetails.required().omit({ serial: true }),
+  }),
+});
+export type ZUserPut = z.infer<typeof ZUserPut>;
