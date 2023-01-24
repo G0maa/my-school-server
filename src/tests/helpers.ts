@@ -3,7 +3,7 @@ import { User } from '../models';
 import StudyClass from '../models/class';
 import Subject from '../models/subject';
 import { createActiveSubject } from '../services/activeSubject.service';
-import { createStudent } from '../services/student.service';
+import { createUser } from '../services/user.service';
 import { ZActiveSubject } from '../validator/activeSubject.validator';
 import {
   ZEducationType,
@@ -60,7 +60,7 @@ export const getDummyTeacher = async () => {
 };
 
 export const getDummyStudent = async () => {
-  const student = createStudent({}, { studyYear: '1' });
+  const student = createUser({ role: 'Student' }, {}, { studyYear: '1' });
   return student;
 };
 

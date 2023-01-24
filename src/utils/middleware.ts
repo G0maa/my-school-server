@@ -44,17 +44,22 @@ const isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
 };
 
 // To try this middleware
-const validate =
+const validateSchema =
   (schema: AnyZodObject) =>
-  (req: Request, _res: Response, next: NextFunction) => {
+  (req: Request, res: Response, next: NextFunction) => {
     // Error handling in errror-handler middleware
     // await/promise is needed only if you use **async** `refinements` or `transformers`
-    schema.parse({
-      body: req.body,
-      query: req.query,
-      params: req.params,
-    });
-    return next();
+    try {
+      schema.parse({
+        body: req.body,
+        query: req.query,
+        params: req.params,
+      });
+      return next();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (e: any) {
+      return res.status(400).send(e.errors);
+    }
   };
 
 const unknownEndpoint = (_req: Request, res: Response) => {
@@ -125,7 +130,7 @@ export {
   errorHandler,
   isAuthenticated,
   setAuthorizedRoles,
-  validate,
+  validateSchema,
   requestLogger,
   uploadFile,
 };

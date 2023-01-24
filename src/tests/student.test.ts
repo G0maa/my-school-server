@@ -1,7 +1,6 @@
 import supertest from 'supertest';
 import { app } from '../app';
-import { ZStudent } from '../validator/student.validator';
-import { ZUser } from '../validator/user.validator';
+import { ZStudentPost } from '../validator/student.validator';
 import { getDummyClass, loginAdmin } from './helpers';
 
 const api = supertest(app);
@@ -15,27 +14,35 @@ beforeAll(async () => {
 });
 
 // must not provide username & password as they're auto created.
-const dummyStudent: ZStudent = {
-  studyYear: '1',
-} as ZStudent;
+const dummyStudent: ZStudentPost['body'] = {
+  user: { role: 'Student' },
+  userDetails: {},
+  student: { studyYear: '1' },
+};
 
 // TS doesn't recognize that role is automatically created.
-const fullStudent = {
-  firstName: 'Mohammed',
-  lastName: 'Gomaa',
-  gender: 'Male',
-  mobile: '01013587921',
-  registerDate: new Date('2022-12-16'),
-  dateOfBirth: new Date('1995-01-01'),
-  bloodGroup: 'O+',
-  address: 'Egypt',
-  email: 'example@example.com',
-  studyYear: '1',
-  educationType: 'Sceiences',
-  parentName: 'Gomaa',
-  parentPhonenumber: 'Mohammed',
-  // role: 'Student',
-} as ZStudent & ZUser;
+const fullStudent: ZStudentPost['body'] = {
+  user: {
+    email: 'example@example.com',
+    role: 'Student',
+  },
+  userDetails: {
+    firstName: 'Mohammed',
+    lastName: 'Gomaa',
+    gender: 'Male',
+    mobile: '01013587921',
+    registerDate: new Date('2022-12-16'),
+    dateOfBirth: new Date('1995-01-01'),
+    bloodGroup: 'O+',
+    address: 'Egypt',
+  },
+  student: {
+    studyYear: '1',
+    educationType: 'Sceiences',
+    parentName: 'Gomaa',
+    parentPhonenumber: 'Mohammed',
+  },
+};
 
 describe('CRUD of Student', () => {
   test('POST & GET simpleified student', async () => {
@@ -52,7 +59,7 @@ describe('CRUD of Student', () => {
       .expect(200);
 
     const get = await api
-      .get(`${studentRoute}${res.body.userId}`)
+      .get(`${studentRoute}${res.body.id}`)
       .set('Cookie', [sessionId])
       .expect(200);
 
@@ -62,15 +69,23 @@ describe('CRUD of Student', () => {
 
   test('POST & GET full student', async () => {
     const res = await api
-      .post(`${studentRoute}?type=full`)
+      .post(studentRoute)
       .set('Cookie', [sessionId])
       .send(fullStudent)
       .expect(200);
 
-    await api
-      .get(`${studentRoute}${res.body.userId}`)
+    console.log('NewStudent', res.body);
+
+    const newStudent = await api
+      .get(`${studentRoute}${res.body.id}`)
       .set('Cookie', [sessionId])
       .expect(200);
+
+    expect(newStudent.body.parentName).toEqual(fullStudent.student.parentName);
+    expect(newStudent.body.user.email).toEqual(fullStudent.user.email);
+    expect(newStudent.body.user.userDetails.bloodGroup).toEqual(
+      fullStudent.userDetails.bloodGroup
+    );
   });
 
   test('Success when adding a Student with an existent Class', async () => {
@@ -79,11 +94,11 @@ describe('CRUD of Student', () => {
     const res = await api
       .post(`${studentRoute}`)
       .set('Cookie', [sessionId])
-      .send({ ...dummyStudent, classId })
+      .send({ ...dummyStudent, student: { ...dummyStudent.student, classId } })
       .expect(200);
 
     const res2 = await api
-      .get(`${studentRoute}${res.body.userId}`)
+      .get(`${studentRoute}${res.body.id}`)
       .set('Cookie', [sessionId])
       .expect(200);
 
@@ -94,7 +109,10 @@ describe('CRUD of Student', () => {
     const res = await api
       .post(`${studentRoute}`)
       .set('Cookie', [sessionId])
-      .send({ ...dummyStudent, classId: 'ZZZ000' })
+      .send({
+        ...dummyStudent,
+        student: { ...dummyStudent.student, classId: 'ZZZ000' },
+      })
       .expect(400);
 
     // Dirty coverage of code.
@@ -122,7 +140,7 @@ describe('CRUD of Student', () => {
 
     // Dirty coverage of code.
     const allStudentsReq = await api
-      .delete(`${studentRoute}${res.body.userId}`)
+      .delete(`${studentRoute}${res.body.id}`)
       .set('Cookie', [sessionId])
       .expect(200);
 

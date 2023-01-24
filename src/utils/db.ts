@@ -10,6 +10,7 @@ import SubjectsMaterial from '../models/subjectsMaterial';
 import Holiday from '../models/holiday';
 import Fee from '../models/fee';
 import Grade from '../models/grade';
+import UserDetails from '../models/userDetails';
 
 const sequelize = new Sequelize(config.DATABASE_URL, {
   dialectOptions: {
@@ -28,6 +29,7 @@ sequelize.addModels([
   Admin,
   Student,
   User,
+  UserDetails,
   Teacher,
   Subject,
   StudyClass,
