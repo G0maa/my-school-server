@@ -1,5 +1,6 @@
 import fs from 'fs';
 import { Admin, Student, Teacher, User } from '../models';
+import UserDetails from '../models/userDetails';
 import { ZRole } from '../validator/general.validator';
 import { hashPassword } from './helpers';
 
@@ -14,7 +15,7 @@ const init = async () => {
   const hashedPassword = await hashPassword(password);
 
   // this is solely for the purpose of testing if the user has a hashed password.
-  // also #bug, isReset logic is illogical, if true => user can & should reset,
+  // also To-Do, isReset logic is illogical, if true => user can & should reset,
   await Admin.create(
     {
       user: {
@@ -22,10 +23,11 @@ const init = async () => {
         password: hashedPassword,
         role: ZRole.Enum.Admin,
         isReset: true,
+        userDetails: {},
       },
     },
     {
-      include: User,
+      include: [{ model: User, include: [{ model: UserDetails }] }],
     }
   );
 
@@ -37,10 +39,11 @@ const init = async () => {
         password,
         role: ZRole.enum.Student,
         studyYear: '1',
+        userDetails: {},
       },
     },
     {
-      include: User,
+      include: [{ model: User, include: [{ model: UserDetails }] }],
     }
   );
 
@@ -50,10 +53,11 @@ const init = async () => {
         username: 'T0001',
         password,
         role: ZRole.enum.Teacher,
+        userDetails: {},
       },
     },
     {
-      include: User,
+      include: [{ model: User, include: [{ model: UserDetails }] }],
     }
   );
 

@@ -14,12 +14,14 @@ export const ZTeacher = z
     education: z.string().max(64),
   })
   .partial();
+export type ZTeacher = z.infer<typeof ZTeacher>;
 
 export const ZTeacherQuery = ZTeacher.extend({
   department: ZTeacher.shape.department.transform((attribute) =>
     ToLikeQuery(attribute)
   ),
 }).partial();
+export type ZTeacherQuery = z.infer<typeof ZTeacherQuery>;
 
 export const ZTeacherPost = z.object({
   body: ZUserPost.shape.body
@@ -34,7 +36,4 @@ export const ZTeacherPut = z.object({
     teacher: ZTeacher.omit({ userId: true }).required(),
   }),
 });
-
 export type ZTeacherPut = z.infer<typeof ZTeacherPut>;
-export type ZTeacherQuery = z.infer<typeof ZTeacherQuery>;
-export type ZTeacher = z.infer<typeof ZTeacher>;

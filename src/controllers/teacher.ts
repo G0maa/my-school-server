@@ -1,8 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import express, { Request, Response } from 'express';
-import { getTeacher, getTeachers } from '../services/teacher.service';
-import { createUser, deleteUser, updateUser } from '../services/user.service';
+import {
+  createUser,
+  deleteUser,
+  getUser,
+  getUsers,
+  updateUser,
+} from '../services/user.service';
 import {
   setAuthorizedRoles,
   isAuthenticated,
@@ -15,6 +20,7 @@ import {
   ZTeacherQuery,
 } from '../validator/teacher.validator';
 import { ZUserQuery } from '../validator/user.validator';
+import { ZUserDetailsQuery } from '../validator/userDetails.validator';
 
 const teacherRouter = express.Router();
 
@@ -24,17 +30,25 @@ teacherRouter.get(
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req, res) => {
+    // Route validation for this will be redundant,
+    // as client can't send objects in a req.query nor should it.
     const searchQueryUser = ZUserQuery.parse(req.query);
+    const searchQueryUserDetails = ZUserDetailsQuery.parse(req.query);
     const searchQueryTeacher = ZTeacherQuery.parse(req.query);
 
-    const query = await getTeachers(searchQueryUser, searchQueryTeacher);
+    const query = await getUsers(
+      'Teacher',
+      searchQueryUser,
+      searchQueryUserDetails,
+      searchQueryTeacher
+    );
     return res.status(200).json(query).end();
   }
 );
 
 teacherRouter.get('/:id', isAuthenticated, async (req, res) => {
   const zUuid = ZUuid.parse(req.params.id);
-  const query = await getTeacher(zUuid);
+  const query = await getUser(zUuid, 'Teacher');
   return res.status(200).json(query).end();
 });
 

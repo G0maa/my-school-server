@@ -15,6 +15,7 @@ export const ZUserDetails = z
     address: z.string().max(64),
   })
   .partial();
+export type ZUserDetails = z.infer<typeof ZUserDetails>;
 
 export const ZUserDetailsQuery = ZUserDetails.extend({
   firstName: ZUserDetails.shape.firstName.transform((attribute) =>
@@ -24,6 +25,7 @@ export const ZUserDetailsQuery = ZUserDetails.extend({
     ToLikeQuery(attribute)
   ),
 }).partial();
+export type ZUserDetailsQuery = z.infer<typeof ZUserDetailsQuery>;
 
 export const ZUserDetailsPost = z.object({
   body: z.object({
@@ -40,7 +42,4 @@ export const ZUserDetailsPut = z.object({
     userDetails: ZUserDetails.required().omit({ serial: true }),
   }),
 });
-
 export type ZUserDetailsPut = z.infer<typeof ZUserDetailsPut>;
-export type ZUserDetailsQuery = z.infer<typeof ZUserDetailsQuery>;
-export type ZUserDetails = z.infer<typeof ZUserDetails>;

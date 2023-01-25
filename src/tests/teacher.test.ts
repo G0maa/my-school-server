@@ -60,8 +60,8 @@ describe('CRUD of Teacher', () => {
       .set('Cookie', [sessionId])
       .expect(200);
 
-    expect(get.body.user.role).toEqual('Teacher');
-    expect(get.body.user.username).toMatch('T');
+    expect(get.body.role).toEqual('Teacher');
+    expect(get.body.username).toMatch('T');
   });
 
   test('POST & GET full teacher', async () => {
@@ -76,9 +76,11 @@ describe('CRUD of Teacher', () => {
       .set('Cookie', [sessionId])
       .expect(200);
 
-    expect(newTeacher.body.department).toEqual(fullTeacher.teacher.department);
-    expect(newTeacher.body.user.email).toEqual(fullTeacher.user.email);
-    expect(newTeacher.body.user.userDetails.bloodGroup).toEqual(
+    expect(newTeacher.body.teacher.department).toEqual(
+      fullTeacher.teacher.department
+    );
+    expect(newTeacher.body.email).toEqual(fullTeacher.user.email);
+    expect(newTeacher.body.userDetails.bloodGroup).toEqual(
       fullTeacher.userDetails.bloodGroup
     );
   });

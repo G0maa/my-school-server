@@ -1,8 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import express, { Request, Response } from 'express';
-import { getStudent, getStudents } from '../services/student.service';
-import { createUser, deleteUser, updateUser } from '../services/user.service';
+import {
+  createUser,
+  deleteUser,
+  getUser,
+  getUsers,
+  updateUser,
+} from '../services/user.service';
 import {
   setAuthorizedRoles,
   isAuthenticated,
@@ -19,17 +24,18 @@ import { ZUserDetailsQuery } from '../validator/userDetails.validator';
 
 const studentRouter = express.Router();
 
-// GET, GET:id, POST, DELETE, PUT
 studentRouter.get(
   '/',
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req, res) => {
+    // Can this look better? To-Do
     const searchQueryUser = ZUserQuery.parse(req.query);
-    const searchQueryUserDetails = ZUserDetailsQuery.parse(req.body);
+    const searchQueryUserDetails = ZUserDetailsQuery.parse(req.query);
     const searchQueryStudent = ZStudentQuery.parse(req.query);
 
-    const allStudents = await getStudents(
+    const allStudents = await getUsers(
+      'Student',
       searchQueryUser,
       searchQueryUserDetails,
       searchQueryStudent
@@ -40,7 +46,7 @@ studentRouter.get(
 
 studentRouter.get('/:id', isAuthenticated, async (req, res) => {
   const zUuid = ZUuid.parse(req.params.id);
-  const student = await getStudent(zUuid);
+  const student = await getUser(zUuid, 'Student');
   return res.status(200).json(student).end();
 });
 

@@ -1,17 +1,51 @@
 import { Student, Teacher, User, Admin } from '../models';
 import UserDetails from '../models/userDetails';
 import { Role, ZUuid } from '../validator/general.validator';
-import { ZStudentPost, ZStudentPut } from '../validator/student.validator';
-import { ZTeacherPost, ZTeacherPut } from '../validator/teacher.validator';
-import { ZUserPost, ZUserPut } from '../validator/user.validator';
+import {
+  ZStudentPost,
+  ZStudentPut,
+  ZStudentQuery,
+} from '../validator/student.validator';
+import {
+  ZTeacherPost,
+  ZTeacherPut,
+  ZTeacherQuery,
+} from '../validator/teacher.validator';
+import { ZUserPost, ZUserPut, ZUserQuery } from '../validator/user.validator';
 import {
   ZUserDetailsPost,
   ZUserDetailsPut,
+  ZUserDetailsQuery,
 } from '../validator/userDetails.validator';
 
 const roleModels = { Student, Teacher, Admin };
 
+const getUsers = async (
+  role: Role,
+  userQuery: ZUserQuery,
+  userDetailsQuery: ZUserDetailsQuery,
+  roleQuery: ZStudentQuery | ZTeacherQuery
+) => {
+  const query = await User.findAll({
+    include: [
+      { model: UserDetails, where: { ...userDetailsQuery } },
+      { model: roleModels[role], where: roleQuery },
+    ],
+    where: { role, ...userQuery },
+  });
+  return query;
+};
+
+const getUser = async (userId: ZUuid, role: Role) => {
+  const query = await User.findOne({
+    include: [{ model: UserDetails }, { model: roleModels[role] }],
+    where: { id: userId },
+  });
+  return query;
+};
+
 // Testing this out
+// Validators DOES NOT set role attribute by themselves.
 const createUser = async (
   zUser: ZUserPost['body']['user'],
   zUserDetails: ZUserDetailsPost['body']['userDetails'],
@@ -62,7 +96,8 @@ const updateUser = async (
   await userDetails.save();
   await roleObject.save();
 
-  return { user, userDetails, [roleName]: roleObject };
+  // ...user, trying to make the response body somewhat consistent.
+  return { ...user, userDetails, [roleName]: roleObject };
 };
 
 // Validation???
@@ -70,4 +105,4 @@ const deleteUser = async (id: ZUuid, role: Role) => {
   await User.destroy({ where: { id, role } });
 };
 
-export { createUser, updateUser, deleteUser };
+export { getUsers, getUser, createUser, updateUser, deleteUser };

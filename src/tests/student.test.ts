@@ -63,8 +63,8 @@ describe('CRUD of Student', () => {
       .set('Cookie', [sessionId])
       .expect(200);
 
-    expect(get.body.user.role).toMatch('Student');
-    expect(get.body.user.username).toMatch('S');
+    expect(get.body.role).toMatch('Student');
+    expect(get.body.username).toMatch('S');
   });
 
   test('POST & GET full student', async () => {
@@ -81,9 +81,11 @@ describe('CRUD of Student', () => {
       .set('Cookie', [sessionId])
       .expect(200);
 
-    expect(newStudent.body.parentName).toEqual(fullStudent.student.parentName);
-    expect(newStudent.body.user.email).toEqual(fullStudent.user.email);
-    expect(newStudent.body.user.userDetails.bloodGroup).toEqual(
+    expect(newStudent.body.student.parentName).toEqual(
+      fullStudent.student.parentName
+    );
+    expect(newStudent.body.email).toEqual(fullStudent.user.email);
+    expect(newStudent.body.userDetails.bloodGroup).toEqual(
       fullStudent.userDetails.bloodGroup
     );
   });
@@ -102,7 +104,8 @@ describe('CRUD of Student', () => {
       .set('Cookie', [sessionId])
       .expect(200);
 
-    expect(res2.body.classId).toEqual(classId);
+    console.log('res2', res2.body);
+    expect(res2.body.student.classId).toEqual(classId);
   });
 
   test('Fails when adding a Student with a non-existent Class', async () => {
