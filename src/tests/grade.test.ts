@@ -28,7 +28,7 @@ describe('CRUD of Grade', () => {
 
     const dummyGrade: ZGrade = {
       activeSubjectId: dummyActiveSubject.serial,
-      studentId: dummyStudent.userId,
+      studentId: dummyStudent.id,
       yearWork: 25,
       exam: 40,
     };
@@ -54,7 +54,7 @@ describe('CRUD of Grade', () => {
 
     const dummyGrade: ZGrade = {
       activeSubjectId: dummyActiveSubject.serial,
-      studentId: dummyStudent.userId,
+      studentId: dummyStudent.id,
       yearWork: 25,
       exam: 40,
     };
@@ -73,7 +73,7 @@ describe('CRUD of Grade', () => {
 
     const dummyGrade: ZGrade = {
       activeSubjectId: dummyActiveSubject.serial,
-      studentId: dummyStudent.userId,
+      studentId: dummyStudent.id,
       yearWork: 25,
       exam: 40,
     };
@@ -91,7 +91,7 @@ describe('CRUD of Grade', () => {
 
     const dummyGrade: ZGrade = {
       activeSubjectId: dummyActiveSubject.serial,
-      studentId: dummyStudent.userId,
+      studentId: dummyStudent.id,
       yearWork: 25,
       exam: 61,
     };

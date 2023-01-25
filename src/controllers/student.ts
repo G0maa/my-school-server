@@ -2,39 +2,51 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import express, { Request, Response } from 'express';
 import {
-  createStudent,
-  deleteStudent,
-  getStudent,
-  getStudents,
-  updateStudent,
-} from '../services/student.service';
-import { setAuthorizedRoles, isAuthenticated } from '../utils/middleware';
+  createUser,
+  deleteUser,
+  getUser,
+  getUsers,
+  updateUser,
+} from '../services/user.service';
+import {
+  setAuthorizedRoles,
+  isAuthenticated,
+  validateSchema,
+} from '../utils/middleware';
 import { ZRole, ZUuid } from '../validator/general.validator';
 import {
-  ZStudent,
+  ZStudentPost,
   ZStudentPut,
   ZStudentQuery,
 } from '../validator/student.validator';
-import { ZUser, ZUserPut, ZUserQuery } from '../validator/user.validator';
+import { ZUserQuery } from '../validator/user.validator';
+import { ZUserDetailsQuery } from '../validator/userDetails.validator';
 
 const studentRouter = express.Router();
 
-// GET, GET:id, POST, DELETE, PUT
 studentRouter.get(
   '/',
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req, res) => {
+    // Can this look better? To-Do
     const searchQueryUser = ZUserQuery.parse(req.query);
+    const searchQueryUserDetails = ZUserDetailsQuery.parse(req.query);
     const searchQueryStudent = ZStudentQuery.parse(req.query);
-    const allStudents = await getStudents(searchQueryUser, searchQueryStudent);
+
+    const allStudents = await getUsers(
+      'Student',
+      searchQueryUser,
+      searchQueryUserDetails,
+      searchQueryStudent
+    );
     return res.status(200).json(allStudents).end();
   }
 );
 
 studentRouter.get('/:id', isAuthenticated, async (req, res) => {
   const zUuid = ZUuid.parse(req.params.id);
-  const student = await getStudent(zUuid);
+  const student = await getUser(zUuid, 'Student');
   return res.status(200).json(student).end();
 });
 
@@ -42,11 +54,11 @@ studentRouter.post(
   '/',
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
-  async (req: Request, res: Response) => {
-    const zUser = ZUser.parse(req.body);
-    const zStudent = ZStudent.parse(req.body);
+  validateSchema(ZStudentPost),
+  async (req: Request<object, object, ZStudentPost['body']>, res: Response) => {
+    const { user, userDetails, student } = req.body;
 
-    const newStudent = await createStudent(zUser, zStudent);
+    const newStudent = await createUser(user, userDetails, student);
 
     return res.status(200).json(newStudent).end();
   }
@@ -57,13 +69,17 @@ studentRouter.put(
   '/:id',
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
-  async (req: Request, res: Response) => {
-    const zUser = ZUserPut.parse({ ...req.body, id: req.params.id });
-    const zStudent = ZStudentPut.parse({ ...req.body, userId: req.params.id });
+  validateSchema(ZStudentPut),
+  async (
+    req: Request<ZStudentPut['params'], object, ZStudentPut['body']>,
+    res: Response
+  ) => {
+    const userId = req.params.id;
+    const { user, userDetails, student } = req.body;
 
-    const student = await updateStudent(zUser, zStudent);
+    const newStudent = await updateUser(userId, user, userDetails, student);
 
-    return res.status(200).json(student).end();
+    return res.status(200).json(newStudent).end();
   }
 );
 
@@ -73,7 +89,7 @@ studentRouter.delete(
   isAuthenticated,
   async (req: Request, res: Response) => {
     const zUuid = ZUuid.parse(req.params.id);
-    const deletedStudent = await deleteStudent(zUuid);
+    const deletedStudent = await deleteUser(zUuid, 'Student');
     return res.status(200).json(deletedStudent).end();
   }
 );

@@ -18,18 +18,12 @@ import {
   generateRandomPassword,
   generateSerialUsername,
 } from '../utils/helpers';
-import {
-  BloodGroup,
-  Gender,
-  ZBloodGroup,
-  ZGender,
-  ZRole,
-} from '../validator/general.validator';
+import { ZRole } from '../validator/general.validator';
 import Admin from './admin';
 import Student from './student';
 import Teacher from './teacher';
+import UserDetails from './userDetails';
 
-// id, name, email, username, password, role, isVerified, isReset
 @Table({
   timestamps: true,
   underscored: true,
@@ -40,41 +34,10 @@ class User extends Model {
   @HasOne(() => Student, { as: 'student' })
   @HasOne(() => Admin, { as: 'admin' })
   @HasOne(() => Teacher, { as: 'teacher' })
+  @HasOne(() => UserDetails, { as: 'userDetails' }) // kebab case or camel case?
   @Default(DataType.UUIDV4)
   @Column(DataType.UUID)
   id!: string;
-
-  @AllowNull(true)
-  @Column(DataType.STRING(64))
-  firstName!: string;
-
-  @AllowNull(true)
-  @Column(DataType.STRING(64))
-  lastName!: string;
-
-  @AllowNull(true)
-  @Column(DataType.ENUM(...Object.values(ZGender.enum)))
-  gender!: Gender;
-
-  @AllowNull(true)
-  @Column(DataType.STRING(20))
-  mobile!: string;
-
-  @AllowNull(true)
-  @Column
-  registerDate!: Date;
-
-  @AllowNull(true)
-  @Column
-  dateOfBirth!: Date;
-
-  @AllowNull(true)
-  @Column(DataType.STRING(64))
-  address!: string;
-
-  @AllowNull(true)
-  @Column(DataType.ENUM(...Object.values(ZBloodGroup.enum)))
-  bloodGroup!: BloodGroup;
 
   @AllowNull(true)
   @Unique(true)
@@ -82,7 +45,7 @@ class User extends Model {
   @Column(DataType.STRING(64))
   email!: string;
 
-  // Note: we generate usernames on code-level
+  // Note: Usernames are generated on code-level
   @AllowNull(false)
   @Unique(true)
   @Column(DataType.STRING(5))

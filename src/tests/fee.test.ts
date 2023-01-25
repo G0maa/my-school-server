@@ -24,7 +24,7 @@ describe('CRUD of Fee', () => {
   test('POST & GET Fee', async () => {
     const dummyStudent = await getDummyStudent();
 
-    dummyFee.studentId = dummyStudent.userId;
+    dummyFee.studentId = dummyStudent.id;
 
     const fee = await api
       .post(feeRoute)

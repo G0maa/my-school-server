@@ -2,20 +2,25 @@
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import express, { Request, Response } from 'express';
 import {
-  createTeacher,
-  deleteTeacher,
-  getTeacher,
-  getTeachers,
-  updateTeacher,
-} from '../services/teacher.service';
-import { setAuthorizedRoles, isAuthenticated } from '../utils/middleware';
+  createUser,
+  deleteUser,
+  getUser,
+  getUsers,
+  updateUser,
+} from '../services/user.service';
+import {
+  setAuthorizedRoles,
+  isAuthenticated,
+  validateSchema,
+} from '../utils/middleware';
 import { ZRole, ZUuid } from '../validator/general.validator';
 import {
-  ZTeacher,
+  ZTeacherPost,
   ZTeacherPut,
   ZTeacherQuery,
 } from '../validator/teacher.validator';
-import { ZUser, ZUserPut, ZUserQuery } from '../validator/user.validator';
+import { ZUserQuery } from '../validator/user.validator';
+import { ZUserDetailsQuery } from '../validator/userDetails.validator';
 
 const teacherRouter = express.Router();
 
@@ -25,32 +30,39 @@ teacherRouter.get(
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req, res) => {
+    // Route validation for this will be redundant,
+    // as client can't send objects in a req.query nor should it.
     const searchQueryUser = ZUserQuery.parse(req.query);
+    const searchQueryUserDetails = ZUserDetailsQuery.parse(req.query);
     const searchQueryTeacher = ZTeacherQuery.parse(req.query);
 
-    const query = await getTeachers(searchQueryUser, searchQueryTeacher);
+    const query = await getUsers(
+      'Teacher',
+      searchQueryUser,
+      searchQueryUserDetails,
+      searchQueryTeacher
+    );
     return res.status(200).json(query).end();
   }
 );
 
 teacherRouter.get('/:id', isAuthenticated, async (req, res) => {
   const zUuid = ZUuid.parse(req.params.id);
-  const query = await getTeacher(zUuid);
+  const query = await getUser(zUuid, 'Teacher');
   return res.status(200).json(query).end();
 });
 
-// Remains for Teacher: doing this the correct way.
 teacherRouter.post(
   '/',
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
-  async (req: Request, res: Response) => {
-    const zUser = ZUser.parse(req.body);
-    const zTeacher = ZTeacher.parse(req.body);
+  validateSchema(ZTeacherPost),
+  async (req: Request<object, object, ZTeacherPost['body']>, res: Response) => {
+    const { user, userDetails, teacher } = req.body;
 
-    const teacher = await createTeacher(zUser, zTeacher);
+    const newTeacher = await createUser(user, userDetails, teacher);
 
-    return res.status(200).json(teacher).end();
+    return res.status(200).json(newTeacher).end();
   }
 );
 
@@ -61,13 +73,17 @@ teacherRouter.put(
   '/:id',
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
-  async (req: Request, res: Response) => {
-    const zUser = ZUserPut.parse({ ...req.body, id: req.params.id });
-    const zTeacher = ZTeacherPut.parse({ ...req.body, userId: req.params.id });
+  validateSchema(ZTeacherPut),
+  async (
+    req: Request<ZTeacherPut['params'], object, ZTeacherPut['body']>,
+    res: Response
+  ) => {
+    const userId = req.params.id;
+    const { user, userDetails, teacher } = req.body;
 
-    const teacher = await updateTeacher(zUser, zTeacher);
+    const newTeacher = await updateUser(userId, user, userDetails, teacher);
 
-    return res.status(200).json(teacher).end();
+    return res.status(200).json(newTeacher).end();
   }
 );
 // Deletion in an School System might be tricky,
@@ -79,7 +95,7 @@ teacherRouter.delete(
   isAuthenticated,
   async (req, res) => {
     const zUuid = ZUuid.parse(req.params.id);
-    const teacher = await deleteTeacher(zUuid);
+    const teacher = await deleteUser(zUuid, 'Teacher');
     return res.status(200).json(teacher).end();
   }
 );

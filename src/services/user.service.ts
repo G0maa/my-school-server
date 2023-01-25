@@ -1,19 +1,108 @@
-import { User } from '../models';
-import { ZUserPut } from '../validator/user.validator';
+import { Student, Teacher, User, Admin } from '../models';
+import UserDetails from '../models/userDetails';
+import { Role, ZUuid } from '../validator/general.validator';
+import {
+  ZStudentPost,
+  ZStudentPut,
+  ZStudentQuery,
+} from '../validator/student.validator';
+import {
+  ZTeacherPost,
+  ZTeacherPut,
+  ZTeacherQuery,
+} from '../validator/teacher.validator';
+import { ZUserPost, ZUserPut, ZUserQuery } from '../validator/user.validator';
+import {
+  ZUserDetailsPost,
+  ZUserDetailsPut,
+  ZUserDetailsQuery,
+} from '../validator/userDetails.validator';
 
-const updateUser = async (zUser: ZUserPut) => {
-  const user = await User.findOne({ where: { id: zUser.id } });
+const roleModels = { Student, Teacher, Admin };
 
-  if (!user) return;
+const getUsers = async (
+  role: Role,
+  userQuery: ZUserQuery,
+  userDetailsQuery: ZUserDetailsQuery,
+  roleQuery: ZStudentQuery | ZTeacherQuery
+) => {
+  const query = await User.findAll({
+    include: [
+      { model: UserDetails, where: { ...userDetailsQuery } },
+      { model: roleModels[role], where: roleQuery },
+    ],
+    where: { role, ...userQuery },
+  });
+  return query;
+};
+
+const getUser = async (userId: ZUuid, role: Role) => {
+  const query = await User.findOne({
+    include: [{ model: UserDetails }, { model: roleModels[role] }],
+    where: { id: userId },
+  });
+  return query;
+};
+
+// Testing this out
+// Validators DOES NOT set role attribute by themselves.
+const createUser = async (
+  zUser: ZUserPost['body']['user'],
+  zUserDetails: ZUserDetailsPost['body']['userDetails'],
+  roleData: ZStudentPost['body']['student'] | ZTeacherPost['body']['teacher']
+) => {
+  const roleName = zUser.role.toLowerCase();
+
+  const user = await User.create(
+    {
+      ...zUser,
+      userDetails: { ...zUserDetails },
+      [roleName]: roleData,
+    },
+    {
+      include: [roleModels[zUser.role], UserDetails],
+    }
+  );
+  return user;
+};
+
+const updateUser = async (
+  userId: ZUuid,
+  zUser: ZUserPut['body']['user'],
+  zUserDetails: ZUserDetailsPut['body']['userDetails'],
+  roleData: ZStudentPut['body']['student'] | ZTeacherPut['body']['teacher']
+) => {
+  const user = await User.findOne({ where: { id: userId } });
+  const userDetails = await UserDetails.findOne({
+    where: { userId },
+  });
+
+  if (!user || !userDetails) return;
+
+  const roleName = user.role.toLowerCase() as Role;
+  const roleObject = await roleModels[user.role].findOne({
+    where: { userId },
+  });
+
+  if (!roleObject) return;
 
   user.set({ ...zUser });
+  userDetails.set({ ...zUserDetails });
+  roleObject.set({ ...roleData });
 
+  // Note this is a transaction, supposedly if one fails all should be reverted.
+  // this relates to issue #34
   await user.save();
+  await userDetails.save();
+  await roleObject.save();
+
+  // ...user, trying to make the response body somewhat consistent.
+  return { ...user, userDetails, [roleName]: roleObject };
 };
 
 // Validation???
-const deleteUser = async (id: string) => {
-  await User.destroy({ where: { id } });
+const deleteUser = async (id: ZUuid, role: Role) => {
+  await User.destroy({ where: { id, role } });
 };
 
-export { updateUser, deleteUser };
+export { getUsers, getUser, createUser, updateUser, deleteUser };

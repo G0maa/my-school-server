@@ -1,7 +1,6 @@
 import supertest from 'supertest';
 import { app } from '../app';
-import { ZTeacher } from '../validator/teacher.validator';
-import { ZUser } from '../validator/user.validator';
+import { ZTeacherPost } from '../validator/teacher.validator';
 import { dummyActiveSubject } from './activeSubject.test';
 import { loginAdmin } from './helpers';
 
@@ -17,23 +16,28 @@ beforeAll(async () => {
 });
 
 // must not provide username & password as they're auto created.
-const dummyTeacher: ZTeacher = {};
-const fullTeacher = {
-  firstName: 'Mohammed',
-  lastName: 'Gomaa',
-  gender: 'Male',
-  mobile: '01013587921',
-  registerDate: new Date('2022-12-16'),
-  dateOfBirth: new Date('1995-01-01'),
-  bloodGroup: 'O+',
-  address: 'Egypt',
-  email: 'exampleTeacher@example.com', // email is unique in table users
-  department: 'CS',
-  education: 'HTI',
-  // This can be safely omitted, although TS will complain.
-  // it's given by default in the backend.
-  // role: 'Teacher',
-} as ZTeacher & ZUser;
+const dummyTeacher: ZTeacherPost['body'] = {
+  user: { role: 'Teacher' },
+  userDetails: {},
+  teacher: {},
+};
+const fullTeacher: ZTeacherPost['body'] = {
+  user: {
+    email: 'exampleTeacher@example.com', // email is unique in table users
+    role: 'Teacher',
+  },
+  userDetails: {
+    firstName: 'Mohammed',
+    lastName: 'Gomaa',
+    gender: 'Male',
+    mobile: '01013587921',
+    registerDate: new Date('2022-12-16'),
+    dateOfBirth: new Date('1995-01-01'),
+    bloodGroup: 'O+',
+    address: 'Egypt',
+  },
+  teacher: { department: 'CS', education: 'HTI' },
+};
 
 describe('CRUD of Teacher', () => {
   test('POST & GET simpleified Teacher', async () => {
@@ -52,25 +56,33 @@ describe('CRUD of Teacher', () => {
       .expect(200);
 
     const get = await api
-      .get(`${teacherRoute}${res.body.userId}`)
+      .get(`${teacherRoute}${res.body.id}`)
       .set('Cookie', [sessionId])
       .expect(200);
 
-    expect(get.body.user.role).toEqual('Teacher');
-    expect(get.body.user.username).toMatch('T');
+    expect(get.body.role).toEqual('Teacher');
+    expect(get.body.username).toMatch('T');
   });
 
   test('POST & GET full teacher', async () => {
     const res = await api
-      .post(`${teacherRoute}?type=full`)
+      .post(teacherRoute)
       .set('Cookie', [sessionId])
       .send(fullTeacher)
       .expect(200);
 
-    await api
-      .get(`${teacherRoute}${res.body.userId}`)
+    const newTeacher = await api
+      .get(`${teacherRoute}${res.body.id}`)
       .set('Cookie', [sessionId])
       .expect(200);
+
+    expect(newTeacher.body.teacher.department).toEqual(
+      fullTeacher.teacher.department
+    );
+    expect(newTeacher.body.email).toEqual(fullTeacher.user.email);
+    expect(newTeacher.body.userDetails.bloodGroup).toEqual(
+      fullTeacher.userDetails.bloodGroup
+    );
   });
 
   test('Success delete Teacher when theres no Referrenetial Integerity', async () => {
@@ -81,7 +93,7 @@ describe('CRUD of Teacher', () => {
       .expect(200);
 
     await api
-      .delete(`${teacherRoute}${teacher.body.userId}`)
+      .delete(`${teacherRoute}${teacher.body.id}`)
       .set('Cookie', [sessionId])
       .expect(200);
 
@@ -113,11 +125,11 @@ describe('CRUD of Teacher', () => {
       .post('/api/activeSubject')
       .set('Cookie', [sessionId])
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      .send({ ...dummyActiveSubject, teacherId: teacher.body.userId })
+      .send({ ...dummyActiveSubject, teacherId: teacher.body.id })
       .expect(200);
 
     await api
-      .delete(`${teacherRoute}${teacher.body.userId}`)
+      .delete(`${teacherRoute}${teacher.body.id}`)
       .set('Cookie', [sessionId])
       .expect(200);
   });
