@@ -1,5 +1,4 @@
 import supertest from 'supertest';
-import { User } from '../models';
 import StudyClass from '../models/class';
 import Subject from '../models/subject';
 import { createActiveSubject } from '../services/activeSubject.service';
@@ -52,15 +51,16 @@ export const getDummySubject = async () => {
 };
 
 export const getDummyTeacher = async () => {
-  // To-Do, change to new syntax.
-  const user = await User.create({ role: ZRole.enum.Teacher });
-  await user.$create('teacher', { id: user.id });
-
-  return user;
+  const teacher = await createUser({ role: ZRole.enum.Teacher }, {}, {});
+  return teacher;
 };
 
 export const getDummyStudent = async () => {
-  const student = createUser({ role: 'Student' }, {}, { studyYear: '1' });
+  const student = createUser(
+    { role: ZRole.enum.Student },
+    {},
+    { studyYear: '1' }
+  );
   return student;
 };
 

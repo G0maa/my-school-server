@@ -1,5 +1,10 @@
 import { Student, Teacher, User, Admin } from '../models';
 import UserDetails from '../models/userDetails';
+import {
+  generateRandomPassword,
+  verifyPassword,
+  hashPassword,
+} from '../utils/helpers';
 import { Role, ZUuid } from '../validator/general.validator';
 import {
   ZStudentPost,
@@ -105,4 +110,57 @@ const deleteUser = async (id: ZUuid, role: Role) => {
   await User.destroy({ where: { id, role } });
 };
 
-export { getUsers, getUser, createUser, updateUser, deleteUser };
+const resetPassword = async (id: ZUuid) => {
+  const user = await User.findOne({ where: { id } });
+
+  if (!user) return;
+
+  // isReset = Password is in plain-text and not hashed,
+  // purpose of this: admin can see the password & then "give" it to users,
+  // i.e. a warning for users that their password needs to be resetted.
+  user.isReset = false;
+  user.password = generateRandomPassword();
+
+  await user.save();
+
+  return user;
+};
+
+const changePassword = async (
+  id: ZUuid,
+  currentPassword: string,
+  newPassword: string
+) => {
+  const user = await User.findOne({ where: { id } });
+
+  if (!user) return;
+
+  let isCorrect = false;
+  // isReset === true => means the password has been reset before;
+  // therefore it is hashed.
+
+  if (user.isReset) {
+    isCorrect = await verifyPassword(currentPassword, user.password);
+  } else {
+    isCorrect = user.password === currentPassword;
+  }
+
+  // Funny that your account hangs on a single if condition.
+  if (!isCorrect) return;
+
+  user.isReset = true;
+  user.password = await hashPassword(newPassword);
+  await user.save();
+
+  return user;
+};
+
+export {
+  getUsers,
+  getUser,
+  createUser,
+  updateUser,
+  deleteUser,
+  resetPassword,
+  changePassword,
+};
