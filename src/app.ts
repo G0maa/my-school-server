@@ -24,6 +24,7 @@ import subjectMaterialRouter from './controllers/subjectsMaterial';
 import holidayRouter from './controllers/holiday';
 import feeRouter from './controllers/fee';
 import gradeRouter from './controllers/grade';
+import userRouter from './controllers/user';
 // import logger from './utils/logger';
 
 const app = express();
@@ -60,6 +61,7 @@ app.use(morgan('tiny'));
 
 if (config.NODE_ENV !== 'PROD') app.use('/', devRouter);
 
+// Might need to get rid of trailing dashes here To-Do
 app.use('/api/auth/', loginRouter);
 app.use('/api/student/', studentRouter);
 app.use('/api/teacher/', teacherRouter);
@@ -70,6 +72,7 @@ app.use('/api/subjectsMaterial/', subjectMaterialRouter);
 app.use('/api/holiday/', holidayRouter);
 app.use('/api/fee/', feeRouter);
 app.use('/api/grade/', gradeRouter);
+app.use('/api/user/', userRouter);
 
 app.get('/api/ping', (_, response) => {
   response.send('<p>pong</p>');

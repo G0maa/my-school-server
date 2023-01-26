@@ -6,7 +6,7 @@ export const ZUser = z
     id: z.string().uuid(),
     email: z.string().email().max(64),
     username: z.string().max(64),
-    password: z.string().max(64),
+    password: z.string().min(6).max(64),
     role: ZRole,
     isVerified: z.boolean(),
     isReset: z.boolean(),
@@ -39,3 +39,11 @@ export const ZUserPut = z.object({
   }),
 });
 export type ZUserPut = z.infer<typeof ZUserPut>;
+
+export const ZUserResetPassword = z
+  .object({
+    currentPassword: ZUser.shape.password,
+    newPassword: ZUser.shape.password,
+  })
+  .required();
+export type ZUserResetPassword = z.infer<typeof ZUserResetPassword>;
