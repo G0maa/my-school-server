@@ -6,11 +6,10 @@ import { getDummyClass, loginAdmin } from './helpers';
 const api = supertest(app);
 const studentRoute = '/api/student/';
 
-let sessionId: string;
+let adminCookie: { Cookie: string };
 beforeAll(async () => {
-  sessionId = (await loginAdmin(api)) as string;
+  adminCookie = await loginAdmin(api);
   // Can be moved to its own function
-  await api.get('/testAuth').set('Cookie', [sessionId]).expect(200);
 });
 
 // must not provide username & password as they're auto created.
@@ -48,19 +47,19 @@ describe('CRUD of Student', () => {
   test('POST & GET simpleified student', async () => {
     await api
       .post(studentRoute)
-      .set('Cookie', [sessionId])
+      .set(adminCookie)
       .send(dummyStudent)
       .expect(200);
 
     const res = await api
       .post(studentRoute)
-      .set('Cookie', [sessionId])
+      .set(adminCookie)
       .send(dummyStudent)
       .expect(200);
 
     const get = await api
       .get(`${studentRoute}${res.body.id}`)
-      .set('Cookie', [sessionId])
+      .set(adminCookie)
       .expect(200);
 
     expect(get.body.role).toMatch('Student');
@@ -70,7 +69,7 @@ describe('CRUD of Student', () => {
   test('POST & GET full student', async () => {
     const res = await api
       .post(studentRoute)
-      .set('Cookie', [sessionId])
+      .set(adminCookie)
       .send(fullStudent)
       .expect(200);
 
@@ -78,7 +77,7 @@ describe('CRUD of Student', () => {
 
     const newStudent = await api
       .get(`${studentRoute}${res.body.id}`)
-      .set('Cookie', [sessionId])
+      .set(adminCookie)
       .expect(200);
 
     expect(newStudent.body.student.parentName).toEqual(
@@ -95,13 +94,13 @@ describe('CRUD of Student', () => {
 
     const res = await api
       .post(`${studentRoute}`)
-      .set('Cookie', [sessionId])
+      .set(adminCookie)
       .send({ ...dummyStudent, student: { ...dummyStudent.student, classId } })
       .expect(200);
 
     const res2 = await api
       .get(`${studentRoute}${res.body.id}`)
-      .set('Cookie', [sessionId])
+      .set(adminCookie)
       .expect(200);
 
     console.log('res2', res2.body);
@@ -111,7 +110,7 @@ describe('CRUD of Student', () => {
   test('Fails when adding a Student with a non-existent Class', async () => {
     const res = await api
       .post(`${studentRoute}`)
-      .set('Cookie', [sessionId])
+      .set(adminCookie)
       .send({
         ...dummyStudent,
         student: { ...dummyStudent.student, classId: 'ZZZ000' },
@@ -121,7 +120,7 @@ describe('CRUD of Student', () => {
     // Dirty coverage of code.
     const allStudentsReq = await api
       .get(studentRoute)
-      .set('Cookie', [sessionId])
+      .set(adminCookie)
       .expect(200);
 
     expect(allStudentsReq.body).not.toEqual(
@@ -137,14 +136,14 @@ describe('CRUD of Student', () => {
   test('Deletion of a Student without Study Class', async () => {
     const res = await api
       .post(`${studentRoute}`)
-      .set('Cookie', [sessionId])
+      .set(adminCookie)
       .send(dummyStudent)
       .expect(200);
 
     // Dirty coverage of code.
     const allStudentsReq = await api
       .delete(`${studentRoute}${res.body.id}`)
-      .set('Cookie', [sessionId])
+      .set(adminCookie)
       .expect(200);
 
     expect(allStudentsReq.body).not.toEqual(

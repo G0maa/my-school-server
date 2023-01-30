@@ -6,11 +6,10 @@ import { getDummySubject, loginAdmin } from './helpers';
 const api = supertest(app);
 const subjectsMaterialRoute = '/api/subjectsMaterial';
 
-let sessionId: string;
+let adminCookie: { Cookie: string };
 let subjectId: string;
 beforeAll(async () => {
-  sessionId = (await loginAdmin(api)) as string;
-  await api.get('/testAuth').set('Cookie', [sessionId]).expect(200);
+  adminCookie = await loginAdmin(api);
 
   subjectId = (await getDummySubject()).subjectId;
 });
@@ -23,7 +22,7 @@ describe('CRUD Subjects Materials', () => {
 
     const oneSubjectMaterialRecord = await api
       .post(`${subjectsMaterialRoute}/${subjectId}`)
-      .set('Cookie', [sessionId])
+      .set(adminCookie)
       .set('Content-Type', 'multipart/form-data')
       .field('fileName', 'jest test')
       .attach('pdf', filePath)
@@ -34,7 +33,7 @@ describe('CRUD Subjects Materials', () => {
       .get(
         `${subjectsMaterialRoute}/${subjectId}/${oneSubjectMaterialRecord.body.serial}`
       )
-      .set('Cookie', [sessionId])
+      .set(adminCookie)
       .expect(200);
     expect(res.headers['content-length']).toEqual('11');
     console.log('res', res);

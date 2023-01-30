@@ -7,12 +7,11 @@ import { loginAdmin } from './helpers';
 const api = supertest(app);
 const teacherRoute = '/api/teacher/';
 
-let sessionId: string;
+let adminCookie: { Cookie: string };
 beforeAll(async () => {
   // jest.setTimeout(20000);
-  sessionId = (await loginAdmin(api)) as string;
+  adminCookie = await loginAdmin(api);
   // Can be moved to its own function
-  await api.get('/testAuth').set('Cookie', [sessionId]).expect(200);
 });
 
 // must not provide username & password as they're auto created.
@@ -45,19 +44,19 @@ describe('CRUD of Teacher', () => {
     // serialization of username works correctly
     await api
       .post(teacherRoute)
-      .set('Cookie', [sessionId])
+      .set(adminCookie)
       .send(dummyTeacher)
       .expect(200);
 
     const res = await api
       .post(teacherRoute)
-      .set('Cookie', [sessionId])
+      .set(adminCookie)
       .send(dummyTeacher)
       .expect(200);
 
     const get = await api
       .get(`${teacherRoute}${res.body.id}`)
-      .set('Cookie', [sessionId])
+      .set(adminCookie)
       .expect(200);
 
     expect(get.body.role).toEqual('Teacher');
@@ -67,13 +66,13 @@ describe('CRUD of Teacher', () => {
   test('POST & GET full teacher', async () => {
     const res = await api
       .post(teacherRoute)
-      .set('Cookie', [sessionId])
+      .set(adminCookie)
       .send(fullTeacher)
       .expect(200);
 
     const newTeacher = await api
       .get(`${teacherRoute}${res.body.id}`)
-      .set('Cookie', [sessionId])
+      .set(adminCookie)
       .expect(200);
 
     expect(newTeacher.body.teacher.department).toEqual(
@@ -88,19 +87,16 @@ describe('CRUD of Teacher', () => {
   test('Success delete Teacher when theres no Referrenetial Integerity', async () => {
     const teacher = await api
       .post(teacherRoute)
-      .set('Cookie', [sessionId])
+      .set(adminCookie)
       .send(dummyTeacher)
       .expect(200);
 
     await api
       .delete(`${teacherRoute}${teacher.body.id}`)
-      .set('Cookie', [sessionId])
+      .set(adminCookie)
       .expect(200);
 
-    const teachers = await api
-      .get(teacherRoute)
-      .set('Cookie', [sessionId])
-      .expect(200);
+    const teachers = await api.get(teacherRoute).set(adminCookie).expect(200);
 
     // till I get familiar with this syntax
     // src: https://medium.com/@andrei.pfeiffer/jest-matching-objects-in-array-50fe2f4d6b98
@@ -117,20 +113,20 @@ describe('CRUD of Teacher', () => {
   test('Success when Teacher is attached to an ActiveSubject', async () => {
     const teacher = await api
       .post(teacherRoute)
-      .set('Cookie', [sessionId])
+      .set(adminCookie)
       .send(dummyTeacher)
       .expect(200);
 
     await api
       .post('/api/activeSubject')
-      .set('Cookie', [sessionId])
+      .set(adminCookie)
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       .send({ ...dummyActiveSubject, teacherId: teacher.body.id })
       .expect(200);
 
     await api
       .delete(`${teacherRoute}${teacher.body.id}`)
-      .set('Cookie', [sessionId])
+      .set(adminCookie)
       .expect(200);
   });
 });

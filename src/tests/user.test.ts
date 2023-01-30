@@ -5,12 +5,11 @@ import { getDummyStudent, loginAdmin } from './helpers';
 const api = supertest(app);
 const userRoute = '/api/user';
 
-let sessionId: string;
+let adminCookie: { Cookie: string };
 beforeAll(async () => {
   // jest.setTimeout(20000);
-  sessionId = (await loginAdmin(api)) as string;
+  adminCookie = await loginAdmin(api);
   // Can be moved to its own function
-  await api.get('/testAuth').set('Cookie', [sessionId]).expect(200);
 });
 
 // This also needs to remove session from server & test so.
@@ -25,7 +24,7 @@ describe('Admin reset password for user', () => {
 
     const changePasswordRequest = await api
       .post(`${userRoute}/${user.id}/reset-password`)
-      .set('Cookie', [sessionId])
+      .set(adminCookie)
       .expect(200);
 
     // Verify that old password does not work.

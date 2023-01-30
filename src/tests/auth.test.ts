@@ -65,7 +65,7 @@ describe('Trying evil scenarios', () => {
 
     const getInfo = await api
       .get('/testAuth')
-      .set('Cookie', [sessionId])
+      .set({ Cookie: sessionId })
       .expect(200);
 
     expect(getInfo.body).toMatchObject({

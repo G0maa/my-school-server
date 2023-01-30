@@ -7,10 +7,9 @@ import { loginAdmin } from './helpers';
 const api = supertest(app);
 const holidayRoute = '/api/holiday/';
 
-let sessionId: string;
+let adminCookie: { Cookie: string };
 beforeAll(async () => {
-  sessionId = (await loginAdmin(api)) as string;
-  await api.get('/testAuth').set('Cookie', [sessionId]).expect(200);
+  adminCookie = await loginAdmin(api);
 });
 
 const dummyHoliday: ZHoliday = {
@@ -23,14 +22,11 @@ describe('CRUD of Holiday', () => {
   test('POST & GET all Holidays', async () => {
     await api
       .post(holidayRoute)
-      .set('Cookie', [sessionId])
+      .set(adminCookie)
       .send(dummyHoliday)
       .expect(200);
 
-    const holidays = await api
-      .get(holidayRoute)
-      .set('Cookie', [sessionId])
-      .expect(200);
+    const holidays = await api.get(holidayRoute).set(adminCookie).expect(200);
 
     expect(holidays.body).toEqual(
       expect.arrayContaining([
@@ -48,13 +44,10 @@ describe('CRUD of Holiday', () => {
 
     await api
       .delete(`${holidayRoute}${holiday.serial}`)
-      .set('Cookie', [sessionId])
+      .set(adminCookie)
       .expect(200);
 
-    const holidays = await api
-      .get(holidayRoute)
-      .set('Cookie', [sessionId])
-      .expect(200);
+    const holidays = await api.get(holidayRoute).set(adminCookie).expect(200);
 
     expect(holidays.body).not.toEqual(
       expect.arrayContaining([

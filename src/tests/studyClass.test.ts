@@ -6,11 +6,10 @@ import { ZStudyClass } from '../validator/studyClass.validator';
 const api = supertest(app);
 const studyClassRoute = '/api/studyClass/';
 
-let sessionId: string;
+let adminCookie: { Cookie: string };
 beforeAll(async () => {
   // P.S: Can be a student too, something code coverage won't get.
-  sessionId = (await loginAdmin(api)) as string;
-  await api.get('/testAuth').set('Cookie', [sessionId]).expect(200);
+  adminCookie = await loginAdmin(api);
 });
 
 export const dummyClass: ZStudyClass = {
@@ -25,13 +24,13 @@ describe('CRUD of StudyClass', () => {
     // serialization of username works correctly
     await api
       .post(studyClassRoute)
-      .set('Cookie', [sessionId])
+      .set(adminCookie)
       .send(dummyClass)
       .expect(200);
 
     const get = await api
       .get(`${studyClassRoute}${dummyClass.classId}`)
-      .set('Cookie', [sessionId])
+      .set(adminCookie)
       .expect(200);
 
     expect(get.body.classId).toMatch('BSC123');

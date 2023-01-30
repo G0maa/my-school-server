@@ -9,20 +9,27 @@ import {
   ZRole,
   ZStudyYear,
 } from '../validator/general.validator';
+import { ZUserLogin } from '../validator/user.validator';
 
-const adminCreds = {
+const adminCreds: ZUserLogin['body'] = {
   username: 'A0001',
   password: '000000',
 };
 
-export const loginAdmin = async (api: supertest.SuperTest<supertest.Test>) => {
+export const loginAdmin = async (
+  api: supertest.SuperTest<supertest.Test>,
+  creds?: ZUserLogin['body']
+) => {
   const response = await api
     .post('/api/auth/login')
-    .send(adminCreds)
+    .send(creds || adminCreds)
     .expect(200);
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  return response.headers['set-cookie'];
+  const sessionId = response.headers['set-cookie'] as string;
+
+  await api.get('/testAuth').set({ Cookie: sessionId }).expect(200);
+
+  return { Cookie: sessionId };
 };
 
 export const getDummyClass = async () => {
