@@ -47,3 +47,18 @@ export const ZUserResetPassword = z
   })
   .required();
 export type ZUserResetPassword = z.infer<typeof ZUserResetPassword>;
+
+export const ZUserLogin = z.object({
+  body: z.object({
+    username: ZUser.shape.username,
+    password: ZUser.shape.password,
+  }),
+});
+export type ZUserLogin = z.infer<typeof ZUserLogin>;
+
+export const ZReqUser = ZUser.pick({
+  id: true,
+  role: true,
+  username: true,
+}).required();
+export type ZReqUser = z.infer<typeof ZReqUser>;

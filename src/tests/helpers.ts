@@ -2,6 +2,7 @@ import supertest from 'supertest';
 import StudyClass from '../models/class';
 import Subject from '../models/subject';
 import { createActiveSubject } from '../services/activeSubject.service';
+import { createFee } from '../services/fee.service';
 import { createUser } from '../services/user.service';
 import { ZActiveSubject } from '../validator/activeSubject.validator';
 import {
@@ -31,6 +32,8 @@ export const loginAdmin = async (
 
   return { Cookie: sessionId };
 };
+
+// ### getters of simple entites used in testing ###
 
 export const getDummyClass = async () => {
   const [studyClass] = await StudyClass.findOrCreate({
@@ -85,4 +88,17 @@ export const getDummyActiveSubject = async () => {
 
   const activeSubject = await createActiveSubject(dummyActiveSubject);
   return activeSubject;
+};
+
+export const getDummyFee = async () => {
+  const { id } = await getDummyStudent();
+
+  const fee = await createFee({
+    studentId: id,
+    feeType: 'Tuituiotion',
+    amount: 500,
+    dueDate: new Date('2023-01-18'),
+  });
+
+  return fee;
 };

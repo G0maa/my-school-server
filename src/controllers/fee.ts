@@ -12,6 +12,7 @@ import { setAuthorizedRoles, isAuthenticated } from '../utils/middleware';
 import {
   ZFee,
   ZFeeFind,
+  ZFeeGet,
   ZFeePut,
   ZFeeSerial,
 } from '../validator/fee.validator';
@@ -31,14 +32,24 @@ feeRouter.get(
   }
 );
 
+// Experimental, non-nested & somewhat resource (owner) protected route.
+// and probably *non-rest* too :) #37
 feeRouter.get(
   '/:serial',
   setAuthorizedRoles([ZRole.enum.Admin, ZRole.enum.Student]),
   isAuthenticated,
   async (req, res) => {
-    const zFeeSerial = ZFeeSerial.parse(req.params.serial);
-    const fees = await getFee(zFeeSerial);
-    return res.status(200).json(fees).end();
+    // ~3rd method to validate requests.
+    // as opposed to the other one
+    // This way I don't have to "hard-code" types in the req parameter.
+    const { params, user } = ZFeeGet.parse(req);
+
+    let fee;
+    if (user.role === 'Admin') fee = await getFee(params.serial);
+    else fee = await getFee(params.serial, user.id);
+
+    if (!fee) return res.status(404).json({ message: 'Fee not found' }).end();
+    return res.status(200).json(fee).end();
   }
 );
 

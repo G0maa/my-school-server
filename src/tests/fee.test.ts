@@ -1,6 +1,6 @@
 import supertest from 'supertest';
 import { app } from '../app';
-import { getDummyStudent, loginAdmin } from './helpers';
+import { getDummyFee, getDummyStudent, loginAdmin } from './helpers';
 
 const api = supertest(app);
 const feeRoute = '/api/fee';
@@ -20,10 +20,11 @@ export const dummyFee = {
 };
 
 describe('CRUD of Fee', () => {
-  test('POST & GET Fee', async () => {
-    const dummyStudent = await getDummyStudent();
+  test('POST & GET Fee (admin)', async () => {
+    const { id } = await getDummyStudent();
 
-    dummyFee.studentId = dummyStudent.id;
+    // Setting correct studentId in dummyFe
+    dummyFee.studentId = id;
 
     const fee = await api
       .post(feeRoute)
@@ -37,5 +38,41 @@ describe('CRUD of Fee', () => {
       .expect(200);
 
     expect(get.body).toMatchObject(dummyFee);
+  });
+});
+
+describe('Security of Fees API', () => {
+  test('Student can access his own fees', async () => {
+    const { id, username, password } = await getDummyStudent();
+    const studentCookie = await loginAdmin(api, { username, password });
+
+    const testFee = { ...dummyFee, studentId: id };
+
+    const fee = await api
+      .post(feeRoute)
+      .set(adminCookie)
+      .send(testFee)
+      .expect(200);
+
+    const get = await api
+      .get(`${feeRoute}/${fee.body.serial}?studentId=${id}`)
+      .set(studentCookie)
+      .expect(200);
+
+    expect(get.body).toMatchObject(testFee);
+  });
+
+  test('Student cannot access other students fees', async () => {
+    const { username, password } = await getDummyStudent();
+    const studentCookie = await loginAdmin(api, { username, password });
+
+    const testFee = await getDummyFee();
+
+    const get = await api
+      .get(`${feeRoute}/${testFee.serial}`)
+      .set(studentCookie)
+      .expect(404);
+
+    expect(get.body).toEqual({ message: 'Fee not found' });
   });
 });

@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { ZStudent } from './student.validator';
+import { ZReqUser } from './user.validator';
 
 export const ZFee = z
   .object({
@@ -18,6 +19,11 @@ export type ZFeeSerial = z.infer<typeof ZFeeSerial>;
 
 export const ZFeeFind = ZFee.pick({ serial: true, studentId: true }).partial();
 export type ZFeeFind = z.infer<typeof ZFeeFind>;
+
+export const ZFeeGet = z.object({
+  params: z.object({ serial: ZFeeSerial }).required(),
+  user: ZReqUser,
+});
 
 export const ZFeePut = ZFee.required();
 export type ZFeePut = z.infer<typeof ZFeePut>;

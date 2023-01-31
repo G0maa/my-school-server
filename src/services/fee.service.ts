@@ -5,16 +5,26 @@ import {
   ZFeePut,
   ZFeeSerial,
 } from '../validator/fee.validator';
+import { ZUuid } from '../validator/general.validator';
 
 const getFees = async (zFeeFind: ZFeeFind) => {
   const fees = await Fee.findAll({ where: { ...zFeeFind } });
   return fees;
 };
 
-// To-do proper error message if not found.
-// To-do only student that has this fee can access it
-const getFee = async (serial: ZFeeSerial) => {
-  const fee = await Fee.findOne({ where: { serial } });
+const getFee = async (serial: ZFeeSerial, studentId?: ZUuid) => {
+  // I'm not sure how to get rid of this, or if I should,
+  // it seems a bit too verbose, but ORM can't have an attribute of undefined
+  // **in the where object**
+  let query: object = { serial };
+  if (studentId) query = { ...query, studentId };
+
+  const fee = await Fee.findOne({
+    where: { ...query },
+  });
+
+  if (!fee) return;
+
   return fee;
 };
 
