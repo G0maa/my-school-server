@@ -44,9 +44,7 @@ feeRouter.get(
     // This way I don't have to "hard-code" types in the req parameter.
     const { params, user } = ZFeeGet.parse(req);
 
-    let fee;
-    if (user.role === 'Admin') fee = await getFee(params.serial);
-    else fee = await getFee(params.serial, user.id);
+    const fee = await getFee(params.serial, user);
 
     if (!fee) return res.status(404).json({ message: 'Fee not found' }).end();
     return res.status(200).json(fee).end();
