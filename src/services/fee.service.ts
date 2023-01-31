@@ -1,10 +1,5 @@
 import Fee from '../models/fee';
-import {
-  ZFee,
-  ZFeeFind,
-  ZFeePut,
-  ZFeeSerial,
-} from '../validator/fee.validator';
+import { ZFee, ZFeeFind, ZFeePut } from '../validator/fee.validator';
 import { ZReqUser } from '../validator/user.validator';
 
 const getFees = async (zFeeFind: ZFeeFind['query'], user: ZReqUser) => {
@@ -15,7 +10,7 @@ const getFees = async (zFeeFind: ZFeeFind['query'], user: ZReqUser) => {
   return fees;
 };
 
-const getFee = async (serial: ZFeeSerial, user: ZReqUser) => {
+const getFee = async (serial: ZFee['serial'], user: ZReqUser) => {
   const fee = await Fee.findOne({
     where: { serial },
   });
@@ -31,7 +26,7 @@ const createFee = async (zFee: ZFee) => {
   return fee;
 };
 
-const updateFee = async (zFee: ZFeePut) => {
+const updateFee = async (zFee: ZFeePut['body']) => {
   const fee = await Fee.findOne({ where: { serial: zFee.serial } });
 
   // To-do proper error message if not found.
@@ -44,7 +39,7 @@ const updateFee = async (zFee: ZFeePut) => {
   return fee;
 };
 
-const deleteFee = async (serial: ZFeeSerial) => {
+const deleteFee = async (serial: ZFee['serial']) => {
   const fee = await Fee.destroy({ where: { serial } });
   return fee;
 };

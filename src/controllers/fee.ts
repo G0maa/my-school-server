@@ -10,11 +10,11 @@ import {
 } from '../services/fee.service';
 import { setAuthorizedRoles, isAuthenticated } from '../utils/middleware';
 import {
-  ZFee,
+  ZFeeDelete,
   ZFeeFind,
   ZFeeGet,
+  ZFeePost,
   ZFeePut,
-  ZFeeSerial,
 } from '../validator/fee.validator';
 import { ZRole } from '../validator/general.validator';
 
@@ -28,7 +28,9 @@ feeRouter.get(
   isAuthenticated,
   async (req, res) => {
     const { query, user } = ZFeeFind.parse(req);
+
     const fees = await getFees(query, user);
+
     return res.status(200).json(fees).end();
   }
 );
@@ -48,6 +50,7 @@ feeRouter.get(
     const fee = await getFee(params.serial, user);
 
     if (!fee) return res.status(404).json({ message: 'Fee not found' }).end();
+
     return res.status(200).json(fee).end();
   }
 );
@@ -59,9 +62,9 @@ feeRouter.post(
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req: Request, res: Response) => {
-    const zFee = ZFee.parse(req.body);
+    const { body } = ZFeePost.parse(req);
 
-    const fee = await createFee(zFee);
+    const fee = await createFee(body);
 
     return res.status(200).json(fee).end();
   }
@@ -72,9 +75,9 @@ feeRouter.put(
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req: Request, res: Response) => {
-    const zFeePut = ZFeePut.parse(req.body);
+    const { body } = ZFeePut.parse(req);
 
-    const fee = await updateFee(zFeePut);
+    const fee = await updateFee(body);
 
     return res.status(200).json(fee).end();
   }
@@ -85,8 +88,10 @@ feeRouter.delete(
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req: Request, res: Response) => {
-    const zFeeSerial = ZFeeSerial.parse(req.params.serial);
-    const fee = await deleteFee(zFeeSerial);
+    const { params } = ZFeeDelete.parse(req);
+
+    const fee = await deleteFee(params.serial);
+
     return res.status(200).json(fee).end();
   }
 );

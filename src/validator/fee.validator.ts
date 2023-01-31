@@ -14,9 +14,6 @@ export const ZFee = z
   .required({ studentId: true });
 export type ZFee = z.infer<typeof ZFee>;
 
-export const ZFeeSerial = ZFee.shape.serial;
-export type ZFeeSerial = z.infer<typeof ZFeeSerial>;
-
 // export const ZFeeFind = ZFee.pick({ serial: true, studentId: true }).partial();
 export const ZFeeFind = z.object({
   query: ZFee.pick({ serial: true, studentId: true }).partial(),
@@ -25,9 +22,21 @@ export const ZFeeFind = z.object({
 export type ZFeeFind = z.infer<typeof ZFeeFind>;
 
 export const ZFeeGet = z.object({
-  params: z.object({ serial: ZFeeSerial }).required(),
+  params: z.object({ serial: ZFee.shape.serial }).required(),
   user: ZReqUser,
 });
 
-export const ZFeePut = ZFee.required();
+export const ZFeePost = z.object({
+  body: ZFee,
+});
+export type ZFeePost = z.infer<typeof ZFeePost>;
+
+export const ZFeePut = z.object({
+  body: ZFee.required(),
+});
 export type ZFeePut = z.infer<typeof ZFeePut>;
+
+export const ZFeeDelete = z.object({
+  params: z.object({ serial: ZFee.shape.serial }).required(),
+});
+export type ZFeeDelete = z.infer<typeof ZFeeDelete>;
