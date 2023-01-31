@@ -20,7 +20,7 @@ beforeAll(async () => {
   adminCookie = await loginAdmin(api);
 });
 
-describe('CRUD of Grade', () => {
+describe('CRUD of Grade (Admin)', () => {
   test('POST & GET Grade', async () => {
     const dummyActiveSubject = await getDummyActiveSubject();
     const dummyStudent = await getDummyStudent();
@@ -88,5 +88,66 @@ describe('CRUD of Grade', () => {
     };
 
     await api.post(gradeRoute).set(adminCookie).send(dummyGrade).expect(400);
+  });
+});
+
+describe('Securtiy of Grade route', () => {
+  test('Student can access his grades', async () => {
+    const { serial } = await getDummyActiveSubject();
+    const { id, username, password } = await getDummyStudent();
+
+    // Assigning a grade to a student.
+    const dummyGrade: ZGrade = {
+      activeSubjectId: serial,
+      studentId: id,
+      yearWork: 25,
+      exam: 40,
+    };
+
+    const post = await api
+      .post(gradeRoute)
+      .set(adminCookie)
+      .send(dummyGrade)
+      .expect(200);
+
+    // Logging in as the owner of the grade
+    const studentCookie = await loginAdmin(api, { username, password });
+
+    const get = await api
+      .get(`${gradeRoute}/${post.body.serial}`)
+      .set(studentCookie)
+      .expect(200);
+
+    expect(get.body).toMatchObject(dummyGrade);
+  });
+
+  test('Student cannot access other students grades', async () => {
+    const { serial } = await getDummyActiveSubject();
+    const { id } = await getDummyStudent();
+    const { username, password } = await getDummyStudent();
+
+    // Assigning a grade to a student.
+    const dummyGrade: ZGrade = {
+      activeSubjectId: serial,
+      studentId: id,
+      yearWork: 25,
+      exam: 40,
+    };
+
+    const post = await api
+      .post(gradeRoute)
+      .set(adminCookie)
+      .send(dummyGrade)
+      .expect(200);
+
+    // Logging in as the other student
+    const studentCookie = await loginAdmin(api, { username, password });
+
+    const get = await api
+      .get(`${gradeRoute}/${post.body.serial}`)
+      .set(studentCookie)
+      .expect(404);
+
+    expect(get.body).toEqual({ message: 'Fee not found' });
   });
 });
