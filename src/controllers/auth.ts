@@ -5,6 +5,8 @@ import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import { User } from '../models';
 import { verifyPassword } from '../utils/helpers';
+import { validateSchema } from '../utils/middleware';
+import { ZUserLogin } from '../validator/user.validator';
 
 // this gets called as a middleware,
 // variables are taken from req.body
@@ -68,17 +70,22 @@ const loginRouter = express.Router();
 
 // Keep in mind that this route gets
 // the object passed in local strategy callback
-loginRouter.post('/login', passport.authenticate('local'), (req, res) => {
-  if (!req.user) return res.status(401).end();
+loginRouter.post(
+  '/login',
+  validateSchema(ZUserLogin),
+  passport.authenticate('local'),
+  (req, res) => {
+    if (!req.user) return res.status(401).end();
 
-  return res
-    .status(200)
-    .json({
-      id: req.user.id,
-      username: req.user.username,
-      role: req.user.role,
-    })
-    .end();
-});
+    return res
+      .status(200)
+      .json({
+        id: req.user.id,
+        username: req.user.username,
+        role: req.user.role,
+      })
+      .end();
+  }
+);
 
 export default loginRouter;
