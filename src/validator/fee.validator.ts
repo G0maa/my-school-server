@@ -17,7 +17,11 @@ export type ZFee = z.infer<typeof ZFee>;
 export const ZFeeSerial = ZFee.shape.serial;
 export type ZFeeSerial = z.infer<typeof ZFeeSerial>;
 
-export const ZFeeFind = ZFee.pick({ serial: true, studentId: true }).partial();
+// export const ZFeeFind = ZFee.pick({ serial: true, studentId: true }).partial();
+export const ZFeeFind = z.object({
+  query: ZFee.pick({ serial: true, studentId: true }).partial(),
+  user: ZReqUser,
+});
 export type ZFeeFind = z.infer<typeof ZFeeFind>;
 
 export const ZFeeGet = z.object({

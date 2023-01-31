@@ -20,14 +20,15 @@ import { ZRole } from '../validator/general.validator';
 
 const feeRouter = express.Router();
 
-// GET ALL, GET for specific student, GET:id, POST, DELETE, PUT (set as paid)
+// Inconsistent logic, if admin requests, return everything,
+// if user requests return his own resources only.
 feeRouter.get(
   '/',
   setAuthorizedRoles([ZRole.enum.Admin, ZRole.enum.Student]),
   isAuthenticated,
   async (req, res) => {
-    const zFeeFind = ZFeeFind.parse(req.query);
-    const fees = await getFees(zFeeFind);
+    const { query, user } = ZFeeFind.parse(req);
+    const fees = await getFees(query, user);
     return res.status(200).json(fees).end();
   }
 );

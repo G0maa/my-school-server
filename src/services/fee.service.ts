@@ -7,8 +7,11 @@ import {
 } from '../validator/fee.validator';
 import { ZReqUser } from '../validator/user.validator';
 
-const getFees = async (zFeeFind: ZFeeFind) => {
-  const fees = await Fee.findAll({ where: { ...zFeeFind } });
+const getFees = async (zFeeFind: ZFeeFind['query'], user: ZReqUser) => {
+  let fees;
+  if (user.role === 'Admin')
+    fees = await Fee.findAll({ where: { ...zFeeFind } });
+  else fees = await Fee.findAll({ where: { ...zFeeFind, studentId: user.id } });
   return fees;
 };
 
