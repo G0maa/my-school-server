@@ -52,7 +52,8 @@ class Grade extends Model {
   @Column(DataType.NUMBER())
   yearWork!: string;
 
-  @BelongsTo(() => Student)
+  // Relations
+  @BelongsTo(() => Student, { targetKey: 'userId' })
   student!: Student;
 
   // Revise & Test this

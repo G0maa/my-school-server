@@ -10,10 +10,12 @@ import {
   PrimaryKey,
   AutoIncrement,
   BelongsToMany,
+  HasMany,
 } from 'sequelize-typescript';
 import ActiveSubject from './activeSubject';
 import StudyClass from './class';
 import Subject from './subject';
+import SubjectsMaterial from './subjectsMaterial';
 
 import User from './user';
 
@@ -50,6 +52,9 @@ class Teacher extends Model {
 
   @BelongsToMany(() => Subject, () => ActiveSubject)
   subjects!: Subject[];
+
+  @HasMany(() => SubjectsMaterial)
+  subjectsMaterials!: SubjectsMaterial[];
 }
 
 export default Teacher;

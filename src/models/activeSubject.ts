@@ -49,8 +49,12 @@ class ActiveSubject extends Model {
   @Column(DataType.STRING(6))
   subjectSchedule!: string;
 
+  // Relations
   @HasMany(() => Grade)
   studentGrades!: Grade[];
+
+  // Do not do this, this is the 'connecting' table
+  // @BelongsTo(() => Teacher)...
 }
 
 export default ActiveSubject;
