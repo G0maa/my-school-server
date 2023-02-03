@@ -65,6 +65,9 @@ class Student extends Model {
   classId!: string;
 
   // Relations
+  @BelongsTo(() => StudyClass)
+  studyClass!: StudyClass;
+
   @BelongsTo(() => User)
   user!: User;
 

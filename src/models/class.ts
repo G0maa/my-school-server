@@ -37,6 +37,7 @@ class StudyClass extends Model {
   @Column(DataType.ENUM(...Object.values(ZEducationType.enum)))
   educationType!: EducationType;
 
+  // Relations
   @BelongsToMany(() => Subject, () => ActiveSubject)
   subjects!: Subject[];
 
