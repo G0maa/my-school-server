@@ -41,6 +41,8 @@ const getUsers = async (
   return query;
 };
 
+// According to the types in the model,
+// query.[model] might or might not exist.
 const getUser = async (userId: ZUuid, role: Role) => {
   const query = await User.findOne({
     include: [{ model: UserDetails }, { model: roleModels[role] }],
