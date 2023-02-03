@@ -12,6 +12,7 @@ import {
   setAuthorizedRoles,
   isAuthenticated,
   validateSchema,
+  isAuthenticatedTest,
 } from '../utils/middleware';
 import { ZRole, ZUuid } from '../validator/general.validator';
 import {
@@ -52,8 +53,8 @@ studentRouter.get('/:id', isAuthenticated, async (req, res) => {
 
 studentRouter.post(
   '/',
-  setAuthorizedRoles([ZRole.enum.Admin]),
-  isAuthenticated,
+  setAuthorizedRoles([ZRole.enum.Admin, ZRole.enum.Student]),
+  isAuthenticatedTest('id'),
   validateSchema(ZStudentPost),
   async (req: Request<object, object, ZStudentPost['body']>, res: Response) => {
     const { user, userDetails, student } = req.body;
