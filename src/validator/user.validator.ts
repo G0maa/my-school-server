@@ -34,7 +34,7 @@ export type ZUserPost = z.infer<typeof ZUserPost>;
 export const ZUserPut = z.object({
   params: z.object({ id: ZUuid }),
   body: z.object({
-    user: ZUser.pick({ email: true }),
+    user: ZUser.pick({ email: true }).required(),
     // userDetails: ZUserDetails.required().omit({ serial: true }),
   }),
 });

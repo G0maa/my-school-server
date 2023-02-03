@@ -43,6 +43,37 @@ const isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
   return next();
 };
 
+// **Assumes nested style of API** => /api/student/:studentId/fee/:feeId
+// https://stackoverflow.com/questions/3297048/403-forbidden-vs-401-unauthorized-http-responses
+const isAuthenticatedTest = (idAttributeName?: string) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    // I. Is Authenticated? i.e. does the client have auth data in the session?
+    if (!req.user)
+      return res.status(401).json({ message: 'Unauthenticed User' }).end();
+
+    // II. Is Authorized?
+    // A. Is Admin?
+
+    if (req.user.role === 'Admin') return next();
+
+    if (!req.allowedRoles) return next();
+
+    // B. Is non-admin but allowed?
+    const isAuthorized = req.allowedRoles.find(
+      (role) => req.user?.role === role
+    );
+
+    if (!isAuthorized)
+      return res.status(403).json({ message: 'Unauthorized User' }).end();
+
+    // C. Does the client own the requested resource?
+    if (idAttributeName && req.user.id !== req.params[idAttributeName])
+      return res.status(403).json({ message: 'Unauthorized User' }).end();
+
+    return next();
+  };
+};
+
 // To try this middleware
 const validateSchema =
   (schema: AnyZodObject) =>
@@ -58,6 +89,7 @@ const validateSchema =
       return next();
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (e: any) {
+      console.log('Errors: ', e.errors);
       return res.status(400).send(e.errors);
     }
   };
@@ -133,4 +165,5 @@ export {
   validateSchema,
   requestLogger,
   uploadFile,
+  isAuthenticatedTest,
 };

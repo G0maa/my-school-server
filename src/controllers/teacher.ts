@@ -12,6 +12,7 @@ import {
   setAuthorizedRoles,
   isAuthenticated,
   validateSchema,
+  isAuthenticatedTest,
 } from '../utils/middleware';
 import { ZRole, ZUuid } from '../validator/general.validator';
 import {
@@ -71,8 +72,8 @@ teacherRouter.post(
 // Not tested
 teacherRouter.put(
   '/:id',
-  setAuthorizedRoles([ZRole.enum.Admin]),
-  isAuthenticated,
+  setAuthorizedRoles([ZRole.enum.Admin, ZRole.enum.Teacher]),
+  isAuthenticatedTest('id'),
   validateSchema(ZTeacherPut),
   async (
     req: Request<ZTeacherPut['params'], object, ZTeacherPut['body']>,
@@ -83,6 +84,7 @@ teacherRouter.put(
 
     const newTeacher = await updateUser(userId, user, userDetails, teacher);
 
+    console.log('newTeacher', newTeacher);
     return res.status(200).json(newTeacher).end();
   }
 );
