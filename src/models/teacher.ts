@@ -28,8 +28,7 @@ class Teacher extends Model {
   @Column
   serial!: number;
 
-  @ForeignKey(() => User) // is this needed?
-  @BelongsTo(() => User, { as: 'user' }) // student
+  @ForeignKey(() => User)
   @Default(DataType.UUIDV4) // to allow creation on this side.
   @Column({ type: DataType.UUID, onDelete: 'CASCADE', onUpdate: 'CASCADE' })
   userId!: string;
@@ -41,6 +40,10 @@ class Teacher extends Model {
   @AllowNull(true)
   @Column(DataType.STRING(64))
   department!: string;
+
+  // Relations
+  @BelongsTo(() => User)
+  user!: User;
 
   @BelongsToMany(() => StudyClass, () => ActiveSubject)
   studyClasses!: StudyClass[];

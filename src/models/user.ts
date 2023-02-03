@@ -30,11 +30,8 @@ import UserDetails from './userDetails';
   modelName: 'user',
 })
 class User extends Model {
+  // Note: Associations point mainly to this PK
   @PrimaryKey
-  @HasOne(() => Student, { as: 'student' })
-  @HasOne(() => Admin, { as: 'admin' })
-  @HasOne(() => Teacher, { as: 'teacher' })
-  @HasOne(() => UserDetails, { as: 'userDetails' }) // kebab case or camel case?
   @Default(DataType.UUIDV4)
   @Column(DataType.UUID)
   id!: string;
@@ -72,6 +69,19 @@ class User extends Model {
 
   @UpdatedAt
   updatedAt!: Date;
+
+  // Relations
+  @HasOne(() => UserDetails)
+  userDetails!: UserDetails;
+
+  @HasOne(() => Student)
+  student!: Student;
+
+  @HasOne(() => Admin)
+  admin!: Admin;
+
+  @HasOne(() => Teacher)
+  teacher!: Teacher;
 
   @BeforeValidate
   static assignUsernamePassword = async (instance: User) => {
