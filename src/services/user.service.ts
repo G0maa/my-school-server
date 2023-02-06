@@ -46,7 +46,7 @@ const getUsers = async (
 const getUser = async (userId: ZUuid, role: Role) => {
   const query = await User.findOne({
     include: [{ model: UserDetails }, { model: roleModels[role] }],
-    where: { id: userId },
+    where: { id: userId, role },
   });
   return query;
 };
