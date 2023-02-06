@@ -1,7 +1,11 @@
 import { z } from 'zod';
 import { ToLikeQuery, ZUuid } from './general.validator';
-import { ZUserPost, ZUserPut } from './user.validator';
-import { ZUserDetailsPost, ZUserDetailsPut } from './userDetails.validator';
+import { ZUserPost, ZUserPut, ZUserQuery } from './user.validator';
+import {
+  ZUserDetailsPost,
+  ZUserDetailsPut,
+  ZUserDetailsQuery,
+} from './userDetails.validator';
 
 // Caveat of this re-work,
 // you're not veryfing referrentail integrtity here,
@@ -23,16 +27,23 @@ export const ZTeacherQuery = ZTeacher.extend({
 }).partial();
 export type ZTeacherQuery = z.infer<typeof ZTeacherQuery>;
 
+export const ZTeacherFind = z.object({
+  query: ZUserQuery.merge(ZUserDetailsQuery).merge(ZTeacherQuery),
+});
+export type ZTeacherFind = z.infer<typeof ZTeacherFind>;
+
 export const ZTeacherPost = z.object({
-  body: ZUserPost.shape.body
-    .merge(ZUserDetailsPost.shape.body)
-    .extend({ teacher: ZTeacher.omit({ userId: true }).partial() }),
+  body: ZUserPost.shape.body.shape.user.extend({
+    userDetails: ZUserDetailsPost.shape.body.shape.userDetails,
+    teacher: ZTeacher.omit({ userId: true }).partial(),
+  }),
 });
 export type ZTeacherPost = z.infer<typeof ZTeacherPost>;
 
 export const ZTeacherPut = z.object({
   params: z.object({ id: ZUuid }),
-  body: ZUserPut.shape.body.merge(ZUserDetailsPut.shape.body).extend({
+  body: ZUserPut.shape.body.shape.user.extend({
+    userDetails: ZUserDetailsPut.shape.body.shape.userDetails,
     teacher: ZTeacher.omit({ userId: true }).required(),
   }),
 });

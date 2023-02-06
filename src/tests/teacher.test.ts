@@ -16,15 +16,13 @@ beforeAll(async () => {
 
 // must not provide username & password as they're auto created.
 const dummyTeacher: ZTeacherPost['body'] = {
-  user: { role: 'Teacher' },
+  role: 'Teacher',
   userDetails: {},
   teacher: {},
 };
 const fullTeacher: ZTeacherPost['body'] = {
-  user: {
-    email: 'exampleTeacher@example.com', // email is unique in table users
-    role: 'Teacher',
-  },
+  email: 'exampleTeacher@example.com', // email is unique in table users
+  role: 'Teacher',
   userDetails: {
     firstName: 'Mohammed',
     lastName: 'Gomaa',
@@ -79,7 +77,7 @@ describe('CRUD of Teacher', () => {
     expect(newTeacher.body.teacher.department).toEqual(
       fullTeacher.teacher.department
     );
-    expect(newTeacher.body.email).toEqual(fullTeacher.user.email);
+    expect(newTeacher.body.email).toEqual(fullTeacher.email);
     expect(newTeacher.body.userDetails.bloodGroup).toEqual(
       fullTeacher.userDetails.bloodGroup
     );
@@ -141,7 +139,7 @@ describe('CRUD of Teacher', () => {
 describe('Security of Teacher API', () => {
   test('A Teacher can change his own details', async () => {
     const teacher = { ...fullTeacher };
-    teacher.user.email = 'test@teacher.com';
+    teacher.email = 'test@teacher.com';
 
     const teacherPost = await api
       .post(teacherRoute)
@@ -155,7 +153,7 @@ describe('Security of Teacher API', () => {
     });
 
     const changedTeacher = { ...teacher };
-    changedTeacher.user.email = 'teacher@example.com';
+    changedTeacher.email = 'teacher@example.com';
     changedTeacher.teacher.department = 'IT';
     changedTeacher.userDetails.firstName = 'Taha';
 
@@ -172,7 +170,7 @@ describe('Security of Teacher API', () => {
 
     // Verifying that get also reflected the new change
     // expect(resGet.body).toMatchObject(putTeacher);
-    expect(resGet.body.email).toEqual(changedTeacher.user.email);
+    expect(resGet.body.email).toEqual(changedTeacher.email);
     expect(resGet.body.userDetails.lastName).toEqual(
       changedTeacher.userDetails.lastName
     );
@@ -183,7 +181,7 @@ describe('Security of Teacher API', () => {
 
   test('Other users cannot change a teacher data (non resource owners)', async () => {
     const teacher = { ...fullTeacher };
-    teacher.user.email = 'test1@teacher.com';
+    teacher.email = 'test1@teacher.com';
 
     const teacherPost = await api
       .post(teacherRoute)
@@ -198,7 +196,7 @@ describe('Security of Teacher API', () => {
     });
 
     const changedTeacher = structuredClone(teacher);
-    changedTeacher.user.email = 'teacher@example.com';
+    changedTeacher.email = 'teacher@example.com';
     changedTeacher.teacher.department = 'IT';
     changedTeacher.userDetails.firstName = 'Taha';
 
@@ -214,7 +212,7 @@ describe('Security of Teacher API', () => {
       .expect(200);
 
     // expect(resGet.body).toMatchObject(putTeacher);
-    expect(resGet.body.email).toEqual(teacher.user.email);
+    expect(resGet.body.email).toEqual(teacher.email);
     expect(resGet.body.userDetails.lastName).toEqual(
       teacher.userDetails.lastName
     );

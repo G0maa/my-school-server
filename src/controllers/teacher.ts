@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import express, { Request, Response } from 'express';
+import express from 'express';
 import {
   createUser,
   deleteUser,
@@ -11,45 +11,50 @@ import {
 import {
   setAuthorizedRoles,
   isAuthenticated,
-  validateSchema,
   isAuthenticatedTest,
 } from '../utils/middleware';
-import { ZRole, ZUuid } from '../validator/general.validator';
+import { ZRole } from '../validator/general.validator';
 import {
+  ZTeacherFind,
   ZTeacherPost,
   ZTeacherPut,
   ZTeacherQuery,
 } from '../validator/teacher.validator';
-import { ZUserQuery } from '../validator/user.validator';
+import {
+  ZUserDelete,
+  ZUserGetOne,
+  ZUserQuery,
+} from '../validator/user.validator';
 import { ZUserDetailsQuery } from '../validator/userDetails.validator';
 
 const teacherRouter = express.Router();
 
-// #17 very WET CRUD operations.
 teacherRouter.get(
   '/',
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req, res) => {
-    // Route validation for this will be redundant,
-    // as client can't send objects in a req.query nor should it.
-    const searchQueryUser = ZUserQuery.parse(req.query);
-    const searchQueryUserDetails = ZUserDetailsQuery.parse(req.query);
-    const searchQueryTeacher = ZTeacherQuery.parse(req.query);
+    const { query } = ZTeacherFind.parse(req);
 
-    const query = await getUsers(
+    const searchQueryUser = ZUserQuery.parse(query);
+    const searchQueryUserDetails = ZUserDetailsQuery.parse(query);
+    const searchQueryTeacher = ZTeacherQuery.parse(query);
+
+    const queryResult = await getUsers(
       'Teacher',
       searchQueryUser,
       searchQueryUserDetails,
       searchQueryTeacher
     );
-    return res.status(200).json(query).end();
+    return res.status(200).json(queryResult).end();
   }
 );
 
 teacherRouter.get('/:id', isAuthenticated, async (req, res) => {
-  const zUuid = ZUuid.parse(req.params.id);
-  const query = await getUser(zUuid, 'Teacher');
+  const { params } = ZUserGetOne.parse(req);
+
+  const query = await getUser(params.id, 'Teacher');
+
   return res.status(200).json(query).end();
 });
 
@@ -57,47 +62,48 @@ teacherRouter.post(
   '/',
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
-  validateSchema(ZTeacherPost),
-  async (req: Request<object, object, ZTeacherPost['body']>, res: Response) => {
-    const { user, userDetails, teacher } = req.body;
+  async (req, res) => {
+    const { body } = ZTeacherPost.parse(req);
 
-    const newTeacher = await createUser(user, userDetails, teacher);
+    const user = { ...body, userDetails: undefined, teacher: undefined };
+
+    const newTeacher = await createUser(user, body.userDetails, body.teacher);
 
     return res.status(200).json(newTeacher).end();
   }
 );
 
-// Erm... I can change the role to Admin.
-// ORM doesn't care about patch or put, it's the same Model.set({}).
-// Not tested
 teacherRouter.put(
   '/:id',
   setAuthorizedRoles([ZRole.enum.Admin, ZRole.enum.Teacher]),
   isAuthenticatedTest('id'),
-  validateSchema(ZTeacherPut),
-  async (
-    req: Request<ZTeacherPut['params'], object, ZTeacherPut['body']>,
-    res: Response
-  ) => {
-    const userId = req.params.id;
-    const { user, userDetails, teacher } = req.body;
+  async (req, res) => {
+    const { params, body } = ZTeacherPut.parse(req);
 
-    const newTeacher = await updateUser(userId, user, userDetails, teacher);
+    // To-Do: This is kind of too hacky.
+    const user = { ...body, userDetails: undefined, teacher: undefined };
+
+    const newTeacher = await updateUser(
+      params.id,
+      user,
+      body.userDetails,
+      body.teacher
+    );
 
     console.log('newTeacher', newTeacher);
     return res.status(200).json(newTeacher).end();
   }
 );
-// Deletion in an School System might be tricky,
-// i.e. this teacher might be in some record in ActiveCourses.
-// current implementation => Don't delete and give a not so useful error message.
+
 teacherRouter.delete(
   '/:id',
   setAuthorizedRoles([ZRole.Enum.Admin]),
   isAuthenticated,
   async (req, res) => {
-    const zUuid = ZUuid.parse(req.params.id);
-    const teacher = await deleteUser(zUuid, 'Teacher');
+    const { params } = ZUserDelete.parse(req);
+
+    const teacher = await deleteUser(params.id, 'Teacher');
+
     return res.status(200).json(teacher).end();
   }
 );

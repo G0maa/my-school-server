@@ -14,17 +14,15 @@ beforeAll(async () => {
 
 // must not provide username & password as they're auto created.
 const dummyStudent: ZStudentPost['body'] = {
-  user: { role: 'Student' },
+  role: 'Student',
   userDetails: {},
   student: { studyYear: '1' },
 };
 
 // TS doesn't recognize that role is automatically created.
 const fullStudent: ZStudentPost['body'] = {
-  user: {
-    email: 'example@example.com',
-    role: 'Student',
-  },
+  email: 'example@example.com',
+  role: 'Student',
   userDetails: {
     firstName: 'Mohammed',
     lastName: 'Gomaa',
@@ -73,8 +71,6 @@ describe('CRUD of Student', () => {
       .send(fullStudent)
       .expect(200);
 
-    console.log('NewStudent', res.body);
-
     const newStudent = await api
       .get(`${studentRoute}${res.body.id}`)
       .set(adminCookie)
@@ -83,7 +79,7 @@ describe('CRUD of Student', () => {
     expect(newStudent.body.student.parentName).toEqual(
       fullStudent.student.parentName
     );
-    expect(newStudent.body.email).toEqual(fullStudent.user.email);
+    expect(newStudent.body.email).toEqual(fullStudent.email);
     expect(newStudent.body.userDetails.bloodGroup).toEqual(
       fullStudent.userDetails.bloodGroup
     );
@@ -103,7 +99,6 @@ describe('CRUD of Student', () => {
       .set(adminCookie)
       .expect(200);
 
-    console.log('res2', res2.body);
     expect(res2.body.student.classId).toEqual(classId);
   });
 

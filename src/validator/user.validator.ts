@@ -22,6 +22,18 @@ export const ZUserQuery = ZUser.extend({
 }).partial();
 export type ZUserQuery = z.infer<typeof ZUserQuery>;
 
+// To-Do: I'm not sure about this, while it is true meaning wise,
+// it might be better to create a single ZUuidReq or something
+export const ZUserGetOne = z.object({
+  params: z.object({ id: ZUuid }),
+});
+export type ZUserGetOne = z.infer<typeof ZUserGetOne>;
+
+export const ZUserDelete = z.object({
+  params: z.object({ id: ZUuid }),
+});
+export type ZUserDelete = z.infer<typeof ZUserDelete>;
+
 export const ZUserPost = z.object({
   body: z.object({
     user: ZUser.omit({ isVerified: true, isReset: true, id: true })
