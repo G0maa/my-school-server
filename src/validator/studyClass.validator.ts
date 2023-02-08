@@ -6,6 +6,7 @@ export const ZStudyClass = z.object({
   studyYear: ZStudyYear.optional(),
   educationType: ZEducationType.optional(),
 });
+export type ZStudyClass = z.infer<typeof ZStudyClass>;
 
 export const ZStudyClassQuery = ZStudyClass.extend({
   classId: ZStudyClass.shape.classId.transform((attrbiute) =>
@@ -13,7 +14,4 @@ export const ZStudyClassQuery = ZStudyClass.extend({
   ),
 }).partial();
 
-export const ZStudyClassPut = ZStudyClass.required();
-export type ZStudyClassPut = z.infer<typeof ZStudyClassPut>;
 export type ZStudyClassQuery = z.infer<typeof ZStudyClassQuery>;
-export type ZStudyClass = z.infer<typeof ZStudyClass>;

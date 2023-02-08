@@ -3,7 +3,6 @@
 import StudyClass from '../models/class';
 import {
   ZStudyClass,
-  ZStudyClassPut,
   ZStudyClassQuery,
 } from '../validator/studyClass.validator';
 
@@ -25,7 +24,7 @@ const createStudyClass = async (studyClass: ZStudyClass) => {
   return res;
 };
 
-const updateStudyClass = async (zStudyClass: ZStudyClassPut) => {
+const updateStudyClass = async (zStudyClass: ZStudyClass) => {
   const studyClass = await StudyClass.findOne({
     where: {
       classId: zStudyClass.classId,
