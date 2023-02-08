@@ -23,12 +23,14 @@ class Admin extends Model {
   @Column
   serial!: number;
 
-  @BelongsTo(() => User, { as: 'user' })
   @ForeignKey(() => User)
-  @PrimaryKey
   @AllowNull(false)
   @Column({ type: DataType.UUID, onDelete: 'RESTRICT', onUpdate: 'RESTRICT' })
   userId!: string;
+
+  // Relations
+  @BelongsTo(() => User)
+  user!: User;
 }
 
 export default Admin;

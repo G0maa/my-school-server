@@ -30,9 +30,7 @@ class UserDetails extends Model {
   @Column
   serial!: number;
 
-  @BelongsTo(() => User, { as: 'user' })
   @ForeignKey(() => User)
-  @PrimaryKey
   @AllowNull(false)
   @Column({ type: DataType.UUID, onDelete: 'CASCADE', onUpdate: 'CASCADE' })
   userId!: string;
@@ -74,6 +72,10 @@ class UserDetails extends Model {
 
   @UpdatedAt
   updatedAt!: Date;
+
+  // Relations
+  @BelongsTo(() => User)
+  user!: User;
 }
 
 export default UserDetails;

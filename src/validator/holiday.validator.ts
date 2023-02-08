@@ -8,7 +8,16 @@ export const ZHoliday = z.object({
   startDate: z.coerce.date(),
   endDate: z.coerce.date(),
 });
-
-export const ZHolidaySerial = ZHoliday.shape.serial;
-export type ZHolidaySerial = z.infer<typeof ZHolidaySerial>;
 export type ZHoliday = z.infer<typeof ZHoliday>;
+
+// export const ZHolidaySerial = ZHoliday.shape.serial;
+// export type ZHolidaySerial = z.infer<typeof ZHolidaySerial>;
+export const ZHolidayPost = z.object({
+  body: ZHoliday,
+});
+export type ZHolidayPost = z.infer<typeof ZHolidayPost>;
+
+export const ZHolidayDelete = z.object({
+  params: z.object({ serial: ZHoliday.shape.serial }).required(),
+});
+export type ZHolidayDelete = z.infer<typeof ZHolidayDelete>;

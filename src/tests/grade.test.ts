@@ -7,7 +7,7 @@ import { ZGrade } from '../validator/grade.validator';
 const api = supertest(app);
 const gradeRoute = '/api/grade';
 
-let sessionId: string;
+let adminCookie: { Cookie: string };
 export const dummyActiveSubject: ZActiveSubject = {
   subjectId: '',
   classId: '',
@@ -17,11 +17,10 @@ export const dummyActiveSubject: ZActiveSubject = {
 
 beforeAll(async () => {
   // P.S: Can be a student too, something code coverage won't get.
-  sessionId = (await loginAdmin(api)) as string;
-  await api.get('/testAuth').set('Cookie', [sessionId]).expect(200);
+  adminCookie = await loginAdmin(api);
 });
 
-describe('CRUD of Grade', () => {
+describe('CRUD of Grade (Admin)', () => {
   test('POST & GET Grade', async () => {
     const dummyActiveSubject = await getDummyActiveSubject();
     const dummyStudent = await getDummyStudent();
@@ -35,13 +34,13 @@ describe('CRUD of Grade', () => {
 
     const post = await api
       .post(gradeRoute)
-      .set('Cookie', [sessionId])
+      .set(adminCookie)
       .send(dummyGrade)
       .expect(200);
 
     const get = await api
       .get(`${gradeRoute}/${post.body.serial}`)
-      .set('Cookie', [sessionId])
+      .set(adminCookie)
       .expect(200);
 
     expect(get.body).toMatchObject(dummyGrade);
@@ -59,11 +58,7 @@ describe('CRUD of Grade', () => {
       exam: 40,
     };
 
-    await api
-      .post(gradeRoute)
-      .set('Cookie', [sessionId])
-      .send(dummyGrade)
-      .expect(400);
+    await api.post(gradeRoute).set(adminCookie).send(dummyGrade).expect(400);
   });
 
   test('Fails when studentId does not reference an existing student', async () => {
@@ -78,11 +73,7 @@ describe('CRUD of Grade', () => {
       exam: 40,
     };
 
-    await api
-      .post(gradeRoute)
-      .set('Cookie', [sessionId])
-      .send(dummyGrade)
-      .expect(400);
+    await api.post(gradeRoute).set(adminCookie).send(dummyGrade).expect(400);
   });
 
   test('Fails when exam grade is more than 60', async () => {
@@ -96,10 +87,67 @@ describe('CRUD of Grade', () => {
       exam: 61,
     };
 
-    await api
+    await api.post(gradeRoute).set(adminCookie).send(dummyGrade).expect(400);
+  });
+});
+
+describe('Securtiy of Grade route', () => {
+  test('Student can access his grades', async () => {
+    const { serial } = await getDummyActiveSubject();
+    const { id, username, password } = await getDummyStudent();
+
+    // Assigning a grade to a student.
+    const dummyGrade: ZGrade = {
+      activeSubjectId: serial,
+      studentId: id,
+      yearWork: 25,
+      exam: 40,
+    };
+
+    const post = await api
       .post(gradeRoute)
-      .set('Cookie', [sessionId])
+      .set(adminCookie)
       .send(dummyGrade)
-      .expect(400);
+      .expect(200);
+
+    // Logging in as the owner of the grade
+    const studentCookie = await loginAdmin(api, { username, password });
+
+    const get = await api
+      .get(`${gradeRoute}/${post.body.serial}`)
+      .set(studentCookie)
+      .expect(200);
+
+    expect(get.body).toMatchObject(dummyGrade);
+  });
+
+  test('Student cannot access other students grades', async () => {
+    const { serial } = await getDummyActiveSubject();
+    const { id } = await getDummyStudent();
+    const { username, password } = await getDummyStudent();
+
+    // Assigning a grade to a student.
+    const dummyGrade: ZGrade = {
+      activeSubjectId: serial,
+      studentId: id,
+      yearWork: 25,
+      exam: 40,
+    };
+
+    const post = await api
+      .post(gradeRoute)
+      .set(adminCookie)
+      .send(dummyGrade)
+      .expect(200);
+
+    // Logging in as the other student
+    const studentCookie = await loginAdmin(api, { username, password });
+
+    const get = await api
+      .get(`${gradeRoute}/${post.body.serial}`)
+      .set(studentCookie)
+      .expect(404);
+
+    expect(get.body).toEqual({ message: 'Fee not found' });
   });
 });

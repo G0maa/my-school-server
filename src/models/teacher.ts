@@ -10,10 +10,12 @@ import {
   PrimaryKey,
   AutoIncrement,
   BelongsToMany,
+  HasMany,
 } from 'sequelize-typescript';
 import ActiveSubject from './activeSubject';
 import StudyClass from './class';
 import Subject from './subject';
+import SubjectsMaterial from './subjectsMaterial';
 
 import User from './user';
 
@@ -28,8 +30,7 @@ class Teacher extends Model {
   @Column
   serial!: number;
 
-  @ForeignKey(() => User) // is this needed?
-  @BelongsTo(() => User, { as: 'user' }) // student
+  @ForeignKey(() => User)
   @Default(DataType.UUIDV4) // to allow creation on this side.
   @Column({ type: DataType.UUID, onDelete: 'CASCADE', onUpdate: 'CASCADE' })
   userId!: string;
@@ -42,11 +43,18 @@ class Teacher extends Model {
   @Column(DataType.STRING(64))
   department!: string;
 
+  // Relations
+  @BelongsTo(() => User)
+  user!: User;
+
   @BelongsToMany(() => StudyClass, () => ActiveSubject)
   studyClasses!: StudyClass[];
 
   @BelongsToMany(() => Subject, () => ActiveSubject)
   subjects!: Subject[];
+
+  @HasMany(() => SubjectsMaterial)
+  subjectsMaterials!: SubjectsMaterial[];
 }
 
 export default Teacher;

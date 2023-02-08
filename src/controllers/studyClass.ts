@@ -1,6 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-misused-promises */
-import express, { Request, Response } from 'express';
+import express from 'express';
 import {
   createStudyClass,
   deleteStudyClass,
@@ -11,28 +10,28 @@ import {
 import { setAuthorizedRoles, isAuthenticated } from '../utils/middleware';
 import { ZRole } from '../validator/general.validator';
 import {
-  ZStudyClass,
+  ZStudyClassDelete,
+  ZStudyClassFind,
+  ZStudyClassGet,
+  ZStudyClassPost,
   ZStudyClassPut,
-  ZStudyClassQuery,
 } from '../validator/studyClass.validator';
 
 const studyClassRouter = express.Router();
 
-// #17 very WET CRUD operations.
-studyClassRouter.get(
-  '/',
-  setAuthorizedRoles([ZRole.enum.Admin, ZRole.enum.Student]),
-  isAuthenticated,
-  async (req, res) => {
-    const searchQuery = ZStudyClassQuery.parse(req.query);
-    const query = await getStudyClasses(searchQuery);
-    return res.status(200).json(query).end();
-  }
-);
+studyClassRouter.get('/', isAuthenticated, async (req, res) => {
+  const { query } = ZStudyClassFind.parse(req);
 
-studyClassRouter.get('/:id', isAuthenticated, async (req, res) => {
-  const zStudyClassId = ZStudyClass.shape.classId.parse(req.params.id);
-  const query = await getStudyClass(zStudyClassId);
+  const result = await getStudyClasses(query);
+
+  return res.status(200).json(result).end();
+});
+
+studyClassRouter.get('/:classId', isAuthenticated, async (req, res) => {
+  const { params } = ZStudyClassGet.parse(req);
+
+  const query = await getStudyClass(params.classId);
+
   return res.status(200).json(query).end();
 });
 
@@ -40,37 +39,43 @@ studyClassRouter.post(
   '/',
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
-  async (req: Request, res: Response) => {
-    const zStudyClass = ZStudyClass.parse(req.body);
-    const studyClass = await createStudyClass(zStudyClass);
+  async (req, res) => {
+    const { body } = ZStudyClassPost.parse(req);
+
+    const studyClass = await createStudyClass(body);
+
     return res.status(200).json(studyClass).end();
   }
 );
 
 // Not tested
 studyClassRouter.put(
-  '/:id',
+  '/:classId',
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
-  async (req: Request, res: Response) => {
-    const zStudyClass = ZStudyClassPut.parse({
-      ...req.body,
-      classId: req.params.id,
-    });
+  async (req, res) => {
+    const { params, body } = ZStudyClassPut.parse(req);
+
     // returns undefiend if not found => to-do: Return a proper message
-    const studyClass = await updateStudyClass(zStudyClass);
+    const studyClass = await updateStudyClass({
+      ...body,
+      classId: params.classId,
+    });
+
     return res.status(200).json(studyClass).end();
   }
 );
+
 // Not tested
 studyClassRouter.delete(
-  '/:id',
+  '/:classId',
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
-  async (req: Request, res: Response) => {
-    const zStudyClassId = ZStudyClass.shape.classId.parse(req.params.id);
+  async (req, res) => {
+    const { params } = ZStudyClassDelete.parse(req);
 
-    const studyClass = await deleteStudyClass(zStudyClassId);
+    const studyClass = await deleteStudyClass(params.classId);
+
     return res.status(200).json(studyClass).end();
   }
 );

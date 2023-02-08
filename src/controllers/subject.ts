@@ -11,30 +11,34 @@ import {
 import { setAuthorizedRoles, isAuthenticated } from '../utils/middleware';
 import { ZRole } from '../validator/general.validator';
 import {
-  ZSubject,
+  ZSubjectDelete,
+  ZSubjectFind,
+  ZSubjectGetOne,
+  ZSubjectPost,
   ZSubjectPut,
-  ZSubjectQuery,
 } from '../validator/subject.validator';
 
 const subjectRouter = express.Router();
 
-// #17 very WET CRUD operations.
 // Searching not tested,
 subjectRouter.get(
   '/',
   setAuthorizedRoles([ZRole.enum.Admin, ZRole.enum.Student]),
   isAuthenticated,
   async (req, res) => {
-    const searchQuery = ZSubjectQuery.parse(req.query);
+    const { query } = ZSubjectFind.parse(req);
 
-    const query = await getSubjects(searchQuery);
-    return res.status(200).json(query).end();
+    const result = await getSubjects(query);
+
+    return res.status(200).json(result).end();
   }
 );
 
 subjectRouter.get('/:id', isAuthenticated, async (req, res) => {
-  const zSubjectId = ZSubject.shape.subjectId.parse(req.params.id);
-  const query = await getSubject(zSubjectId);
+  const { params } = ZSubjectGetOne.parse(req);
+
+  const query = await getSubject(params.id);
+
   return res.status(200).json(query).end();
 });
 
@@ -43,8 +47,10 @@ subjectRouter.post(
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req: Request, res: Response) => {
-    const zSubject = ZSubject.parse(req.body);
-    const subject = await createSubject(zSubject);
+    const { body } = ZSubjectPost.parse(req);
+
+    const subject = await createSubject(body);
+
     return res.status(200).json(subject).end();
   }
 );
@@ -56,13 +62,11 @@ subjectRouter.put(
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req: Request, res: Response) => {
-    // Replacing the subjectId in req.body, if it exists.
-    const zSubject = ZSubjectPut.parse({
-      ...req.body,
-      subjectId: req.params.id,
-    });
+    const { params, body } = ZSubjectPut.parse(req);
+
     // returns undefiend if not found => to-do: Return a proper message
-    const subject = await updateSubject(zSubject);
+    const subject = await updateSubject({ subjectId: params.id, ...body });
+
     return res.status(200).json(subject).end();
   }
 );
@@ -72,8 +76,10 @@ subjectRouter.delete(
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req: Request, res: Response) => {
-    const zSubjectId = ZSubject.shape.subjectId.parse(req.params.id);
-    const subject = await deleteSubject(zSubjectId);
+    const { params } = ZSubjectDelete.parse(req);
+
+    const subject = await deleteSubject(params.id);
+
     return res.status(200).json(subject).end();
   }
 );

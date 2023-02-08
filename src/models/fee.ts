@@ -45,6 +45,7 @@ class Fee extends Model {
   @Column
   isPaid!: boolean;
 
+  // Relations
   @BelongsTo(() => Student)
   student!: Student;
 }

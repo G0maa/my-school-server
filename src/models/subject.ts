@@ -6,6 +6,7 @@ import {
   AllowNull,
   PrimaryKey,
   BelongsToMany,
+  HasMany,
 } from 'sequelize-typescript';
 import {
   EducationType,
@@ -15,6 +16,7 @@ import {
 } from '../validator/general.validator';
 import ActiveSubject from './activeSubject';
 import StudyClass from './class';
+import SubjectsMaterial from './subjectsMaterial';
 import Teacher from './teacher';
 
 @Table({
@@ -39,11 +41,15 @@ class Subject extends Model {
   @Column(DataType.ENUM(...Object.values(ZEducationType.Enum)))
   educationType!: EducationType;
 
+  // Relations
   @BelongsToMany(() => StudyClass, () => ActiveSubject)
   studyClasses!: StudyClass[];
 
   @BelongsToMany(() => Teacher, () => ActiveSubject)
   teachers!: Teacher[];
+
+  @HasMany(() => SubjectsMaterial)
+  subjectMaterial!: SubjectsMaterial[];
 }
 
 export default Subject;

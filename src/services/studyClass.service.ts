@@ -1,9 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-misused-promises */
 import StudyClass from '../models/class';
 import {
   ZStudyClass,
-  ZStudyClassPut,
   ZStudyClassQuery,
 } from '../validator/studyClass.validator';
 
@@ -25,7 +22,7 @@ const createStudyClass = async (studyClass: ZStudyClass) => {
   return res;
 };
 
-const updateStudyClass = async (zStudyClass: ZStudyClassPut) => {
+const updateStudyClass = async (zStudyClass: ZStudyClass) => {
   const studyClass = await StudyClass.findOne({
     where: {
       classId: zStudyClass.classId,
@@ -41,7 +38,7 @@ const updateStudyClass = async (zStudyClass: ZStudyClassPut) => {
 };
 
 // Not tested
-const deleteStudyClass = async (classId: string) => {
+const deleteStudyClass = async (classId: ZStudyClass['classId']) => {
   const res = await StudyClass.destroy({
     where: { classId },
   });

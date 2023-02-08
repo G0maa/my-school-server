@@ -41,10 +41,12 @@ const getUsers = async (
   return query;
 };
 
+// According to the types in the model,
+// query.[model] might or might not exist.
 const getUser = async (userId: ZUuid, role: Role) => {
   const query = await User.findOne({
     include: [{ model: UserDetails }, { model: roleModels[role] }],
-    where: { id: userId },
+    where: { id: userId, role },
   });
   return query;
 };
@@ -58,6 +60,9 @@ const createUser = async (
 ) => {
   const roleName = zUser.role.toLowerCase();
 
+  // To-Do: This is not correctly typed.
+  // i.e.: user.userDetails & user[roleName] do not exist in compile time,
+  // although they exist at run time.
   const user = await User.create(
     {
       ...zUser,
@@ -102,6 +107,7 @@ const updateUser = async (
   await roleObject.save();
 
   // ...user, trying to make the response body somewhat consistent.
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return { ...user, userDetails, [roleName]: roleObject };
 };
 

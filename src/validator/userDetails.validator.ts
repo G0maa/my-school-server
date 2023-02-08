@@ -39,7 +39,7 @@ export type ZUserDetailsPost = z.infer<typeof ZUserDetailsPost>;
 export const ZUserDetailsPut = z.object({
   params: ZUuid,
   body: z.object({
-    userDetails: ZUserDetails.required().omit({ serial: true }),
+    userDetails: ZUserDetails.required().omit({ serial: true, userId: true }),
   }),
 });
 export type ZUserDetailsPut = z.infer<typeof ZUserDetailsPut>;

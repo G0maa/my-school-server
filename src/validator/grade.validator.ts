@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { ZActiveSubject } from './activeSubject.validator';
 import { ZStudent } from './student.validator';
+import { ZReqUser } from './user.validator';
 
 export const ZGrade = z
   .object({
@@ -14,14 +15,33 @@ export const ZGrade = z
   .partial({ serial: true });
 export type ZGrade = z.infer<typeof ZGrade>;
 
-export const ZGradeFind = ZGrade.pick({
-  studentId: true,
-  activeSubjectId: true,
-}).partial();
+export const ZGradePost = z.object({
+  body: ZGrade,
+});
+export type ZGradePost = z.infer<typeof ZGradePost>;
+
+export const ZGradeFind = z.object({
+  query: ZGrade.pick({
+    studentId: true,
+    activeSubjectId: true,
+  }).partial(),
+  user: ZReqUser,
+});
 export type ZGradeFind = z.infer<typeof ZGradeFind>;
 
-export const ZGradePut = ZGrade.required();
+export const ZGradeGet = z.object({
+  params: z.object({ serial: ZGrade.shape.serial }).required(),
+  user: ZReqUser,
+});
+export type ZGradeGet = z.infer<typeof ZGradeGet>;
+
+export const ZGradePut = z.object({
+  params: z.object({ serial: ZGrade.shape.serial }).required(),
+  body: ZGrade.required(),
+});
 export type ZGradePut = z.infer<typeof ZGradePut>;
 
-export const ZGradeSerial = ZGrade.shape.serial;
-export type ZGradeSerial = z.infer<typeof ZGradeSerial>;
+export const ZGradeDelete = z.object({
+  params: z.object({ serial: ZGrade.shape.serial }).required(),
+});
+export type ZGradeDelete = z.infer<typeof ZGradeDelete>;

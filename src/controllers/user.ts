@@ -3,8 +3,7 @@
 import express from 'express';
 import { changePassword, resetPassword } from '../services/user.service';
 import { isAuthenticated } from '../utils/middleware';
-import { ZUuid } from '../validator/general.validator';
-import { ZUserResetPassword } from '../validator/user.validator';
+import { ZUserResetPassword, ZUserGetOne } from '../validator/user.validator';
 
 const userRouter = express.Router();
 
@@ -14,18 +13,20 @@ const userRouter = express.Router();
 // Will be refactored when we introduce sending emails.
 // https://stackoverflow.com/questions/3077229/restful-password-reset
 userRouter.post('/:id/reset-password', isAuthenticated, async (req, res) => {
-  const userId = ZUuid.parse(req.params.id);
+  // Less code, less "meaningful"
+  // Or More code i.e. ZUserResetPassword?
+  const { params } = ZUserGetOne.parse(req);
 
   if (req.user?.role === 'Admin') {
-    const user = await resetPassword(userId);
+    const user = await resetPassword(params.id);
 
     if (!user)
       return res.status(400).json({ error: 'Admin: User non-existent' }).end();
 
     return res.status(200).json(user).end();
-  } else if (req.user?.id === req.params.id) {
+  } else if (req.user?.id === params.id) {
     const { currentPassword, newPassword } = ZUserResetPassword.parse(req.body);
-    const user = await changePassword(userId, currentPassword, newPassword);
+    const user = await changePassword(params.id, currentPassword, newPassword);
 
     if (!user)
       return res

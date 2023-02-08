@@ -8,6 +8,7 @@ import {
   AutoIncrement,
   ForeignKey,
   Unique,
+  BelongsTo,
 } from 'sequelize-typescript';
 import Subject from './subject';
 import Teacher from './teacher';
@@ -43,6 +44,13 @@ class SubjectsMaterial extends Model {
   @Unique(true)
   @Column(DataType.STRING(256))
   filePath!: string;
+
+  // Relations
+  @BelongsTo(() => Teacher, { targetKey: 'userId' })
+  teacher!: Teacher;
+
+  @BelongsTo(() => Subject)
+  subject!: Subject;
 }
 
 export default SubjectsMaterial;
