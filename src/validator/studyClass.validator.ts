@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { ToLikeQuery, ZEducationType, ZStudyYear } from './general.validator';
 
+// I'm keeping this as an "old" "style" of validation,
 export const ZStudyClass = z.object({
   classId: z.string().max(6),
   studyYear: ZStudyYear.optional(),
