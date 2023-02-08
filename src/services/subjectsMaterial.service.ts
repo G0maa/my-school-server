@@ -1,7 +1,7 @@
 import fs from 'fs';
 import Subject from '../models/subject';
 import SubjectsMaterial from '../models/subjectsMaterial';
-import { ZSubjectId } from '../validator/subject.validator';
+import { ZSubject } from '../validator/subject.validator';
 import {
   ZSubjectsMaterial,
   ZSubjectsMaterialVerify,
@@ -12,7 +12,7 @@ const getSubjectsMaterial = async () => {
   return subjectMaterial;
 };
 
-const getSubjectMaterial = async (subjectId: ZSubjectId) => {
+const getSubjectMaterial = async (subjectId: ZSubject['subjectId']) => {
   const subjectMaterial = await SubjectsMaterial.findAll({
     where: { subjectId },
   });

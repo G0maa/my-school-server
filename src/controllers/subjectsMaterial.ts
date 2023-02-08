@@ -14,7 +14,7 @@ import {
   uploadFile,
 } from '../utils/middleware';
 import { ZRole } from '../validator/general.validator';
-import { ZSubjectId } from '../validator/subject.validator';
+import { ZSubjectGetOne } from '../validator/subject.validator';
 import {
   ZSubjectsMaterial,
   ZSubjectsMaterialVerify,
@@ -47,8 +47,8 @@ subjectMaterialRouter.get(
 
 // Get table of that particular subject
 subjectMaterialRouter.get('/:subjectId', isAuthenticated, async (req, res) => {
-  const zSubjectId = ZSubjectId.parse(req.params.subjectId);
-  const query = await getSubjectMaterial(zSubjectId);
+  const { params } = ZSubjectGetOne.parse(req);
+  const query = await getSubjectMaterial(params.id);
   return res.status(200).json(query).end();
 });
 
