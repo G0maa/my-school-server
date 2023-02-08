@@ -3,19 +3,20 @@
 import ActiveSubject from '../models/activeSubject';
 import {
   ZActiveSubject,
-  ZActiveSubjectPut,
+  ZActiveSubjectDelete,
+  ZActiveSubjectGet,
   ZActiveSubjectQuery,
 } from '../validator/activeSubject.validator';
 
-// #17 very WET CRUD operations.
-// Should I incldie Teacher, studyClass, & Subject?
 // Searching not tested
 const getActiveSubjects = async (searchQuery: ZActiveSubjectQuery) => {
   const query = await ActiveSubject.findAll({ where: { ...searchQuery } });
   return query;
 };
 
-const getActiveSubject = async (serial: string) => {
+const getActiveSubject = async (
+  serial: ZActiveSubjectGet['params']['serial']
+) => {
   const query = await ActiveSubject.findOne({
     where: { serial },
   });
@@ -28,7 +29,7 @@ const createActiveSubject = async (zActiveSubject: ZActiveSubject) => {
   return activeSubject;
 };
 
-const updateActiveSubject = async (zActiveSubject: ZActiveSubjectPut) => {
+const updateActiveSubject = async (zActiveSubject: ZActiveSubject) => {
   const activeSubject = await ActiveSubject.findOne({
     where: { serial: zActiveSubject.serial },
   });
@@ -40,7 +41,9 @@ const updateActiveSubject = async (zActiveSubject: ZActiveSubjectPut) => {
 };
 
 // Not-tested
-const deleteActiveSubject = async (serial: string) => {
+const deleteActiveSubject = async (
+  serial: ZActiveSubjectDelete['params']['serial']
+) => {
   const activeSubject = await ActiveSubject.destroy({
     where: { serial },
   });

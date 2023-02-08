@@ -12,12 +12,13 @@ import { ZTeacher } from './teacher.validator';
 // P.S, this is inconsitent with DB design, all IDs are optional.
 // P.P.S: This allows searching for non-existent IDs
 export const ZActiveSubject = z.object({
-  serial: z.number().positive().optional(),
+  serial: z.coerce.number().positive().optional(),
   subjectId: ZSubject.shape.subjectId,
   classId: ZStudyClass.shape.classId,
   teacherId: ZTeacher.shape.userId,
   subjectSchedule: z.string().max(6).optional(),
 });
+export type ZActiveSubject = z.infer<typeof ZActiveSubject>;
 
 export const ZActiveSubjectQuery = ZActiveSubject.extend({
   subjectSchedule: ZActiveSubject.shape.subjectSchedule.transform((attribute) =>
@@ -25,9 +26,32 @@ export const ZActiveSubjectQuery = ZActiveSubject.extend({
   ),
 }).partial();
 
+export const ZActiveSubjectFind = z.object({
+  query: ZActiveSubjectQuery,
+});
+export type ZActiveSubjectFind = z.infer<typeof ZActiveSubjectFind>;
+
+export const ZActiveSubjectGet = z.object({
+  params: z.object({ serial: ZActiveSubject.shape.serial }).required(),
+});
+export type ZActiveSubjectGet = z.infer<typeof ZActiveSubjectGet>;
+
+export type ZActiveSubjectQuery = z.infer<typeof ZActiveSubjectQuery>;
+
+export const ZActiveSubjectPost = z.object({
+  body: ZActiveSubject,
+});
+export type ZActiveSubjectPost = z.infer<typeof ZActiveSubjectPost>;
+
 // This represents REST PUT,
 // but doesn't represent DB SET NULL property on foreign keys.
-export const ZActiveSubjectPut = ZActiveSubject.required();
+export const ZActiveSubjectPut = z.object({
+  params: z.object({ serial: ZActiveSubject.shape.serial }).required(),
+  body: ZActiveSubject.omit({ serial: true }).required(),
+});
 export type ZActiveSubjectPut = z.infer<typeof ZActiveSubjectPut>;
-export type ZActiveSubjectQuery = z.infer<typeof ZActiveSubjectQuery>;
-export type ZActiveSubject = z.infer<typeof ZActiveSubject>;
+
+export const ZActiveSubjectDelete = z.object({
+  params: z.object({ serial: ZActiveSubject.shape.serial }).required(),
+});
+export type ZActiveSubjectDelete = z.infer<typeof ZActiveSubjectDelete>;

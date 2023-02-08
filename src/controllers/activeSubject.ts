@@ -10,65 +10,77 @@ import {
 } from '../services/activeSubject.service';
 import { setAuthorizedRoles, isAuthenticated } from '../utils/middleware';
 import {
-  ZActiveSubject,
+  ZActiveSubjectDelete,
+  ZActiveSubjectFind,
+  ZActiveSubjectGet,
+  ZActiveSubjectPost,
   ZActiveSubjectPut,
-  ZActiveSubjectQuery,
 } from '../validator/activeSubject.validator';
 import { ZRole } from '../validator/general.validator';
 
 const activeSubjectRouter = express.Router();
 
-// #17 very WET CRUD operations.
 activeSubjectRouter.get(
   '/',
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req, res) => {
-    const searchQuery = ZActiveSubjectQuery.parse(req.query);
-    const query = await getActiveSubjects(searchQuery);
-    return res.status(200).json(query).end();
+    const { query } = ZActiveSubjectFind.parse(req);
+
+    const result = await getActiveSubjects(query);
+
+    return res.status(200).json(result).end();
   }
 );
 
-activeSubjectRouter.get('/:id', isAuthenticated, async (req, res) => {
-  const query = await getActiveSubject(req.params.id);
+activeSubjectRouter.get('/:serial', isAuthenticated, async (req, res) => {
+  const { params } = ZActiveSubjectGet.parse(req);
+
+  const query = await getActiveSubject(params.serial);
+
   return res.status(200).json(query).end();
 });
 
-// To-Do: This needs to be throughly tested.
 activeSubjectRouter.post(
   '/',
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req: Request, res: Response) => {
-    const zActiveSubject = ZActiveSubject.parse(req.body);
-    const activeSubject = await createActiveSubject(zActiveSubject);
+    const { body } = ZActiveSubjectPost.parse(req);
+
+    const activeSubject = await createActiveSubject(body);
+
     return res.status(200).json(activeSubject).end();
   }
 );
 
 // not-tested
 activeSubjectRouter.put(
-  '/:id',
+  '/:serial',
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req: Request, res: Response) => {
-    const zActiveSubject = ZActiveSubjectPut.parse({
-      ...req.body,
-      serial: req.params.id,
+    const { params, body } = ZActiveSubjectPut.parse(req);
+
+    const activeSubject = await updateActiveSubject({
+      ...body,
+      serial: params.serial,
     });
-    const activeSubject = await updateActiveSubject(zActiveSubject);
+
     return res.status(200).json(activeSubject).end();
   }
 );
 
 // Not-tested
 activeSubjectRouter.delete(
-  '/:id',
+  '/:serial',
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
-  async (req: Request, res: Response) => {
-    const activeSubject = await deleteActiveSubject(req.params.id);
+  async (req, res) => {
+    const { params } = ZActiveSubjectDelete.parse(req);
+
+    const activeSubject = await deleteActiveSubject(params.serial);
+
     return res.status(200).json(activeSubject).end();
   }
 );
