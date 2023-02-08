@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-misused-promises */
 import StudyClass from '../models/class';
 import {
   ZStudyClass,
@@ -40,7 +38,7 @@ const updateStudyClass = async (zStudyClass: ZStudyClass) => {
 };
 
 // Not tested
-const deleteStudyClass = async (classId: string) => {
+const deleteStudyClass = async (classId: ZStudyClass['classId']) => {
   const res = await StudyClass.destroy({
     where: { classId },
   });
