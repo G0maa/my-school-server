@@ -16,8 +16,8 @@ import {
 import { ZRole } from '../validator/general.validator';
 import { ZSubjectGetOne } from '../validator/subject.validator';
 import {
-  ZSubjectsMaterial,
-  ZSubjectsMaterialVerify,
+  ZSubjectsMaterialOne,
+  ZSubjectsMaterialPost,
 } from '../validator/subjectsMaterial.validator';
 
 const subjectMaterialRouter = express.Router();
@@ -26,6 +26,7 @@ const subjectMaterialRouter = express.Router();
 // This router is very experimental, lots of validations & verifications are missing.
 subjectMaterialRouter.get('/', isAuthenticated, async (_req, res) => {
   const query = await getSubjectsMaterial();
+
   return res.status(200).json(query).end();
 });
 
@@ -34,9 +35,9 @@ subjectMaterialRouter.get(
   '/:subjectId/:serial',
   isAuthenticated,
   async (req, res) => {
-    const requestObject = ZSubjectsMaterialVerify.parse(req.params);
+    const { params } = ZSubjectsMaterialOne.parse(req);
 
-    const oneSubjectMaterial = await getOneSubjectMaterial(requestObject);
+    const oneSubjectMaterial = await getOneSubjectMaterial(params);
 
     if (!oneSubjectMaterial)
       return res.status(401).json({ message: 'File not found' });
@@ -48,7 +49,9 @@ subjectMaterialRouter.get(
 // Get table of that particular subject
 subjectMaterialRouter.get('/:subjectId', isAuthenticated, async (req, res) => {
   const { params } = ZSubjectGetOne.parse(req);
+
   const query = await getSubjectMaterial(params.id);
+
   return res.status(200).json(query).end();
 });
 
@@ -59,18 +62,16 @@ subjectMaterialRouter.post(
   isAuthenticated,
   uploadFile.single('pdf'),
   async (req: Request, res: Response) => {
+    const { params, body } = ZSubjectsMaterialPost.parse(req);
+
     if (!req.file)
       return res
         .status(401)
         .json({ message: 'Unsupported file extension' })
         .end();
-    const zSubjectMaterial = ZSubjectsMaterial.parse({
-      ...req.body,
-      subjectId: req.params.subjectId,
-    });
 
     const subjectMaterial = await addSubjectMaterial(
-      zSubjectMaterial,
+      { ...body, subjectId: params.subjectId },
       req.file
     );
 
@@ -86,9 +87,10 @@ subjectMaterialRouter.delete(
   setAuthorizedRoles([ZRole.enum.Admin, ZRole.enum.Teacher]),
   isAuthenticated,
   async (req: Request, res: Response) => {
-    const zObject = ZSubjectsMaterialVerify.parse(req.params);
+    const { params } = ZSubjectsMaterialOne.parse(req);
 
-    await deleteOneSubjectMaterial(zObject);
+    await deleteOneSubjectMaterial(params);
+
     return res.status(204).end();
   }
 );

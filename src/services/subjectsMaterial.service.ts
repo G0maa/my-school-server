@@ -4,7 +4,7 @@ import SubjectsMaterial from '../models/subjectsMaterial';
 import { ZSubject } from '../validator/subject.validator';
 import {
   ZSubjectsMaterial,
-  ZSubjectsMaterialVerify,
+  ZSubjectsMaterialOne,
 } from '../validator/subjectsMaterial.validator';
 
 const getSubjectsMaterial = async () => {
@@ -20,7 +20,9 @@ const getSubjectMaterial = async (subjectId: ZSubject['subjectId']) => {
 };
 
 // Refactor, very similar to the one above, & rename
-const getOneSubjectMaterial = async (verifyObject: ZSubjectsMaterialVerify) => {
+const getOneSubjectMaterial = async (
+  verifyObject: ZSubjectsMaterialOne['params']
+) => {
   const subjectMaterial = await SubjectsMaterial.findOne({
     where: { ...verifyObject },
   });
@@ -62,7 +64,7 @@ const addSubjectMaterial = async (
 };
 
 const deleteOneSubjectMaterial = async (
-  verifyObject: ZSubjectsMaterialVerify
+  verifyObject: ZSubjectsMaterialOne['params']
 ) => {
   const deletedMaterial = await SubjectsMaterial.findOne({
     where: { ...verifyObject },
