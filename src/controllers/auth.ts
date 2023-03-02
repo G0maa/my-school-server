@@ -75,6 +75,7 @@ loginRouter.post(
   validateSchema(ZUserLogin),
   passport.authenticate('local'),
   (req, res) => {
+    // #swagger.tags = ['login']
     if (!req.user) return res.status(401).end();
 
     return res

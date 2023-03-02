@@ -25,6 +25,7 @@ import holidayRouter from './controllers/holiday';
 import feeRouter from './controllers/fee';
 import gradeRouter from './controllers/grade';
 import userRouter from './controllers/user';
+import startSwagger from './utils/swagger';
 // import logger from './utils/logger';
 
 const app = express();
@@ -82,12 +83,14 @@ app.get('/api/failping', (_, response) => {
   response.status(400).send();
 });
 
-app.use(unknownEndpoint);
-app.use(errorHandler);
-
 const initServer = async () => {
+  await startSwagger(app);
   await connectToDatabase();
   await init();
+
+  // should be outside of this function, hopefully only temporary.
+  app.use(unknownEndpoint);
+  app.use(errorHandler);
 };
 
 export { app, initServer };
