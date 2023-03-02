@@ -35,7 +35,7 @@
     "passport-local": "^1.0.0",
     "pg": "^8.8.0",
     "reflect-metadata": "^0.1.13",
-    "sequelize": "^6.28.0",
+    "sequelize": "^6.29.0",
     "sequelize-typescript": "^2.1.5",
     "umzug": "^3.2.1",
     "zod": "^3.20.2"
@@ -66,6 +66,7 @@
     "prettier": "2.7.1",
     "sequelize-cli": "^6.5.2",
     "supertest": "^6.3.1",
+    "swagger-autogen": "^2.23.1",
     "ts-jest": "^29.0.3",
     "ts-node-dev": "^2.0.0",
     "typescript": "^4.9.3"
