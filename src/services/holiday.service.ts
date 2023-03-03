@@ -1,8 +1,12 @@
 import Holiday from '../models/holiday';
-import { ZHolidayDelete, ZHolidayPost } from '../validator/holiday.validator';
+import {
+  ZHolidayDelete,
+  ZHolidayFind,
+  ZHolidayPost,
+} from '../validator/holiday.validator';
 
-const getHolidays = async () => {
-  const holidays = await Holiday.findAll();
+const getHolidays = async (query: ZHolidayFind['query']) => {
+  const holidays = await Holiday.findAndCountAll({ ...query });
   return holidays;
 };
 

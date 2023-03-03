@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { ZPaginate } from './general.validator';
 
 // Not sure if coersion is a safe option here,
 // It might be in ZHolidaySerial, but not here.
@@ -12,6 +13,12 @@ export type ZHoliday = z.infer<typeof ZHoliday>;
 
 // export const ZHolidaySerial = ZHoliday.shape.serial;
 // export type ZHolidaySerial = z.infer<typeof ZHolidaySerial>;
+
+export const ZHolidayFind = z.object({
+  query: ZPaginate,
+});
+export type ZHolidayFind = z.infer<typeof ZHolidayFind>;
+
 export const ZHolidayPost = z.object({
   body: ZHoliday,
 });

@@ -23,6 +23,17 @@ export const ToLikeQuery = (attribute: string | undefined | null) => {
   return { [Op.like]: `%${attribute}%` };
 };
 
+// offset & size might be too big e.g. page=1000000&size=100000
+export const ZPaginate = z
+  .object({
+    page: z.coerce.number().min(1).default(1),
+    size: z.coerce.number().min(10).default(10),
+  })
+  .transform(({ page, size }) => {
+    return { offset: (page - 1) * size, limit: size };
+  });
+export type ZPaginate = z.infer<typeof ZPaginate>;
+
 // Inferred Types
 export type StudyYear = z.infer<typeof ZStudyYear>;
 export type Role = z.infer<typeof ZRole>;

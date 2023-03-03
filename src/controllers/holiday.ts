@@ -8,12 +8,18 @@ import {
 } from '../services/holiday.service';
 import { setAuthorizedRoles, isAuthenticated } from '../utils/middleware';
 import { ZRole } from '../validator/general.validator';
-import { ZHolidayPost, ZHolidayDelete } from '../validator/holiday.validator';
+import {
+  ZHolidayPost,
+  ZHolidayDelete,
+  ZHolidayFind,
+} from '../validator/holiday.validator';
 
 const holidayRouter = express.Router();
 
-holidayRouter.get('/', isAuthenticated, async (_req, res) => {
-  const holidays = await getHolidays();
+holidayRouter.get('/', isAuthenticated, async (req, res) => {
+  const { query } = ZHolidayFind.parse(req);
+
+  const holidays = await getHolidays(query);
 
   return res.status(200).json(holidays).end();
 });

@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { ZStudent } from './student.validator';
 import { ZReqUser } from './user.validator';
+import { ZPaginate } from './general.validator';
 
 export const ZFee = z
   .object({
@@ -16,7 +17,7 @@ export type ZFee = z.infer<typeof ZFee>;
 
 // export const ZFeeFind = ZFee.pick({ serial: true, studentId: true }).partial();
 export const ZFeeFind = z.object({
-  query: ZFee.pick({ serial: true, studentId: true }).partial(),
+  query: ZFee.pick({ serial: true, studentId: true }).partial().and(ZPaginate),
   user: ZReqUser,
 });
 export type ZFeeFind = z.infer<typeof ZFeeFind>;
