@@ -41,6 +41,7 @@
     "zod": "^3.20.2"
   },
   "devDependencies": {
+    "@asteasolutions/zod-to-openapi": "^4.4.1",
     "@types/bcrypt": "^5.0.0",
     "@types/cors": "^2.8.12",
     "@types/dotenv": "^8.2.0",

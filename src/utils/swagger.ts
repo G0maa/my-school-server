@@ -2,8 +2,33 @@
 import { Express } from 'express';
 import swaggerAutogen from 'swagger-autogen';
 import swaggerUI from 'swagger-ui-express';
+import {
+  OpenAPIRegistry,
+  OpenAPIGenerator,
+} from '@asteasolutions/zod-to-openapi';
 // const swaggerDocument = require('./../../swagger-output.json');
 import fs from 'fs';
+import { ZStudentPost, ZStudentPut } from '../validator/student.validator';
+import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
+import { z } from 'zod';
+
+extendZodWithOpenApi(z);
+// Zod to OpenAPI part
+
+const registry = new OpenAPIRegistry();
+
+// const ZStudentPostO = registry.register('ZStudentPost', ZStudentPost);
+registry.register('ZStudentPost', ZStudentPost.shape.body);
+// Need to fix #33 for this to work... zod-to-openapi does not support .transform
+// registry.register('ZStudentFind', ZStudentFind.shape.query);
+registry.register('ZStudentPut', ZStudentPut.shape.body);
+
+const generator = new OpenAPIGenerator(registry.definitions, '3.0.0');
+
+const components = generator.generateComponents();
+
+// console.log('ZStudentPostOpenAPI', ZStudentPostO);
+console.log('components', components.components?.schemas);
 
 const doc = {
   info: {
@@ -20,7 +45,12 @@ const doc = {
       name: 'fees',
       description: 'fees routes',
     },
+    {
+      name: 'students',
+      description: 'students routes',
+    },
   ],
+  '@definitions': components.components?.schemas,
   host: 'localhost:8080',
   schemes: ['http'],
 };
