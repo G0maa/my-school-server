@@ -10,6 +10,8 @@ on:
 
 jobs:
   ci:
+    if: |
+      contains(join(toJson(github.event.commits.*.message), ' '), '#skipchecks') != true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
