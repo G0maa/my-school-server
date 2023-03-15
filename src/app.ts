@@ -25,8 +25,8 @@ import holidayRouter from './controllers/holiday';
 import feeRouter from './controllers/fee';
 import gradeRouter from './controllers/grade';
 import userRouter from './controllers/user';
-import startSwagger from './utils/swagger';
-// import logger from './utils/logger';
+import swaggerUI from 'swagger-ui-express';
+import specs from './swagger-output.json';
 
 const app = express();
 
@@ -54,7 +54,7 @@ app.use(
   })
 );
 app.use(express.json());
-// POST /api/X 4003 ms
+
 // Unsure about the cause of this...
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call
 if (config.NODE_ENV === 'DEV') app.use(requestLogger);
@@ -83,17 +83,12 @@ app.get('/api/ping', (_, response) => {
   response.send('<p>pong</p>');
 });
 
-// eslint-disable-next-line @typescript-eslint/no-floating-promises
-// startSwagger(app);
+// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(specs));
+app.use(unknownEndpoint);
+app.use(errorHandler);
 
-console.log('test, app.ts');
 const initServer = async () => {
-  // Needs some fixing.. .file needs restructuring to-do
-  if (config.NODE_ENV !== 'test') await startSwagger(app);
-
-  app.use(unknownEndpoint);
-  app.use(errorHandler);
-
   await connectToDatabase();
   await init();
 };

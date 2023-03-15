@@ -1,13 +1,9 @@
 /* eslint-disable */
-import { Express } from 'express';
 import swaggerAutogen from 'swagger-autogen';
-import swaggerUI from 'swagger-ui-express';
 import {
   OpenAPIRegistry,
   OpenAPIGenerator,
 } from '@asteasolutions/zod-to-openapi';
-// const swaggerDocument = require('./../../swagger-output.json');
-import fs from 'fs';
 import { ZStudentPost, ZStudentPut } from '../validator/student.validator';
 import { extendZodWithOpenApi } from '@asteasolutions/zod-to-openapi';
 import { z } from 'zod';
@@ -49,15 +45,7 @@ const doc = {
   schemes: ['http'],
 };
 
-const outputFile = './swagger-output.json';
+const outputFile = '../swagger-output.json';
 const endpointsFiles = ['./src/app.ts'];
 
-const startSwagger = async (app: Express) => {
-  await swaggerAutogen({ openapi: '3.0.0' })(outputFile, endpointsFiles, doc);
-  const specs = fs.readFileSync('./swagger-output.json', 'utf8');
-
-  // return [swaggerUI.serve, swaggerUI.setup(JSON.parse(specs))];
-  app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(JSON.parse(specs)));
-};
-
-export default startSwagger;
+swaggerAutogen({ openapi: '3.0.0' })(outputFile, endpointsFiles, doc);
