@@ -84,7 +84,7 @@ app.get('/api/ping', (_, response) => {
 });
 
 if (config.NODE_ENV !== 'test') {
-  const specs = fs.readFileSync('./swagger-output.json', 'utf8');
+  const specs = fs.readFileSync('./src/swagger-output.json', 'utf8');
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(JSON.parse(specs)));
 }
