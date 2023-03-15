@@ -54,7 +54,7 @@ app.use(
   })
 );
 app.use(express.json());
-
+// POST /api/X 4003 ms
 // Unsure about the cause of this...
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call
 if (config.NODE_ENV === 'DEV') app.use(requestLogger);
@@ -76,21 +76,26 @@ app.use('/api/grade/', gradeRouter);
 app.use('/api/user/', userRouter);
 
 app.get('/api/ping', (_, response) => {
+  /* 
+    #swagger.tags = ['Health Checks']
+    #swagger.description = 'Verifies that the Web App works'
+  */
   response.send('<p>pong</p>');
 });
 
-app.get('/api/failping', (_, response) => {
-  response.status(400).send();
-});
+// eslint-disable-next-line @typescript-eslint/no-floating-promises
+// startSwagger(app);
 
+console.log('test, app.ts');
 const initServer = async () => {
-  await startSwagger(app);
-  await connectToDatabase();
-  await init();
+  // Needs some fixing.. .file needs restructuring to-do
+  if (config.NODE_ENV !== 'test') await startSwagger(app);
 
-  // should be outside of this function, hopefully only temporary.
   app.use(unknownEndpoint);
   app.use(errorHandler);
+
+  await connectToDatabase();
+  await init();
 };
 
 export { app, initServer };

@@ -21,6 +21,10 @@ import {
 const gradeRouter = express.Router();
 
 gradeRouter.get('/', isAuthenticated, async (req, res) => {
+  /* 
+      #swagger.tags = ['Grades']
+      #swagger.security = [{ "cookieAuth": [] }]
+  */
   const { query, user } = ZGradeFind.parse(req);
 
   const grades = await getGrades(query, user);
@@ -32,6 +36,10 @@ gradeRouter.get('/', isAuthenticated, async (req, res) => {
 // i.e. a Teacher can't /api/grade/:serial
 // will always return not found, probably unreasonable.
 gradeRouter.get('/:serial', isAuthenticated, async (req, res) => {
+  /* 
+    #swagger.tags = ['Grades']
+    #swagger.security = [{ "cookieAuth": [] }]
+  */
   const { params, user } = ZGradeGet.parse(req);
 
   const grade = await getGrade(params.serial, user);
@@ -46,6 +54,10 @@ gradeRouter.post(
   setAuthorizedRoles([ZRole.enum.Admin, ZRole.enum.Teacher]),
   isAuthenticated,
   async (req: Request, res: Response) => {
+    /* 
+      #swagger.tags = ['Grades']
+      #swagger.security = [{ "cookieAuth": [] }]
+    */
     const { body } = ZGradePost.parse(req);
 
     const grade = await addGrade(body);
@@ -60,6 +72,10 @@ gradeRouter.put(
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req: Request, res: Response) => {
+    /* 
+      #swagger.tags = ['Grades']
+      #swagger.security = [{ "cookieAuth": [] }]
+    */
     const { params, body } = ZGradePut.parse(req);
 
     const grade = await updateGrade({ ...body, serial: params.serial });
@@ -73,6 +89,10 @@ gradeRouter.delete(
   setAuthorizedRoles([ZRole.enum.Admin, ZRole.enum.Teacher]),
   isAuthenticated,
   async (req: Request, res: Response) => {
+    /* 
+      #swagger.tags = ['Grades']
+      #swagger.security = [{ "cookieAuth": [] }]
+    */
     const { params } = ZGradeDelete.parse(req);
 
     const grade = await deleteGrade(params.serial);

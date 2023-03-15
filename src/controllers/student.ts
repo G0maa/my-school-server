@@ -34,13 +34,13 @@ studentRouter.get(
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req, res) => {
+    // revise this to-do
     /* 
-    #swagger.tags = ['students']
-    #swagger.requestBody = {
-      content: {
-        "application/json": {
-          schema: { $ref: "#components/schemas/ZStudentFind" }
-        }
+    #swagger.tags = ['Students']
+    #swagger.security = [{ "cookieAuth": [] }]
+    [hashHere]swagger.parameters['thisiswrong'] = {
+      in: query,
+        schema: { $ref: "#/components/schemas/ZStudentFind" }
       }
     } 
     */
@@ -65,7 +65,8 @@ studentRouter.get(
 
 studentRouter.get('/:id', isAuthenticated, async (req, res) => {
   /* 
-    #swagger.tags = ['students']
+    #swagger.tags = ['Students']
+    #swagger.security = [{ "cookieAuth": [] }]
   */
   const { params } = ZUserGetOne.parse(req);
 
@@ -80,11 +81,12 @@ studentRouter.post(
   isAuthenticatedTest('id'),
   async (req, res) => {
     /* 
-    #swagger.tags = ['students']
+    #swagger.tags = ['Students']
+    #swagger.security = [{ "cookieAuth": [] }]
     #swagger.requestBody = {
       content: {
         "application/json": {
-          schema: { $ref: "#components/schemas/ZStudentPost" }
+          schema: { $ref: "#/components/schemas/ZStudentPost" }
         }
       }
     } 
@@ -106,11 +108,12 @@ studentRouter.put(
   isAuthenticated,
   async (req, res) => {
     /* 
-    #swagger.tags = ['students']
+    #swagger.tags = ['Students']
+    #swagger.security = [{ "cookieAuth": [] }]
     #swagger.requestBody = {
       content: {
         "application/json": {
-          schema: { $ref: "#components/schemas/ZStudentPut" }
+          schema: { $ref: "#/components/schemas/ZStudentPut" }
         }
       }
     } 
@@ -136,8 +139,9 @@ studentRouter.delete(
   isAuthenticated,
   async (req, res) => {
     /* 
-    #swagger.tags = ['students']
-  */
+      #swagger.tags = ['Students']
+      #swagger.security = [{ "cookieAuth": [] }]
+    */
     const { params } = ZUserDelete.parse(req);
 
     const deletedStudent = await deleteUser(params.id, 'Student');

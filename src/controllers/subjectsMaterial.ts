@@ -25,6 +25,10 @@ const subjectMaterialRouter = express.Router();
 // Needs testing
 // This router is very experimental, lots of validations & verifications are missing.
 subjectMaterialRouter.get('/', isAuthenticated, async (_req, res) => {
+  /* 
+    #swagger.tags = ['Subjects Material']
+    #swagger.security = [{ "cookieAuth": [] }]
+  */
   const query = await getSubjectsMaterial();
 
   return res.status(200).json(query).end();
@@ -35,6 +39,10 @@ subjectMaterialRouter.get(
   '/:subjectId/:serial',
   isAuthenticated,
   async (req, res) => {
+    /* 
+      #swagger.tags = ['Subjects Material']
+      #swagger.security = [{ "cookieAuth": [] }]
+    */
     const { params } = ZSubjectsMaterialOne.parse(req);
 
     const oneSubjectMaterial = await getOneSubjectMaterial(params);
@@ -48,6 +56,10 @@ subjectMaterialRouter.get(
 
 // Get table of that particular subject
 subjectMaterialRouter.get('/:subjectId', isAuthenticated, async (req, res) => {
+  /* 
+    #swagger.tags = ['Subjects Material']
+    #swagger.security = [{ "cookieAuth": [] }]
+  */
   const { params } = ZSubjectGetOne.parse(req);
 
   const query = await getSubjectMaterial(params.id);
@@ -62,6 +74,10 @@ subjectMaterialRouter.post(
   isAuthenticated,
   uploadFile.single('pdf'),
   async (req: Request, res: Response) => {
+    /* 
+      #swagger.tags = ['Subjects Material']
+      #swagger.security = [{ "cookieAuth": [] }]
+    */
     const { params, body } = ZSubjectsMaterialPost.parse(req);
 
     if (!req.file)
@@ -87,6 +103,10 @@ subjectMaterialRouter.delete(
   setAuthorizedRoles([ZRole.enum.Admin, ZRole.enum.Teacher]),
   isAuthenticated,
   async (req: Request, res: Response) => {
+    /* 
+      #swagger.tags = ['Subjects Material']
+      #swagger.security = [{ "cookieAuth": [] }]
+    */
     const { params } = ZSubjectsMaterialOne.parse(req);
 
     await deleteOneSubjectMaterial(params);

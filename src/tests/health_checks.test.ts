@@ -19,8 +19,4 @@ describe('Health checks', () => {
   test('GET /testUnAuth does not require authenticated user', async () => {
     await api.get('/api/ping').expect(200);
   });
-
-  test('GET /api/failping', async () => {
-    await api.get('/api/failping').expect(400);
-  });
 });
