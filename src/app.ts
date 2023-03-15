@@ -26,7 +26,7 @@ import feeRouter from './controllers/fee';
 import gradeRouter from './controllers/grade';
 import userRouter from './controllers/user';
 import swaggerUI from 'swagger-ui-express';
-import specs from './swagger-output.json';
+import fs from 'fs';
 
 const app = express();
 
@@ -83,8 +83,12 @@ app.get('/api/ping', (_, response) => {
   response.send('<p>pong</p>');
 });
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(specs));
+if (config.NODE_ENV !== 'test') {
+  const specs = fs.readFileSync('./swagger-output.json', 'utf8');
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(JSON.parse(specs)));
+}
+
 app.use(unknownEndpoint);
 app.use(errorHandler);
 
