@@ -34,6 +34,17 @@ studentRouter.get(
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req, res) => {
+    // revise this to-do
+    /* 
+    #swagger.tags = ['Students']
+    #swagger.security = [{ "cookieAuth": [] }]
+    [hashHere]swagger.parameters['thisiswrong'] = {
+      in: query,
+        schema: { $ref: "#/components/schemas/ZStudentFind" }
+      }
+    } 
+    */
+
     // Validating twice, can it be better? To-Do
     const { query } = ZStudentFind.parse(req);
 
@@ -53,6 +64,10 @@ studentRouter.get(
 );
 
 studentRouter.get('/:id', isAuthenticated, async (req, res) => {
+  /* 
+    #swagger.tags = ['Students']
+    #swagger.security = [{ "cookieAuth": [] }]
+  */
   const { params } = ZUserGetOne.parse(req);
 
   const student = await getUser(params.id, 'Student');
@@ -65,6 +80,17 @@ studentRouter.post(
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticatedTest('id'),
   async (req, res) => {
+    /* 
+    #swagger.tags = ['Students']
+    #swagger.security = [{ "cookieAuth": [] }]
+    #swagger.requestBody = {
+      content: {
+        "application/json": {
+          schema: { $ref: "#/components/schemas/ZStudentPost" }
+        }
+      }
+    } 
+    */
     const { body } = ZStudentPost.parse(req);
 
     const user = { ...body, userDetails: undefined, student: undefined };
@@ -81,6 +107,17 @@ studentRouter.put(
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req, res) => {
+    /* 
+    #swagger.tags = ['Students']
+    #swagger.security = [{ "cookieAuth": [] }]
+    #swagger.requestBody = {
+      content: {
+        "application/json": {
+          schema: { $ref: "#/components/schemas/ZStudentPut" }
+        }
+      }
+    } 
+    */
     const { params, body } = ZStudentPut.parse(req);
 
     const user = { ...body, userDetails: undefined, student: undefined };
@@ -101,6 +138,10 @@ studentRouter.delete(
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req, res) => {
+    /* 
+      #swagger.tags = ['Students']
+      #swagger.security = [{ "cookieAuth": [] }]
+    */
     const { params } = ZUserDelete.parse(req);
 
     const deletedStudent = await deleteUser(params.id, 'Student');

@@ -26,6 +26,10 @@ subjectRouter.get(
   setAuthorizedRoles([ZRole.enum.Admin, ZRole.enum.Student]),
   isAuthenticated,
   async (req, res) => {
+    /* 
+      #swagger.tags = ['Subjects']
+      #swagger.security = [{ "cookieAuth": [] }]
+    */
     const { query } = ZSubjectFind.parse(req);
 
     const result = await getSubjects(query);
@@ -35,6 +39,10 @@ subjectRouter.get(
 );
 
 subjectRouter.get('/:id', isAuthenticated, async (req, res) => {
+  /* 
+    #swagger.tags = ['Subjects']
+    #swagger.security = [{ "cookieAuth": [] }]
+  */
   const { params } = ZSubjectGetOne.parse(req);
 
   const query = await getSubject(params.id);
@@ -47,6 +55,10 @@ subjectRouter.post(
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req: Request, res: Response) => {
+    /* 
+      #swagger.tags = ['Subjects']
+      #swagger.security = [{ "cookieAuth": [] }]
+    */
     const { body } = ZSubjectPost.parse(req);
 
     const subject = await createSubject(body);
@@ -62,6 +74,10 @@ subjectRouter.put(
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req: Request, res: Response) => {
+    /* 
+      #swagger.tags = ['Subjects']
+      #swagger.security = [{ "cookieAuth": [] }]
+    */
     const { params, body } = ZSubjectPut.parse(req);
 
     // returns undefiend if not found => to-do: Return a proper message
@@ -76,6 +92,10 @@ subjectRouter.delete(
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req: Request, res: Response) => {
+    /* 
+      #swagger.tags = ['Subjects']
+      #swagger.security = [{ "cookieAuth": [] }]
+    */
     const { params } = ZSubjectDelete.parse(req);
 
     const subject = await deleteSubject(params.id);

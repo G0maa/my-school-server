@@ -13,6 +13,10 @@ const userRouter = express.Router();
 // Will be refactored when we introduce sending emails.
 // https://stackoverflow.com/questions/3077229/restful-password-reset
 userRouter.post('/:id/reset-password', isAuthenticated, async (req, res) => {
+  /* 
+    #swagger.tags = ['Users']
+    #swagger.security = [{ "cookieAuth": [] }]
+  */
   // Less code, less "meaningful"
   // Or More code i.e. ZUserResetPassword?
   const { params } = ZUserGetOne.parse(req);

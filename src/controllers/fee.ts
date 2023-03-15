@@ -27,6 +27,10 @@ feeRouter.get(
   setAuthorizedRoles([ZRole.enum.Admin, ZRole.enum.Student]),
   isAuthenticated,
   async (req, res) => {
+    /* 
+      #swagger.tags = ['Fees']
+      #swagger.security = [{ "cookieAuth": [] }]
+    */
     const { query, user } = ZFeeFind.parse(req);
 
     const fees = await getFees(query, user);
@@ -42,6 +46,10 @@ feeRouter.get(
   setAuthorizedRoles([ZRole.enum.Admin, ZRole.enum.Student]),
   isAuthenticated,
   async (req, res) => {
+    /* 
+      #swagger.tags = ['Fees']
+      #swagger.security = [{ "cookieAuth": [] }]
+    */
     // ~3rd method to validate requests.
     // as opposed to the other one
     // This way I don't have to "hard-code" types in the req parameter.
@@ -62,6 +70,10 @@ feeRouter.post(
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req: Request, res: Response) => {
+    /* 
+      #swagger.tags = ['Fees']
+      #swagger.security = [{ "cookieAuth": [] }]
+    */
     const { body } = ZFeePost.parse(req);
 
     const fee = await createFee(body);
@@ -75,6 +87,10 @@ feeRouter.put(
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req: Request, res: Response) => {
+    /* 
+      #swagger.tags = ['Fees']
+      #swagger.security = [{ "cookieAuth": [] }]
+    */
     const { body } = ZFeePut.parse(req);
 
     const fee = await updateFee(body);
@@ -88,6 +104,10 @@ feeRouter.delete(
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req: Request, res: Response) => {
+    /* 
+      #swagger.tags = ['Fees']
+      #swagger.security = [{ "cookieAuth": [] }]
+    */
     const { params } = ZFeeDelete.parse(req);
 
     const fee = await deleteFee(params.serial);

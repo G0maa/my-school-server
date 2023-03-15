@@ -13,6 +13,10 @@ import { ZHolidayPost, ZHolidayDelete } from '../validator/holiday.validator';
 const holidayRouter = express.Router();
 
 holidayRouter.get('/', isAuthenticated, async (_req, res) => {
+  /* 
+    #swagger.tags = ['Holidays']
+    #swagger.security = [{ "cookieAuth": [] }]
+  */
   const holidays = await getHolidays();
 
   return res.status(200).json(holidays).end();
@@ -23,6 +27,10 @@ holidayRouter.post(
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req: Request, res: Response) => {
+    /* 
+      #swagger.tags = ['Holidays']
+      #swagger.security = [{ "cookieAuth": [] }]
+    */
     const { body } = ZHolidayPost.parse(req);
 
     const holiday = await createHoliday(body);
@@ -36,6 +44,10 @@ holidayRouter.delete(
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req: Request, res: Response) => {
+    /* 
+      #swagger.tags = ['Holidays']
+      #swagger.security = [{ "cookieAuth": [] }]
+    */
     const { params } = ZHolidayDelete.parse(req);
 
     const deletedHoliday = await deleteHoliday(params.serial);

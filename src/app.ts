@@ -25,7 +25,8 @@ import holidayRouter from './controllers/holiday';
 import feeRouter from './controllers/fee';
 import gradeRouter from './controllers/grade';
 import userRouter from './controllers/user';
-// import logger from './utils/logger';
+import swaggerUI from 'swagger-ui-express';
+import fs from 'fs';
 
 const app = express();
 
@@ -75,12 +76,18 @@ app.use('/api/grade/', gradeRouter);
 app.use('/api/user/', userRouter);
 
 app.get('/api/ping', (_, response) => {
+  /* 
+    #swagger.tags = ['Health Checks']
+    #swagger.description = 'Verifies that the Web App works'
+  */
   response.send('<p>pong</p>');
 });
 
-app.get('/api/failping', (_, response) => {
-  response.status(400).send();
-});
+if (config.NODE_ENV !== 'test') {
+  const specs = fs.readFileSync('./src/swagger-output.json', 'utf8');
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(JSON.parse(specs)));
+}
 
 app.use(unknownEndpoint);
 app.use(errorHandler);
