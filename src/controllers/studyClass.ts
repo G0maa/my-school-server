@@ -20,6 +20,10 @@ import {
 const studyClassRouter = express.Router();
 
 studyClassRouter.get('/', isAuthenticated, async (req, res) => {
+  /* 
+    #swagger.tags = ['Study Classes']
+    #swagger.security = [{ "cookieAuth": [] }]
+  */
   const { query } = ZStudyClassFind.parse(req);
 
   const result = await getStudyClasses(query);
@@ -28,6 +32,10 @@ studyClassRouter.get('/', isAuthenticated, async (req, res) => {
 });
 
 studyClassRouter.get('/:classId', isAuthenticated, async (req, res) => {
+  /* 
+    #swagger.tags = ['Study Classes']
+    #swagger.security = [{ "cookieAuth": [] }]
+  */
   const { params } = ZStudyClassGet.parse(req);
 
   const query = await getStudyClass(params.classId);
@@ -40,6 +48,10 @@ studyClassRouter.post(
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req, res) => {
+    /* 
+      #swagger.tags = ['Study Classes']
+      #swagger.security = [{ "cookieAuth": [] }]
+    */
     const { body } = ZStudyClassPost.parse(req);
 
     const studyClass = await createStudyClass(body);
@@ -54,6 +66,10 @@ studyClassRouter.put(
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req, res) => {
+    /* 
+      #swagger.tags = ['Study Classes']
+      #swagger.security = [{ "cookieAuth": [] }]
+    */
     const { params, body } = ZStudyClassPut.parse(req);
 
     // returns undefiend if not found => to-do: Return a proper message
@@ -72,6 +88,10 @@ studyClassRouter.delete(
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req, res) => {
+    /* 
+      #swagger.tags = ['Study Classes']
+      #swagger.security = [{ "cookieAuth": [] }]
+    */
     const { params } = ZStudyClassDelete.parse(req);
 
     const studyClass = await deleteStudyClass(params.classId);

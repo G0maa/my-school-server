@@ -75,6 +75,36 @@ loginRouter.post(
   validateSchema(ZUserLogin),
   passport.authenticate('local'),
   (req, res) => {
+    /* 
+      #swagger.tags = ['Login']
+      #swagger.requestBody = {
+        content: {
+          "application/json": {
+            schema: { $ref: "#/components/schemas/ZUserLogin" },
+            examples: {
+              Admin: {
+                value: {
+                  username: 'A0001',
+                  password: '000000'
+                }
+              },
+              Student: {
+                value: {
+                  username: 'S0001',
+                  password: '000000'
+                }
+              },
+              Teacher: {
+                value: {
+                  username: 'T0001',
+                  password: '000000'
+                }
+              }
+            }
+          }
+        }
+      } 
+    */
     if (!req.user) return res.status(401).end();
 
     return res

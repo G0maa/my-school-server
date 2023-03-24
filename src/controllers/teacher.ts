@@ -34,6 +34,10 @@ teacherRouter.get(
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req, res) => {
+    /* 
+      #swagger.tags = ['Teachers']
+      #swagger.security = [{ "cookieAuth": [] }]
+    */
     const { query } = ZTeacherFind.parse(req);
 
     const searchQueryUser = ZUserQuery.parse(query);
@@ -51,6 +55,10 @@ teacherRouter.get(
 );
 
 teacherRouter.get('/:id', isAuthenticated, async (req, res) => {
+  /* 
+    #swagger.tags = ['Teachers']
+    #swagger.security = [{ "cookieAuth": [] }]
+  */
   const { params } = ZUserGetOne.parse(req);
 
   const query = await getUser(params.id, 'Teacher');
@@ -63,6 +71,10 @@ teacherRouter.post(
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req, res) => {
+    /* 
+      #swagger.tags = ['Teachers']
+      #swagger.security = [{ "cookieAuth": [] }]
+    */
     const { body } = ZTeacherPost.parse(req);
 
     const user = { ...body, userDetails: undefined, teacher: undefined };
@@ -78,6 +90,10 @@ teacherRouter.put(
   setAuthorizedRoles([ZRole.enum.Admin, ZRole.enum.Teacher]),
   isAuthenticatedTest('id'),
   async (req, res) => {
+    /* 
+      #swagger.tags = ['Teachers']
+      #swagger.security = [{ "cookieAuth": [] }]
+    */
     const { params, body } = ZTeacherPut.parse(req);
 
     // To-Do: This is kind of too hacky.
@@ -100,6 +116,10 @@ teacherRouter.delete(
   setAuthorizedRoles([ZRole.Enum.Admin]),
   isAuthenticated,
   async (req, res) => {
+    /* 
+      #swagger.tags = ['Teachers']
+      #swagger.security = [{ "cookieAuth": [] }]
+    */
     const { params } = ZUserDelete.parse(req);
 
     const teacher = await deleteUser(params.id, 'Teacher');

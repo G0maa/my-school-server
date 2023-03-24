@@ -11,3 +11,4 @@ package-lock.json
 coverage/
 uploads/
 src/tests/test.txt
+swagger-output.json

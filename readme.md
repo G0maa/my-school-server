@@ -19,7 +19,7 @@
   - Better Error handling
   - Validations related [#34](https://github.com/G0maa/my-school-server/issues/34)
     - Trying to make sure that different entities are _always_ in a valid state
-- Docs
+- Docs - [SwaggerHub Link](https://app.swaggerhub.com/apis/G0maa/My-School-Test/1.0.0#/)
   - Better & more detailed Readme [#46](https://github.com/G0maa/my-school-server/issues/46)
   - API Docs [#40](https://github.com/G0maa/my-school-server/issues/40)
 
@@ -37,8 +37,14 @@
 
 ## Starting up the development environment
 
-- **NOTE: You need to have [docker](https://docs.docker.com/get-docker/) installed.**
-  - And [NodeJS](https://nodejs.org/en/) (LTS version).
+### Pre-requisistes:
+
+- [Docker](https://docs.docker.com/get-docker/)
+  - This is strictly required for the Database to work, any local/cloud PostgreSQL database would do the job.
+- [NodeJS](https://nodejs.org/en/)
+
+### Steps:
+
 - After cloning the repo, open a terminal in your favourite IDE:
 
 1. Start the DBs
@@ -50,6 +56,7 @@
    - `npm run test`
 5. Run the app
    - `npm run dev`
+6. API Docs can be visited at `http://localhost:8080/api-docs/`
 
 ## Development related:
 

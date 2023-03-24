@@ -6,6 +6,9 @@ const devRouter = express.Router();
 
 // Another option to test GET requests
 devRouter.get('/login', (_req, res) => {
+  /* 
+    #swagger.tags = ['Dev']
+  */
   return res.status(200).send(
     `<html>
       <head>
@@ -33,10 +36,17 @@ devRouter.get('/login', (_req, res) => {
 
 // try auth middleware here.
 devRouter.get('/testAuth', isAuthenticated, (req, res) => {
+  /* 
+    #swagger.tags = ['Dev']
+    #swagger.security = [{ "cookieAuth": [] }]
+  */
   return res.status(200).json(req.user).end();
 });
 
 devRouter.get('/testUnAuth', (_req, res) => {
+  /* 
+    #swagger.tags = ['Dev']
+  */
   return res.status(200).json({ message: 'Authorized /testUnAuth' }).end();
 });
 

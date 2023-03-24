@@ -9,7 +9,8 @@
   "scripts": {
     "tsc": "tsc",
     "start": "tsc && node dist/index.js",
-    "dev": "ts-node-dev src/index.ts",
+    "build:docs": "ts-node-dev src/utils/swagger.ts",
+    "dev": "npm run build:docs && ts-node-dev src/index.ts",
     "migration:down": "ts-node-dev src/utils/rollback.ts",
     "migration:downAll": "ts-node-dev src/utils/rollbackAll.ts",
     "eslint": "npx eslint ./src/**/*.ts",
@@ -35,12 +36,13 @@
     "passport-local": "^1.0.0",
     "pg": "^8.8.0",
     "reflect-metadata": "^0.1.13",
-    "sequelize": "^6.28.0",
+    "sequelize": "^6.29.0",
     "sequelize-typescript": "^2.1.5",
     "umzug": "^3.2.1",
     "zod": "^3.20.2"
   },
   "devDependencies": {
+    "@asteasolutions/zod-to-openapi": "^4.4.1",
     "@types/bcrypt": "^5.0.0",
     "@types/cors": "^2.8.12",
     "@types/dotenv": "^8.2.0",
@@ -53,6 +55,7 @@
     "@types/passport": "^1.0.11",
     "@types/passport-local": "^1.0.34",
     "@types/supertest": "^2.0.12",
+    "@types/swagger-ui-express": "^4.1.3",
     "@types/umzug": "^2.3.3",
     "@types/validator": "^13.7.10",
     "@typescript-eslint/eslint-plugin": "^5.47.0",
@@ -66,6 +69,8 @@
     "prettier": "2.7.1",
     "sequelize-cli": "^6.5.2",
     "supertest": "^6.3.1",
+    "swagger-autogen": "^2.23.1",
+    "swagger-ui-express": "^4.6.2",
     "ts-jest": "^29.0.3",
     "ts-node-dev": "^2.0.0",
     "typescript": "^4.9.3"

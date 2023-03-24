@@ -25,6 +25,10 @@ activeSubjectRouter.get(
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req, res) => {
+    /* 
+      #swagger.tags = ['Active Subjects']
+      #swagger.security = [{ "cookieAuth": [] }]
+    */
     const { query } = ZActiveSubjectFind.parse(req);
 
     const result = await getActiveSubjects(query);
@@ -34,6 +38,10 @@ activeSubjectRouter.get(
 );
 
 activeSubjectRouter.get('/:serial', isAuthenticated, async (req, res) => {
+  /* 
+    #swagger.tags = ['Active Subjects']
+    #swagger.security = [{ "cookieAuth": [] }]
+  */
   const { params } = ZActiveSubjectGet.parse(req);
 
   const query = await getActiveSubject(params.serial);
@@ -46,6 +54,10 @@ activeSubjectRouter.post(
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req: Request, res: Response) => {
+    /* 
+      #swagger.tags = ['Active Subjects']
+      #swagger.security = [{ "cookieAuth": [] }]
+    */
     const { body } = ZActiveSubjectPost.parse(req);
 
     const activeSubject = await createActiveSubject(body);
@@ -60,6 +72,10 @@ activeSubjectRouter.put(
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req: Request, res: Response) => {
+    /* 
+      #swagger.tags = ['Active Subjects']
+      #swagger.security = [{ "cookieAuth": [] }]
+    */
     const { params, body } = ZActiveSubjectPut.parse(req);
 
     const activeSubject = await updateActiveSubject({
@@ -77,6 +93,10 @@ activeSubjectRouter.delete(
   setAuthorizedRoles([ZRole.enum.Admin]),
   isAuthenticated,
   async (req, res) => {
+    /* 
+      #swagger.tags = ['Active Subjects']
+      #swagger.security = [{ "cookieAuth": [] }]
+    */
     const { params } = ZActiveSubjectDelete.parse(req);
 
     const activeSubject = await deleteActiveSubject(params.serial);
