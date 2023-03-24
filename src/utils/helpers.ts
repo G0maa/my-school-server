@@ -48,9 +48,30 @@ const generateSerialUsername = async (tableName: string) => {
   return formatUsername(nextNum, tableName);
 };
 
+// To-Do: Probably a better idea to move this to types.ts
+interface Paginate extends Object {
+  page: number;
+  size: number;
+  limit?: number;
+  offset?: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any;
+}
+
+// There could be a better place for this.
+const Paginate = (object: Paginate) => {
+  const { page, size } = object;
+  const offset = (page - 1) * size;
+
+  object.offset = offset;
+  object.limit = size;
+  return object;
+};
+
 export {
   hashPassword,
   verifyPassword,
   generateRandomPassword,
   generateSerialUsername,
+  Paginate,
 };
