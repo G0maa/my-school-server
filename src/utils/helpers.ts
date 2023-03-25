@@ -4,6 +4,9 @@ import { sequelize } from './db';
 import config from './config';
 import { QueryTypes } from 'sequelize';
 import { ValidateRawQuery } from '../validator/student.validator';
+import { z } from 'zod';
+import { Op } from 'sequelize';
+import { Paginate } from '../types';
 
 const hashPassword = async (password: string) => {
   const hashedPassword = await bcrypt.hash(password, config.SALT_ROUNDS);
@@ -33,38 +36,63 @@ const generateSerialUsername = async (tableName: string) => {
      FROM ${tableName}_serial_seq CROSS JOIN ${tableName}`,
     { type: QueryTypes.SELECT }
   );
-  // console.log('rawQuery', rawQuery);
 
   const rawQueryObj = ValidateRawQuery.parse(rawQuery);
 
-  // console.log('rawQueryObj', rawQueryObj);
-
   let nextNum = parseInt(rawQueryObj[0].lastValue || '0');
-
-  // console.log('nextNum', nextNum);
 
   if (!rawQueryObj[0].lastValue) nextNum = 0;
   nextNum += 1;
   return formatUsername(nextNum, tableName);
 };
 
-// To-Do: Probably a better idea to move this to types.ts
-interface Paginate extends Object {
-  page: number;
-  size: number;
-  limit?: number;
-  offset?: number;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [key: string]: any;
-}
+// Note: This assumes validation in the controller, see ZPaginate.
+const getPagination = ({ page, size, ...rest }: Paginate) => {
+  // If it's not validated = I get warned.
+  if (!page || !size)
+    throw new Error('Page and size are required for pagination');
 
-// There could be a better place for this.
-const Paginate = (object: Paginate) => {
-  const { page, size } = object;
   const offset = (page - 1) * size;
+  const limit = size;
+  return { offset, limit, rest };
+};
 
-  object.offset = offset;
-  object.limit = size;
+const mostInnerType = (field: z.ZodTypeAny) => {
+  while (field._def.innerType) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    field = field._def.innerType;
+  }
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  return field._def.typeName;
+};
+
+// I'm not sure if this is a "good" function.
+const querifyStringFields = (
+  object: Record<string, unknown>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  schema: z.ZodObject<any, any>
+) => {
+  // console.log('schema.shape', schema.shape);
+  for (const key in schema.shape) {
+    // for ... in loops over everything,
+    // this if condition is to make sure it only loops over the attributes only.
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, no-prototype-builtins
+    if (!schema.shape.hasOwnProperty(key)) continue;
+
+    // Just making sure key exists in the object, might be optional.
+    if (object[key] === undefined) continue;
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const field = schema.shape[key];
+
+    // For ZodOptional<ZodString> and similar cases.
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
+    const typeName = mostInnerType(field);
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    if (typeName === 'ZodString')
+      object[key] = { [Op.like]: `%${object[key]}%` };
+  }
   return object;
 };
 
@@ -73,5 +101,6 @@ export {
   verifyPassword,
   generateRandomPassword,
   generateSerialUsername,
-  Paginate,
+  getPagination,
+  querifyStringFields,
 };
