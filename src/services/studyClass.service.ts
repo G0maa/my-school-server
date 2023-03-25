@@ -1,12 +1,21 @@
 import StudyClass from '../models/class';
+import { getPagination, querifyStringFields } from '../utils/helpers';
 import {
   ZStudyClass,
-  ZStudyClassQuery,
+  ZStudyClassFind,
 } from '../validator/studyClass.validator';
 
 // Searching not well tested
-const getStudyClasses = async (searchQuery: ZStudyClassQuery) => {
-  const query = await StudyClass.findAll({ where: { ...searchQuery } });
+const getStudyClasses = async (searchQuery: ZStudyClassFind['query']) => {
+  const { offset, limit, rest } = getPagination(searchQuery);
+
+  const querified = querifyStringFields(rest, ZStudyClassFind.shape.query);
+
+  const query = await StudyClass.findAndCountAll({
+    where: querified,
+    offset,
+    limit,
+  });
   return query;
 };
 

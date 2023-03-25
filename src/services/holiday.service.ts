@@ -1,5 +1,5 @@
 import Holiday from '../models/holiday';
-import { Paginate } from '../utils/helpers';
+import { getPagination } from '../utils/helpers';
 import {
   ZHolidayDelete,
   ZHolidayFind,
@@ -7,10 +7,9 @@ import {
 } from '../validator/holiday.validator';
 
 const getHolidays = async (query: ZHolidayFind['query']) => {
-  // See issue #33
-  const obj = Paginate(query);
+  const { offset, limit } = getPagination(query);
 
-  const holidays = await Holiday.findAndCountAll({ ...obj });
+  const holidays = await Holiday.findAndCountAll({ offset, limit });
   return holidays;
 };
 

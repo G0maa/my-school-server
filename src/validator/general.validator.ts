@@ -26,8 +26,8 @@ export const ToLikeQuery = (attribute: string | undefined | null) => {
 // offset & size might be too big e.g. page=1000000&size=100000
 // Note: using .default() does not make it a ZodEffects object
 export const ZPaginate = z.object({
-  page: z.coerce.number().min(1).default(1),
-  size: z.coerce.number().min(10).default(10),
+  page: z.coerce.number().min(1).max(1000).default(1),
+  size: z.coerce.number().min(10).max(100).default(10),
 });
 export type ZPaginate = z.infer<typeof ZPaginate>;
 
