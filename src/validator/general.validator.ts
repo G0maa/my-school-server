@@ -17,7 +17,7 @@ export const ZBloodGroup = z.enum([
   'AB+',
   'AB-',
 ]);
-export const ZEducationType = z.enum(['Sceiences', 'Literature', 'Other']);
+export const ZEducationType = z.enum(['Sciences', 'Literature', 'Other']);
 export const ToLikeQuery = (attribute: string | undefined | null) => {
   if (!attribute) return;
   return { [Op.like]: `%${attribute}%` };
