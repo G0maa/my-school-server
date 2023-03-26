@@ -1,22 +1,31 @@
 import ActiveSubject from '../models/activeSubject';
 import Grade from '../models/grade';
+import { getPagination, querifyStringFields } from '../utils/helpers';
 import { ZGrade, ZGradeFind, ZGradePut } from '../validator/grade.validator';
 import { ZReqUser } from '../validator/user.validator';
 
 const getGrades = async (gradeFind: ZGradeFind['query'], user: ZReqUser) => {
+  const { offset, limit, rest } = getPagination(gradeFind);
+
+  const querified = querifyStringFields(rest, ZGradeFind.shape.query);
+
   let grades;
 
   if (user.role === 'Admin') {
-    grades = await Grade.findAll({ where: gradeFind });
+    grades = await Grade.findAndCountAll({ where: querified, offset, limit });
   } else if (user.role === 'Student') {
-    grades = await Grade.findAll({
-      where: { ...gradeFind, studentId: user.id },
+    grades = await Grade.findAndCountAll({
+      where: { ...querified, studentId: user.id },
+      offset,
+      limit,
     });
   } else if (user.role === 'Teacher') {
-    grades = await Grade.findAll({
+    grades = await Grade.findAndCountAll({
       include: [{ model: ActiveSubject, where: { teacherId: user.id } }],
-      where: { ...gradeFind },
       attributes: { exclude: ['activeSubject'] },
+      where: querified,
+      offset,
+      limit,
     });
   }
 

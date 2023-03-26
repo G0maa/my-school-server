@@ -1,16 +1,25 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 import ActiveSubject from '../models/activeSubject';
+import { getPagination, querifyStringFields } from '../utils/helpers';
 import {
   ZActiveSubject,
   ZActiveSubjectDelete,
+  ZActiveSubjectFind,
   ZActiveSubjectGet,
-  ZActiveSubjectQuery,
 } from '../validator/activeSubject.validator';
 
 // Searching not tested
-const getActiveSubjects = async (searchQuery: ZActiveSubjectQuery) => {
-  const query = await ActiveSubject.findAll({ where: { ...searchQuery } });
+const getActiveSubjects = async (searchQuery: ZActiveSubjectFind['query']) => {
+  const { offset, limit, rest } = getPagination(searchQuery);
+
+  const querified = querifyStringFields(rest, ZActiveSubjectFind.shape.query);
+
+  const query = await ActiveSubject.findAndCountAll({
+    where: querified,
+    offset,
+    limit,
+  });
   return query;
 };
 

@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { ZActiveSubject } from './activeSubject.validator';
 import { ZStudent } from './student.validator';
 import { ZReqUser } from './user.validator';
+import { ZPaginate } from './general.validator';
 
 export const ZGrade = z
   .object({
@@ -24,7 +25,9 @@ export const ZGradeFind = z.object({
   query: ZGrade.pick({
     studentId: true,
     activeSubjectId: true,
-  }).partial(),
+  })
+    .partial()
+    .merge(ZPaginate),
   user: ZReqUser,
 });
 export type ZGradeFind = z.infer<typeof ZGradeFind>;

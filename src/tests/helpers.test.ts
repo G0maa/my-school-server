@@ -16,6 +16,12 @@ describe('getPagination() function unit tests', () => {
     expect(obj.offset).toBe(0);
     expect(obj.limit).toBe(10);
   });
+
+  test('getPagination() returns rest of the object', () => {
+    const obj = getPagination({ page: 1, size: 10, name: 'test', age: 2 });
+
+    expect(obj.rest).toEqual({ name: 'test', age: 2 });
+  });
 });
 
 describe('querifyStringFields() function unit tests', () => {

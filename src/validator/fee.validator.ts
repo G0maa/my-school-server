@@ -15,9 +15,11 @@ export const ZFee = z
   .required({ studentId: true });
 export type ZFee = z.infer<typeof ZFee>;
 
-// export const ZFeeFind = ZFee.pick({ serial: true, studentId: true }).partial();
+// To-Do: does this make a useful endpoint?
 export const ZFeeFind = z.object({
-  query: ZFee.pick({ serial: true, studentId: true }).partial().and(ZPaginate),
+  query: ZFee.pick({ serial: true, studentId: true })
+    .partial()
+    .merge(ZPaginate),
   user: ZReqUser,
 });
 export type ZFeeFind = z.infer<typeof ZFeeFind>;

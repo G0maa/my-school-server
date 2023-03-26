@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ToLikeQuery } from './general.validator';
+import { ZPaginate } from './general.validator';
 import { ZStudyClass } from './studyClass.validator';
 import { ZSubject } from './subject.validator';
 import { ZTeacher } from './teacher.validator';
@@ -20,14 +20,8 @@ export const ZActiveSubject = z.object({
 });
 export type ZActiveSubject = z.infer<typeof ZActiveSubject>;
 
-export const ZActiveSubjectQuery = ZActiveSubject.extend({
-  subjectSchedule: ZActiveSubject.shape.subjectSchedule.transform((attribute) =>
-    ToLikeQuery(attribute)
-  ),
-}).partial();
-
 export const ZActiveSubjectFind = z.object({
-  query: ZActiveSubjectQuery,
+  query: ZActiveSubject.partial().merge(ZPaginate),
 });
 export type ZActiveSubjectFind = z.infer<typeof ZActiveSubjectFind>;
 
@@ -35,8 +29,6 @@ export const ZActiveSubjectGet = z.object({
   params: z.object({ serial: ZActiveSubject.shape.serial }).required(),
 });
 export type ZActiveSubjectGet = z.infer<typeof ZActiveSubjectGet>;
-
-export type ZActiveSubjectQuery = z.infer<typeof ZActiveSubjectQuery>;
 
 export const ZActiveSubjectPost = z.object({
   body: ZActiveSubject,

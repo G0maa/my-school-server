@@ -66,7 +66,12 @@ const mostInnerType = (field: z.ZodTypeAny) => {
   return field._def.typeName;
 };
 
-// I'm not sure if this is a "good" function.
+// This is a hakcky solution as told by @Amr2812,
+// and eventually it's gonna bite me, the "better" way
+// is to make a "mapping" function (i.e. from field to querified field),
+// for each schema.
+// P.S: This function sometimes gets input that does not match the schema,
+// i.e. mainly missing page & size.
 const querifyStringFields = (
   object: Record<string, unknown>,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
