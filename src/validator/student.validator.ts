@@ -1,10 +1,5 @@
 import { z } from 'zod';
-import {
-  ToLikeQuery,
-  ZEducationType,
-  ZStudyYear,
-  ZUuid,
-} from './general.validator';
+import { ZEducationType, ZStudyYear, ZUuid } from './general.validator';
 import { ZStudyClass } from './studyClass.validator';
 import { ZUserPost, ZUserPut, ZUserQuery } from './user.validator';
 import {
@@ -26,23 +21,12 @@ export const ZStudent = z
   .required({ studyYear: true });
 export type ZStudent = z.infer<typeof ZStudent>;
 
-export const ZStudentQuery = ZStudent.partial()
-  .extend({
-    classId: ZStudent.shape.classId.transform((attribute) =>
-      ToLikeQuery(attribute)
-    ), // duplicate use Z
-    parentName: ZStudent.shape.parentName.transform((attribute) =>
-      ToLikeQuery(attribute)
-    ),
-    parentPhonenumber: ZStudent.shape.parentPhonenumber.transform((attribute) =>
-      ToLikeQuery(attribute)
-    ),
-  })
-  .partial();
+export const ZStudentQuery = ZStudent.omit({ userId: true }).partial();
 export type ZStudentQuery = z.infer<typeof ZStudentQuery>;
 
 export const ZStudentFind = z.object({
   query: ZUserQuery.merge(ZUserDetailsQuery).merge(ZStudentQuery),
+  // .merge(ZPaginate),
 });
 export type ZStudentFind = z.infer<typeof ZStudentFind>;
 
