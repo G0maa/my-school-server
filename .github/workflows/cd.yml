@@ -1,22 +1,16 @@
 name: Deploy to EC2 instance
 
 # Made with the help of ChatGPT :D
+# Only works on push to main branch
 on:
   push:
     branches:
-      - master # or main
-  pull_request:
-    branches: [master]
-    types: [opened, synchronize]
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      # - name: Checkout code
-      #   uses: actions/checkout@v3
-      # - name: Install SSH client
-      #   run: sudo apt-get install -y ssh
       - name: SSH into EC2 instance
         uses: appleboy/ssh-action@master
         with:
