@@ -1,0 +1,27 @@
+name: Deploy to EC2 instance
+
+# Made with the help of ChatGPT :D
+on:
+  push:
+    branches:
+      - master # or main
+  pull_request:
+    branches: [master]
+    types: [opened, synchronize]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # - name: Checkout code
+      #   uses: actions/checkout@v3
+      # - name: Install SSH client
+      #   run: sudo apt-get install -y ssh
+      - name: SSH into EC2 instance
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_INSTANCE_HOSTNAME }}
+          username: ubuntu
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            ./deploy.sh
