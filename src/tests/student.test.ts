@@ -35,7 +35,7 @@ const fullStudent: ZStudentPost['body'] = {
   },
   student: {
     studyYear: '1',
-    educationType: 'Sceiences',
+    educationType: 'Sciences',
     parentName: 'Gomaa',
     parentPhonenumber: 'Mohammed',
   },

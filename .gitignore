@@ -7,6 +7,7 @@ test.drawio
 A&D - MVP.md
 out/
 test.ts
+snippet.ts
 package-lock.json
 coverage/
 uploads/

@@ -17,11 +17,19 @@ export const ZBloodGroup = z.enum([
   'AB+',
   'AB-',
 ]);
-export const ZEducationType = z.enum(['Sceiences', 'Literature', 'Other']);
+export const ZEducationType = z.enum(['Sciences', 'Literature', 'Other']);
 export const ToLikeQuery = (attribute: string | undefined | null) => {
   if (!attribute) return;
   return { [Op.like]: `%${attribute}%` };
 };
+
+// offset & size might be too big e.g. page=1000000&size=100000
+// Note: using .default() does not make it a ZodEffects object
+export const ZPaginate = z.object({
+  page: z.coerce.number().min(1).max(1000).default(1),
+  size: z.coerce.number().min(10).max(100).default(10),
+});
+export type ZPaginate = z.infer<typeof ZPaginate>;
 
 // Inferred Types
 export type StudyYear = z.infer<typeof ZStudyYear>;

@@ -4,11 +4,26 @@ import SubjectsMaterial from '../models/subjectsMaterial';
 import { ZSubject } from '../validator/subject.validator';
 import {
   ZSubjectsMaterial,
+  ZSubjectsMaterialFind,
   ZSubjectsMaterialOne,
 } from '../validator/subjectsMaterial.validator';
+import { getPagination, querifyStringFields } from '../utils/helpers';
 
-const getSubjectsMaterial = async () => {
-  const subjectMaterial = await SubjectsMaterial.findAll();
+const getSubjectsMaterial = async (
+  searchQuery: ZSubjectsMaterialFind['query']
+) => {
+  const { limit, offset, rest } = getPagination(searchQuery);
+
+  const querified = querifyStringFields(
+    rest,
+    ZSubjectsMaterialFind.shape.query
+  );
+
+  const subjectMaterial = await SubjectsMaterial.findAndCountAll({
+    where: querified,
+    offset,
+    limit,
+  });
   return subjectMaterial;
 };
 

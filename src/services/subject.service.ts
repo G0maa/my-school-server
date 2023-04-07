@@ -1,9 +1,25 @@
 import Subject from '../models/subject';
-import { ZSubject, ZSubjectQuery } from '../validator/subject.validator';
+import { getPagination, querifyStringFields } from '../utils/helpers';
+import { ZSubject, ZSubjectFind } from '../validator/subject.validator';
 
-const getSubjects = async (searchQuery: ZSubjectQuery) => {
-  const query = await Subject.findAll({
-    where: { ...searchQuery },
+const getSubjects = async (searchQuery: ZSubjectFind['query']) => {
+  // searchQuery is opriginally in req.query
+  // searchQuery: {name: 'test', studyYear: '1', page: 1, size: 10}
+  // querified: {name: { [Op.like]: '%test%' }, studyYear: '1', page: 1, size: 10}
+  // paginated: {limit: 10, offset: 0}
+
+  // The way the functions are, forces a certain order,
+  // which is I dislike, queryifing wihtout getting rid of page & size,
+  // makes sequelize complain about unknown attributes.
+  const { offset, limit, rest } = getPagination(searchQuery);
+
+  // Note: searchQuery after being querified, still has page & size.
+  const querified = querifyStringFields(rest, ZSubjectFind.shape.query);
+
+  const query = await Subject.findAndCountAll({
+    where: querified,
+    offset,
+    limit,
   });
   return query;
 };

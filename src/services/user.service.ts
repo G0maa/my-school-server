@@ -4,6 +4,8 @@ import {
   generateRandomPassword,
   verifyPassword,
   hashPassword,
+  querifyStringFields,
+  getPagination,
 } from '../utils/helpers';
 import { Role, ZUuid } from '../validator/general.validator';
 import {
@@ -31,12 +33,23 @@ const getUsers = async (
   userDetailsQuery: ZUserDetailsQuery,
   roleQuery: ZStudentQuery | ZTeacherQuery
 ) => {
+  const { offset, limit, rest } = getPagination(userQuery);
+
+  const querifiedUserQuery = querifyStringFields(rest, ZUserQuery);
+  const querifiedUserDetailsQuery = querifyStringFields(
+    userDetailsQuery,
+    ZUserDetailsQuery
+  );
+  const querifiedRoleQuery = querifyStringFields(roleQuery, ZStudentQuery);
+
   const query = await User.findAll({
     include: [
-      { model: UserDetails, where: { ...userDetailsQuery } },
-      { model: roleModels[role], where: roleQuery },
+      { model: UserDetails, where: querifiedUserDetailsQuery },
+      { model: roleModels[role], where: querifiedRoleQuery },
     ],
-    where: { role, ...userQuery },
+    where: { role, ...querifiedUserQuery },
+    offset,
+    limit,
   });
   return query;
 };

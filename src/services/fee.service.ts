@@ -1,12 +1,22 @@
 import Fee from '../models/fee';
+import { getPagination, querifyStringFields } from '../utils/helpers';
 import { ZFee, ZFeeFind, ZFeePut } from '../validator/fee.validator';
 import { ZReqUser } from '../validator/user.validator';
 
 const getFees = async (zFeeFind: ZFeeFind['query'], user: ZReqUser) => {
+  const { offset, limit, rest } = getPagination(zFeeFind);
+
+  const querified = querifyStringFields(rest, ZFeeFind.shape.query);
+
   let fees;
   if (user.role === 'Admin')
-    fees = await Fee.findAll({ where: { ...zFeeFind } });
-  else fees = await Fee.findAll({ where: { ...zFeeFind, studentId: user.id } });
+    fees = await Fee.findAndCountAll({ where: querified, offset, limit });
+  else
+    fees = await Fee.findAndCountAll({
+      where: { ...querified, studentId: user.id },
+      offset,
+      limit,
+    });
   return fees;
 };
 

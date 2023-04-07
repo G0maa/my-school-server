@@ -16,6 +16,7 @@ import {
 import { ZRole } from '../validator/general.validator';
 import { ZSubjectGetOne } from '../validator/subject.validator';
 import {
+  ZSubjectsMaterialFind,
   ZSubjectsMaterialOne,
   ZSubjectsMaterialPost,
 } from '../validator/subjectsMaterial.validator';
@@ -24,14 +25,17 @@ const subjectMaterialRouter = express.Router();
 
 // Needs testing
 // This router is very experimental, lots of validations & verifications are missing.
-subjectMaterialRouter.get('/', isAuthenticated, async (_req, res) => {
+subjectMaterialRouter.get('/', isAuthenticated, async (req, res) => {
   /* 
     #swagger.tags = ['Subjects Material']
     #swagger.security = [{ "cookieAuth": [] }]
   */
-  const query = await getSubjectsMaterial();
 
-  return res.status(200).json(query).end();
+  const { query } = ZSubjectsMaterialFind.parse(req);
+
+  const result = await getSubjectsMaterial(query);
+
+  return res.status(200).json(result).end();
 });
 
 // Download, needs some love.

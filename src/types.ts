@@ -13,6 +13,13 @@ export type Migration = (
 // https://stackoverflow.com/questions/40743131/how-to-prevent-property-does-not-exist-on-type-global-with-jsdom-and-t
 export type Bug = 'bug';
 
+export interface Paginate {
+  page?: number;
+  size?: number;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any;
+}
+
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Express {

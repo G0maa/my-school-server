@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ToLikeQuery, ZRole, ZUuid } from './general.validator';
+import { ZPaginate, ZRole, ZUuid } from './general.validator';
 
 export const ZUser = z
   .object({
@@ -15,11 +15,14 @@ export const ZUser = z
   .required({ role: true });
 export type ZUser = z.infer<typeof ZUser>;
 
-export const ZUserQuery = ZUser.extend({
-  username: ZUser.shape.username.transform((attribute) =>
-    ToLikeQuery(attribute)
-  ),
-}).partial();
+// Not the correct place for ZPaginate.
+export const ZUserQuery = ZUser.omit({
+  isReset: true,
+  isVerified: true,
+  password: true,
+})
+  .partial()
+  .merge(ZPaginate);
 export type ZUserQuery = z.infer<typeof ZUserQuery>;
 
 // To-Do: I'm not sure about this, while it is true meaning wise,

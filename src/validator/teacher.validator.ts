@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ToLikeQuery, ZUuid } from './general.validator';
+import { ZUuid } from './general.validator';
 import { ZUserPost, ZUserPut, ZUserQuery } from './user.validator';
 import {
   ZUserDetailsPost,
@@ -20,15 +20,12 @@ export const ZTeacher = z
   .partial();
 export type ZTeacher = z.infer<typeof ZTeacher>;
 
-export const ZTeacherQuery = ZTeacher.extend({
-  department: ZTeacher.shape.department.transform((attribute) =>
-    ToLikeQuery(attribute)
-  ),
-}).partial();
+export const ZTeacherQuery = ZTeacher.omit({ userId: true }).partial();
 export type ZTeacherQuery = z.infer<typeof ZTeacherQuery>;
 
 export const ZTeacherFind = z.object({
   query: ZUserQuery.merge(ZUserDetailsQuery).merge(ZTeacherQuery),
+  // .merge(ZPaginate),
 });
 export type ZTeacherFind = z.infer<typeof ZTeacherFind>;
 

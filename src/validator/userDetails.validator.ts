@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { ToLikeQuery, ZBloodGroup, ZGender, ZUuid } from './general.validator';
+import { ZBloodGroup, ZGender, ZUuid } from './general.validator';
 
 export const ZUserDetails = z
   .object({
@@ -17,13 +17,9 @@ export const ZUserDetails = z
   .partial();
 export type ZUserDetails = z.infer<typeof ZUserDetails>;
 
-export const ZUserDetailsQuery = ZUserDetails.extend({
-  firstName: ZUserDetails.shape.firstName.transform((attribute) =>
-    ToLikeQuery(attribute)
-  ),
-  lastName: ZUserDetails.shape.lastName.transform((attribute) =>
-    ToLikeQuery(attribute)
-  ),
+export const ZUserDetailsQuery = ZUserDetails.omit({
+  userId: true,
+  serial: true,
 }).partial();
 export type ZUserDetailsQuery = z.infer<typeof ZUserDetailsQuery>;
 
