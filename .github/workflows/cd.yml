@@ -9,6 +9,8 @@ on:
 
 jobs:
   deploy:
+    if: |
+      contains(join(toJson(github.event.commits.*.message), ' '), '#skipdeploy') != true
     runs-on: ubuntu-latest
     steps:
       - name: SSH into EC2 instance
