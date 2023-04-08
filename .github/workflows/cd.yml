@@ -20,4 +20,5 @@ jobs:
           script: |
             ls
             wget https://raw.githubusercontent.com/G0maa/my-school-server/master/deploy.sh
+            chmod +x deploy.sh
             ./deploy.sh
