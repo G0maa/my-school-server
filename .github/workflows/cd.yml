@@ -19,6 +19,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             ls
+            rm -f deploy.sh
             wget https://raw.githubusercontent.com/G0maa/my-school-server/master/deploy.sh
             chmod +x deploy.sh
             ./deploy.sh
